@@ -1,0 +1,66 @@
+
+.twitter-typeahead { width: 100%; }
+
+.twitter-typeahead, .tt-hint{
+    width:100%;
+}
+.tt-query { background: trasparent !important; }
+.twitter-typeahead .tt-hint {
+    color: #CCC;
+    display: block;
+    height: 49px;
+    padding: 18px 4px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 4px;
+    text-indent: -9999px
+}
+
+.tt-dropdown-menu {
+    min-width: 160px;
+    margin-top: 2px;
+    padding: 5px 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.2);
+    *border-right-width: 2px;
+    *border-bottom-width: 2px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+
+    border-radius: 0;
+    padding: 2px;
+}
+
+.tt-suggestion {
+    display: block;
+    padding: 5px;
+    text-align: left !important;
+}
+
+
+.tt-suggestion.tt-is-under-cursor {
+    color: #fff;
+    background: #5BC0DE;
+}
+
+.tt-suggestion.tt-is-under-cursor a {
+    color: #fff;
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+
+.tt-suggestion p.userinfo img {
+    height: 24px;
+    margin: 5px;
+}
