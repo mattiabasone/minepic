@@ -12,11 +12,11 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property int $id
  * @property string $uuid
  * @property string $username
- * @property string $skin_md5
  * @property int $fail_count
- * @property int $updated
  * @property string $skin
  * @property string $cape
+ * @property string $created_at
+ * @property string $updated_at
  */
 class Accounts extends Model
 {
@@ -26,10 +26,10 @@ class Accounts extends Model
      *
      * @var string
      */
-    protected $table = 'account';
+    protected $table = 'accounts';
 
     /**
      * @var bool
      */
-    public $timestamps = false;
+    public $timestamps = true;
 }

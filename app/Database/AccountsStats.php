@@ -20,7 +20,7 @@ class AccountsStats extends Model
      *
      * @var string
      */
-    protected $table = 'account_stats';
+    protected $table = 'accounts_stats';
 
     /**
      * Primary key
@@ -77,12 +77,12 @@ class AccountsStats extends Model
         return app('db')->select(
             "SELECT a.`uuid`, a.`username`, s.`count_request`
              FROM (
-              SELECT `uuid`, `count_request` FROM `account_stats`
+              SELECT `uuid`, `count_request` FROM `accounts_stats`
               WHERE `uuid` != '{$default_uuid}'
               ORDER BY `count_request` DESC
               LIMIT 14
             ) s
-            INNER JOIN `account` a USING(`uuid`)
+            INNER JOIN `accounts` a USING(`uuid`)
             ORDER BY s.`count_request` DESC"
         );
     }
@@ -96,11 +96,11 @@ class AccountsStats extends Model
         return app('db')->select(
             "SELECT a.`uuid`, a.`username`, s.`count_request`
               FROM (
-                SELECT `uuid`, `count_request` FROM `account_stats`
+                SELECT `uuid`, `count_request` FROM `accounts_stats`
                 ORDER BY `time_request` DESC
                 LIMIT 9
               ) s
-            INNER JOIN `account` a USING(`uuid`)
+            INNER JOIN `accounts` a USING(`uuid`)
             ORDER BY s.`count_request` DESC"
         );
     }

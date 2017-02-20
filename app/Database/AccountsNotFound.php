@@ -17,7 +17,7 @@ class AccountsNotFound extends Model
      *
      * @var string
      */
-    protected $table = 'account_not_found';
+    protected $table = 'accounts_not_found';
 
     /**
      * Primary key

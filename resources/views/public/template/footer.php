@@ -3,8 +3,8 @@
         <div class="col-md-4">
             <div class="block">
                 <h3>GitHub</h3>
-                Follow the development at<br />
-                <a target="_blank" href="https://github.com/mattiabasone/Minepic">https://github.com/mattiabasone/Minepic</a>
+                Source code<br />
+                <a target="_blank" href="https://github.com/mattiabasone/minepic-api">https://github.com/mattiabasone/minepic-api</a>
             </div>
         </div>
         <div class="col-md-4">

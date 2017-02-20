@@ -20,7 +20,7 @@ class AccountsNameChange extends Model
      *
      * @var string
      */
-    protected $table = 'account_name_change';
+    protected $table = 'accounts_name_change';
 
     /**
      * @var bool

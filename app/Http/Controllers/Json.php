@@ -12,6 +12,13 @@ class Json extends BaseController
 {
 
 
+    /**
+     * Send response to the user
+     *
+     * @param $response
+     * @param $httpStatus
+     * @return Response
+     */
     private static function sendResponse($response, $httpStatus) : Response
     {
         return Response::create($response, $httpStatus, ['Content-Type' =>'application-json']);

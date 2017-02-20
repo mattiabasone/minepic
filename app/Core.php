@@ -12,7 +12,8 @@ use App\Image\Skin;
 use App\Minecraft\MojangAccount;
 use App\Minecraft\MojangClient;
 
-class Core {
+class Core
+{
 
     /**
      * Requested string
@@ -94,7 +95,7 @@ class Core {
      * @return bool
      */
     public function isValidUsername($username): bool {
-        if (preg_match('#[^a-zA-Z0-9_]+#', $username) == 1) {
+        if ( preg_match('#[^a-zA-Z0-9_]+#', $username) == 1 ) {
             return false;
         }
         return true;
@@ -109,7 +110,7 @@ class Core {
      */
     public function isValidUuid(): bool {
         $uuid = strtolower($this->request);
-        if (preg_match('#[a-f0-9]{32}#', $uuid) == 1 AND strlen($uuid) == 32) {
+        if ( preg_match('#[a-f0-9]{32}#', $uuid) == 1 AND strlen($uuid) == 32) {
             return true;
         }
         return false;
@@ -123,7 +124,7 @@ class Core {
      * @return bool
      */
     public function isValidEmail($email): bool {
-        if (preg_match('#^[a-zA-Z0-9\.\_\%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,8}$#', $email) == 1) {
+        if ( preg_match('#^[a-zA-Z0-9\.\_\%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,8}$#', $email) == 1 ) {
             return false;
         }
         return true;
@@ -145,7 +146,7 @@ class Core {
      * @return bool
      */
     private function checkDbCache(): bool {
-        if ((time() - $this->userdata->updated) < env('CACHE_TIME')) {
+        if ( (time() - $this->userdata->updated_at->timestamp) < env('CACHE_TIME')) {
             return true;
         }
         return false;
@@ -158,12 +159,18 @@ class Core {
      * @param string $value
      * @return bool
      */
-    private function loadDbUserdata($type = 'uuid', $value = ''): bool {
+    private function loadDbUserdata($type ='uuid', $value = ''): bool {
         if ($type != 'username') {
-            $result = Accounts::where('uuid', $value)->take(1)->get();
+            $result = Accounts::where('uuid', $value)
+                ->take(1)
+                ->get();
 
         } else {
-            $result = Accounts::where('username', $value)->orderBy('username', 'desc')->take(1)->orderBy('updated', 'DESC')->get();
+            $result = Accounts::where('username', $value)
+                ->orderBy('username', 'desc')
+                ->take(1)
+                ->orderBy('updated_at', 'DESC')
+                ->get();
         }
 
         if (count($result) > 0) {
@@ -189,10 +196,7 @@ class Core {
      */
     public function getFullUserdata(): array {
         $userstats = AccountsStats::find($this->userdata->uuid);
-        return [
-            $this->userdata,
-            $userstats
-        ];
+        return [$this->userdata, $userstats];
     }
 
     /**
@@ -234,7 +238,6 @@ class Core {
             $this->userdata = new Accounts();
             $this->userdata->username = $this->apiUserdata->username;
             $this->userdata->uuid = $this->apiUserdata->uuid;
-            $this->userdata->updated = time();
             $this->userdata->skin = (strlen($this->apiUserdata->skin) > 1 ? $this->apiUserdata->skin : '');
             $this->userdata->cape = (strlen($this->apiUserdata->cape) > 1 ? $this->apiUserdata->cape : '');
             $this->userdata->save();
@@ -297,7 +300,8 @@ class Core {
      * @return void
      */
     public function updateUnexistentAccount() {
-        AccountsNotFound::where('request', $this->request)->update([
+        AccountsNotFound::where('request', $this->request)
+            ->update([
                 'time' => time(),
             ]);
     }
@@ -344,9 +348,9 @@ class Core {
         if (isset($this->userdata->uuid) AND $this->userdata->uuid != '') {
             return [
                 'Cache-Control' => 'private, max-age=' . env('CACHE_TIME'),
-                'Last-Modified' => gmdate('D, d M Y H:i:s \G\M\T', $this->userdata->updated),
-                'Expires' => gmdate('D, d M Y H:i:s \G\M\T', $this->userdata->updated + env('CACHE_TIME')),
-                'ETag' => md5($type . $this->userdata->updated . $this->userdata->uuid . $this->userdata->username . $size),
+                'Last-Modified' => gmdate('D, d M Y H:i:s \G\M\T', $this->userdata->updated_at->timestamp),
+                'Expires' => gmdate('D, d M Y H:i:s \G\M\T', $this->userdata->updated_at->timestamp + env('CACHE_TIME')),
+                'ETag' => md5($type . $this->userdata->updated_at->timestamp . $this->userdata->uuid . $this->userdata->username . $size),
             ];
         } else {
             return [
@@ -457,7 +461,6 @@ class Core {
     private function updateUserFailUpdate(): bool {
         if (isset($this->userdata->uuid)) {
             $this->userdata->fail_count++;
-            $this->userdata->updated = time();
             return $this->userdata->save();
         }
         return false;
@@ -481,7 +484,6 @@ class Core {
                 $this->userdata->skin = $this->apiUserdata->skin;
                 $this->userdata->cape = $this->apiUserdata->cape;
                 $this->userdata->fail_count = 0;
-                $this->userdata->updated = time();
                 $this->userdata->save();
 
                 // Update skin
@@ -639,7 +641,7 @@ class Core {
      * @return bool
      */
     public function forceUserUpdate(): bool {
-        if ((time() - $this->userdata->updated) > env('MIN_USERDATA_UPDATE_INTERVAL')) {
+        if ( (time() - $this->userdata->updated_at) > env('MIN_USERDATA_UPDATE_INTERVAL')) {
             return $this->updateDbUser();
         }
         return false;
@@ -668,4 +670,5 @@ class Core {
             }
         }
     }
+
 }

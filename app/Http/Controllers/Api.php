@@ -27,7 +27,7 @@ class Api extends BaseController
      * @param int $size
      * @return Response
      */
-    public function serveAvatar($uuidOrName = '', $size = 0) : Response {
+    public function serveAvatar($uuidOrName = '', $size = 0): Response {
         $size = (int) $size;
 
         $this->minepic->initialize($uuidOrName);
@@ -54,7 +54,7 @@ class Api extends BaseController
      * @param string $uuidOrName
      * @return Response
      */
-    public function avatarWithSize($size = 0, $uuidOrName = '') : Response {
+    public function avatarWithSize($size = 0, $uuidOrName = ''): Response {
         return $this->serveAvatar($uuidOrName, $size);
     }
 
@@ -66,7 +66,7 @@ class Api extends BaseController
      * @param string $type
      * @return Response
      */
-    public function serveSkin($uuidOrName = '', $size = 0, $type = 'F') : Response {
+    public function serveSkin($uuidOrName = '', $size = 0, $type = 'F'): Response {
         $size = (int) $size;
         $this->minepic->initialize($uuidOrName);
         $headers = $this->minepic->generateHttpCacheHeaders($size, 'avatar');
@@ -91,7 +91,7 @@ class Api extends BaseController
      * @param $size
      * @return Response
      */
-    public function skinFrontWithSize($uuidOrName, $size) : Response {
+    public function skinFrontWithSize($uuidOrName, $size): Response {
         return $this->serveSkin($uuidOrName, $size);
     }
 
@@ -101,7 +101,7 @@ class Api extends BaseController
      * @param $uuidOrName
      * @return Response
      */
-    public function skinBackWithoutSize($uuidOrName) : Response {
+    public function skinBackWithoutSize($uuidOrName): Response {
         return $this->serveSkin($uuidOrName, 0, 'B');
     }
 
@@ -112,7 +112,7 @@ class Api extends BaseController
      * @param $size
      * @return Response
      */
-    public function skinBackWithSize($uuidOrName, $size) : Response {
+    public function skinBackWithSize($uuidOrName, $size): Response {
         return $this->serveSkin($uuidOrName, $size, 'B');
     }
 
@@ -122,7 +122,7 @@ class Api extends BaseController
      * @param string $uuidOrName
      * @return Response
      */
-    public function downloadTexture(string $uuidOrName = '') : Response {
+    public function downloadTexture(string $uuidOrName = ''): Response {
         $headers = [
             'Content-Disposition' => 'Attachment;filename='.$uuidOrName.'.png',
             'Content-Type' => 'image/png'
@@ -139,7 +139,7 @@ class Api extends BaseController
      * @param string $uuidOrName
      * @return Response
      */
-    public function update(string $uuidOrName) : Response {
+    public function update(string $uuidOrName): Response {
         if ($this->minepic->initialize($uuidOrName)) {
             if ($this->minepic->forceUserUpdate()) {
                 $response = ['ok' => true, 'message' => 'Data updated'];

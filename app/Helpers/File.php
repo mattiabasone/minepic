@@ -12,7 +12,7 @@ class File {
      * @param string $uuid
      * @return string
      */
-    public static function getFullPath(string $uuid = '') : string {
+    public static function getFullPath(string $uuid = ''): string {
         if ($uuid == '') {
             $uuid = env('DEFAULT_USERNAME');
         }
@@ -25,7 +25,7 @@ class File {
      * @param string $uuid
      * @return bool
      */
-    public static function exists(string $uuid = '') : bool {
+    public static function exists(string $uuid = ''): bool {
         return file_exists(self::getFullPath($uuid));
     }
 
@@ -36,7 +36,7 @@ class File {
      * @param mixed $skinData
      * @return bool
      */
-    public static function saveSkin(string $uuid, $skinData) {
+    public static function saveSkin(string $uuid, $skinData): bool {
         $fp = fopen(self::getFullPath($uuid), 'w');
         if ($fp) {
             fwrite($fp, $skinData);
@@ -53,7 +53,7 @@ class File {
      * @param mixed
      * @return bool
      */
-    public static function copyAsSteve(string $string = '') : bool {
+    public static function copyAsSteve(string $string = ''): bool {
         if ($string != '') {
             return copy(
                 File::getFullPath(env('DEFAULT_USERNAME')),
