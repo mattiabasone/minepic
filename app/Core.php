@@ -641,7 +641,7 @@ class Core
      * @return bool
      */
     public function forceUserUpdate(): bool {
-        if ( (time() - $this->userdata->updated_at) > env('MIN_USERDATA_UPDATE_INTERVAL')) {
+        if ( (time() - $this->userdata->updated_at->timestamp) > env('MIN_USERDATA_UPDATE_INTERVAL')) {
             return $this->updateDbUser();
         }
         return false;
