@@ -40,6 +40,20 @@ class Core
     private $apiUserdata;
 
     /**
+     * User data has been updated?
+     *
+     * @var bool
+     */
+    private $dataUpdated = false;
+
+    /**
+     * Set force update
+     *
+     * @var bool
+     */
+    private $forceUpdate;
+
+    /**
      * Minepic error string
      *
      * @var string
@@ -370,6 +384,7 @@ class Core
      * @return bool
      */
     public function initialize(string $string): bool {
+        $this->dataUpdated = false;
         $this->request = $string;
         $this->normalizeRequest();
 
@@ -380,7 +395,7 @@ class Core
             if ($this->isValidUuid() AND $this->uuidInDb()) {
                 // Check if UUID is in my database
                 // Data cache still valid?
-                if (!$this->checkDbCache()) {
+                if (!$this->checkDbCache() OR $this->forceUpdatePossible()) {
                     // Nope, updating data
                     $this->updateDbUser();
                 } else {
@@ -393,7 +408,7 @@ class Core
                 return true;
             } else if ($this->nameInDb()) {
                 // Check DB datacache
-                if (!$this->checkDbCache()) {
+                if (!$this->checkDbCache() OR $this->forceUpdatePossible()) {
                     // Check UUID (username change/other)
                     if ($this->convertRequestToUuid()) {
                         if ($this->request === $this->userdata->uuid) {
@@ -493,16 +508,26 @@ class Core
                 if ($this->userdata->username != $originalUsername AND $originalUsername != '') {
                     $this->logUsernameChange($originalUsername, $this->userdata->username, $this->userdata->uuid);
                 }
+                $this->dataUpdated = true;
                 return true;
             }
-
             $this->updateUserFailUpdate();
 
             if (!File::exists($this->userdata->uuid)) {
                 File::copyAsSteve($this->userdata->uuid);
             }
         }
+        $this->dataUpdated = false;
         return false;
+    }
+
+    /**
+     * Return if data has been updated
+     *
+     * @return bool
+     */
+    public function userDataUpdated(): bool {
+        return $this->dataUpdated;
     }
 
     /**
@@ -634,17 +659,24 @@ class Core
     }
 
     /**
-     * Update avatar
+     * Set force update
      *
-     * @access public
-     * @param string
+     * @param bool $forceUpdate
+     */
+    public function setForceUpdate(bool $forceUpdate) {
+        $this->forceUpdate = $forceUpdate;
+    }
+
+    /**
+     * Can I exec force update?
+     *
      * @return bool
      */
-    public function forceUserUpdate(): bool {
-        if ( (time() - $this->userdata->updated_at->timestamp) > env('MIN_USERDATA_UPDATE_INTERVAL')) {
-            return $this->updateDbUser();
-        }
-        return false;
+    private function forceUpdatePossible(): bool {
+        return (
+            ($this->forceUpdate) AND
+            ((time() - $this->userdata->updated_at->timestamp) > env('MIN_USERDATA_UPDATE_INTERVAL'))
+        );
     }
 
     /**=================================================================================================================

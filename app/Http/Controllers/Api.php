@@ -140,8 +140,14 @@ class Api extends BaseController
      * @return Response
      */
     public function update(string $uuidOrName): Response {
+        // Force user update
+        $this->minepic->setForceUpdate(true);
+
+        // Check if user exists
         if ($this->minepic->initialize($uuidOrName)) {
-            if ($this->minepic->forceUserUpdate()) {
+
+            // Check if data has been updated
+            if ($this->minepic->userDataUpdated()) {
                 $response = ['ok' => true, 'message' => 'Data updated'];
                 $httpStatus = 200;
             } else {
