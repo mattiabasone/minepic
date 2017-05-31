@@ -74,7 +74,7 @@ class Core
      * @var string
      * @access public
      */
-    private $retry = false;
+    private $retryUnexistentCheck = false;
 
     /**
      * Current image path
@@ -293,31 +293,14 @@ class Core
     }
 
     /**
-     * Insert a failed request
+     * Salva account inesistente
      *
-     * @access public
-     * @param void
-     * @return bool
+     * @return mixed
      */
-    public function saveUnexistentAccount(): bool {
-        $accountStats = new AccountsNotFound();
-        $accountStats->request = $this->request;
-        $accountStats->time = time();
-        return $accountStats->save();
-    }
-
-    /**
-     * Update a failed request
-     *
-     * @access public
-     * @param void
-     * @return void
-     */
-    public function updateUnexistentAccount() {
-        AccountsNotFound::where('request', $this->request)
-            ->update([
-                'time' => time(),
-            ]);
+    public function saveUnexistentAccount() {
+        $notFound = AccountsNotFound::firstOrNew(['request' => $this->request]);
+        $notFound->request = $this->request;
+        return $notFound->save();
     }
 
     /**
@@ -330,10 +313,10 @@ class Core
     public function isUnexistentAccount(): bool {
         $result = AccountsNotFound::find($this->request);
         if ($result != null) {
-            if ((time() - $result->time) > env('CACHE_TIME')) {
-                $this->retry = true;
+            if ((time() - $result->updated_at->timestamp) > env('CACHE_TIME')) {
+                $this->retryUnexistentCheck = true;
             } else {
-                $this->retry = false;
+                $this->retryUnexistentCheck = false;
             }
             $this->accountNotFound = true;
             return true;
@@ -388,11 +371,12 @@ class Core
         $this->request = $string;
         $this->normalizeRequest();
 
-        if (strlen($this->request) <= 32) {
+        if (!empty($this->request) AND strlen($this->request) <= 32) {
 
             // TODO these checks needs optimizations
             // Valid UUID format? Then check if UUID is in my database
             if ($this->isValidUuid() AND $this->uuidInDb()) {
+
                 // Check if UUID is in my database
                 // Data cache still valid?
                 if (!$this->checkDbCache() OR $this->forceUpdatePossible()) {
@@ -433,9 +417,12 @@ class Core
                 return true;
             } else {
                 // Account not found? time to retry to get information from Mojang?
-                if (!$this->isUnexistentAccount() OR $this->retry) {
+                if (!$this->isUnexistentAccount() OR $this->retryUnexistentCheck) {
                     if (!$this->isValidUuid()) {
                         if (!$this->convertRequestToUuid()) {
+
+                            $this->saveUnexistentAccount();
+
                             $this->userdata = null;
                             $this->currentUserSkinImage = File::getFullPath(env('DEFAULT_USERNAME'));
                             $this->error = "Invalid request username";
@@ -452,12 +439,6 @@ class Core
                         return true;
                     }
                 }
-            }
-
-            if (!$this->accountNotFound) {
-                $this->saveUnexistentAccount();
-            } else {
-                $this->updateUnexistentAccount();
             }
         }
 
@@ -511,6 +492,7 @@ class Core
                 $this->dataUpdated = true;
                 return true;
             }
+
             $this->updateUserFailUpdate();
 
             if (!File::exists($this->userdata->uuid)) {
@@ -565,7 +547,7 @@ class Core
         }
     }
 
-    /**=================================================================================================================
+    /*==================================================================================================================
      * =AVATAR
      *================================================================================================================*/
 
@@ -611,7 +593,7 @@ class Core
         return $avatar;
     }
 
-    /**=================================================================================================================
+    /*==================================================================================================================
      * =SKIN
      *================================================================================================================*/
 
@@ -679,7 +661,7 @@ class Core
         );
     }
 
-    /**=================================================================================================================
+    /*==================================================================================================================
      * =STATS
      *================================================================================================================*/
 

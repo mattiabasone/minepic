@@ -27,7 +27,7 @@ class AccountsNotFound extends Model
     protected $primaryKey = 'request';
 
     /**
-     * No primary key
+     * No primary key autoincrement
      *
      * @var bool
      */
@@ -36,5 +36,10 @@ class AccountsNotFound extends Model
     /**
      * @var bool
      */
-    public $timestamps = false;
+    public $timestamps = true;
+
+    /**
+     * @var array
+     */
+    protected $fillable = ['request'];
 }
