@@ -6,6 +6,11 @@ use App\Core as MinepicCore;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
+/**
+ * Class Api
+ *
+ * @package App\Http\Controllers
+ */
 class Api extends BaseController
 {
     /**
@@ -56,6 +61,43 @@ class Api extends BaseController
      */
     public function avatarWithSize($size = 0, $uuidOrName = ''): Response {
         return $this->serveAvatar($uuidOrName, $size);
+    }
+
+    /**
+     * Serve isometric avatar
+     *
+     * @param string $uuidOrName
+     * @param int $size
+     * @return Response
+     */
+    public function serveIsometricAvatar($uuidOrName = '', $size = 0): Response {
+        $size = (int) $size;
+
+        $this->minepic->initialize($uuidOrName);
+        $headers = $this->minepic->generateHttpCacheHeaders($size, 'avatar-isometric');
+        $this->minepic->updateStats();
+
+        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+            $avatarImage = '';
+            $httpCode = 304;
+        } else {
+            $avatarImage = $this->minepic->isometricAvatarCurrentUser($size);
+            $httpCode = 200;
+            $headers['Content-Type'] = 'image/png';
+        }
+
+        return Response::create($avatarImage, $httpCode, $headers);
+    }
+
+    /**
+     * Isometric Avatar with Size
+     *
+     * @param int $size
+     * @param string $uuidOrName
+     * @return Response
+     */
+    public function isometricAvatarWithSize($size = 0, $uuidOrName = ''): Response {
+        return $this->serveIsometricAvatar($uuidOrName, $size);
     }
 
     /**
@@ -130,6 +172,7 @@ class Api extends BaseController
         $this->minepic->initialize($uuidOrName);
         $avatarImage = $this->minepic->skinCurrentUser();
         $avatarImage->prepareTextureDownload();
+
         return Response::create($avatarImage, 200, $headers);
     }
 
@@ -151,13 +194,24 @@ class Api extends BaseController
                 $response = ['ok' => true, 'message' => 'Data updated'];
                 $httpStatus = 200;
             } else {
-                $response = ['ok' => false, 'message' => 'Cannot update user information, try again later'];
+
+                $userdata = $this->minepic->getUserdata();
+                $dateString = $userdata->updated_at->toW3cString();
+
+                $response = [
+                    'ok'            => false,
+                    'message'       => 'Cannot update user, userdata has been updated recently',
+                    'last_update'   => $dateString
+                ];
+
                 $httpStatus = 403;
             }
         } else {
             $response = ['ok' => false, 'message' => 'User not found'];
             $httpStatus = 404;
         }
+
         return Response::create($response, $httpStatus, ['Content-Type' =>'application-json']);
     }
+
 }

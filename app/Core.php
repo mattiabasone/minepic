@@ -6,9 +6,13 @@ use App\Database\Accounts;
 use App\Database\AccountsNameChange;
 use App\Database\AccountsNotFound;
 use App\Database\AccountsStats;
-use App\Helpers\File;
-use App\Image\Avatar;
-use App\Image\Skin;
+
+use App\Helpers\Storage\Files\SkinsStorage;
+
+use App\Image\Sections\Avatar;
+use App\Image\Sections\Skin;
+use App\Image\IsometricAvatar;
+
 use App\Minecraft\MojangAccount;
 use App\Minecraft\MojangClient;
 
@@ -160,7 +164,7 @@ class Core
      * @return bool
      */
     private function checkDbCache(): bool {
-        if ( (time() - $this->userdata->updated_at->timestamp) < env('CACHE_TIME')) {
+        if ( (time() - $this->userdata->updated_at->timestamp) < env('USERDATA_CACHE_TIME')) {
             return true;
         }
         return false;
@@ -189,10 +193,10 @@ class Core
 
         if (count($result) > 0) {
             $this->userdata = $result[0];
-            $this->currentUserSkinImage = File::getFullPath($this->userdata->uuid);
+            $this->currentUserSkinImage = SkinsStorage::getPath($this->userdata->uuid);
             return true;
         }
-        $this->currentUserSkinImage = File::getFullPath(env('DEFAULT_USERNAME'));
+        $this->currentUserSkinImage = SkinsStorage::getPath(env('DEFAULT_USERNAME'));
         return false;
     }
 
@@ -215,6 +219,7 @@ class Core
 
     /**
      * Check if an UUID is in the database
+     *
      * @param bool $uuid
      * @return bool
      */
@@ -257,7 +262,7 @@ class Core
             $this->userdata->save();
 
             $this->saveRemoteSkin();
-            $this->currentUserSkinImage = File::getFullPath($this->apiUserdata->uuid);
+            $this->currentUserSkinImage = SkinsStorage::getPath($this->apiUserdata->uuid);
 
             $accountStats = new AccountsStats();
             $accountStats->uuid = $this->userdata->uuid;
@@ -313,7 +318,7 @@ class Core
     public function isUnexistentAccount(): bool {
         $result = AccountsNotFound::find($this->request);
         if ($result != null) {
-            if ((time() - $result->updated_at->timestamp) > env('CACHE_TIME')) {
+            if ((time() - $result->updated_at->timestamp) > env('USERDATA_CACHE_TIME')) {
                 $this->retryUnexistentCheck = true;
             } else {
                 $this->retryUnexistentCheck = false;
@@ -327,6 +332,7 @@ class Core
 
     /**
      * Delete current request from failed cache
+     *
      * @return bool
      */
     public function removeFailedRequest(): bool {
@@ -344,9 +350,9 @@ class Core
     public function generateHttpCacheHeaders($size, $type = 'avatar'): array {
         if (isset($this->userdata->uuid) AND $this->userdata->uuid != '') {
             return [
-                'Cache-Control' => 'private, max-age=' . env('CACHE_TIME'),
+                'Cache-Control' => 'private, max-age=' . env('USERDATA_CACHE_TIME'),
                 'Last-Modified' => gmdate('D, d M Y H:i:s \G\M\T', $this->userdata->updated_at->timestamp),
-                'Expires' => gmdate('D, d M Y H:i:s \G\M\T', $this->userdata->updated_at->timestamp + env('CACHE_TIME')),
+                'Expires' => gmdate('D, d M Y H:i:s \G\M\T', $this->userdata->updated_at->timestamp + env('USERDATA_CACHE_TIME')),
                 'ETag' => md5($type . $this->userdata->updated_at->timestamp . $this->userdata->uuid . $this->userdata->username . $size),
             ];
         } else {
@@ -384,13 +390,14 @@ class Core
                     $this->updateDbUser();
                 } else {
                     // Check if local image exists
-                    if (!File::exists($this->request)) {
+                    if (!SkinsStorage::exists($this->request)) {
                         $this->saveRemoteSkin();
                     }
                 }
 
                 return true;
             } else if ($this->nameInDb()) {
+
                 // Check DB datacache
                 if (!$this->checkDbCache() OR $this->forceUpdatePossible()) {
                     // Check UUID (username change/other)
@@ -406,15 +413,16 @@ class Core
                     } else {
                         $this->request = $this->userdata->uuid;
                         $this->updateUserFailUpdate();
-                        File::copyAsSteve($this->request);
+                        SkinsStorage::copyAsSteve($this->request);
                     }
                 } else {
                     // Check if local image exists
-                    if (!File::exists($this->request)) {
-                        File::copyAsSteve($this->request);
+                    if (!SkinsStorage::exists($this->request)) {
+                        SkinsStorage::copyAsSteve($this->request);
                     }
                 }
                 return true;
+
             } else {
                 // Account not found? time to retry to get information from Mojang?
                 if (!$this->isUnexistentAccount() OR $this->retryUnexistentCheck) {
@@ -424,26 +432,38 @@ class Core
                             $this->saveUnexistentAccount();
 
                             $this->userdata = null;
-                            $this->currentUserSkinImage = File::getFullPath(env('DEFAULT_USERNAME'));
+                            $this->currentUserSkinImage = SkinsStorage::getPath(env('DEFAULT_USERNAME'));
                             $this->error = "Invalid request username";
                             $this->request = "";
                             return false;
+
                         }
                     }
 
-                    // I'll try to insert the new user
-                    if ($this->insertNewUuid()) {
-                        if ($this->accountNotFound) {
-                            $this->removeFailedRequest();
-                        }
+                    // Check if the uuid is already in the database, maybe the user has changed username and the check
+                    // nameInDb() has failed
+                    if ($this->uuidInDb()) {
+
+                        $this->updateDbUser();
                         return true;
+
+                    } else {
+
+                        // I'll try to insert the new user
+                        if ($this->insertNewUuid()) {
+                            if ($this->accountNotFound) {
+                                $this->removeFailedRequest();
+                            }
+                            return true;
+                        }
+
                     }
                 }
             }
         }
 
         $this->userdata = null;
-        $this->currentUserSkinImage = File::getFullPath(env('DEFAULT_USERNAME'));
+        $this->currentUserSkinImage = SkinsStorage::getPath(env('DEFAULT_USERNAME'));
         $this->error = "Account not found";
         $this->request = "";
         return false;
@@ -495,8 +515,8 @@ class Core
 
             $this->updateUserFailUpdate();
 
-            if (!File::exists($this->userdata->uuid)) {
-                File::copyAsSteve($this->userdata->uuid);
+            if (!SkinsStorage::exists($this->userdata->uuid)) {
+                SkinsStorage::copyAsSteve($this->userdata->uuid);
             }
         }
         $this->dataUpdated = false;
@@ -576,7 +596,7 @@ class Core
         $all_skin = scandir(storage_path(env('SKINS_FOLDER')));
         $rand = rand(2, count($all_skin));
 
-        $avatar = new Avatar(File::getFullPath($all_skin[$rand]));
+        $avatar = new Avatar(SkinsStorage::getPath($all_skin[$rand]));
         $avatar->renderAvatar($size);
         return $avatar;
     }
@@ -588,9 +608,47 @@ class Core
      * @return Avatar (rendered)
      */
     public function defaultAvatar(int $size = 0): Avatar {
-        $avatar = new Avatar(File::getFullPath(env('DEFAULT_USERNAME')));
+        $avatar = new Avatar(SkinsStorage::getPath(env('DEFAULT_USERNAME')));
         $avatar->renderAvatar($size);
         return $avatar;
+    }
+
+    /*==================================================================================================================
+     * =ISOMETRIC_AVATAR
+     *================================================================================================================*/
+
+    /**
+     * Default Avatar Isometric
+     *
+     * @param int $size
+     * @return IsometricAvatar
+     */
+    public function isometricAvatarCurrentUser(int $size = 0): IsometricAvatar {
+
+        $isometricAvatar = new IsometricAvatar(
+            $this->userdata->uuid,
+            $this->userdata->updated_at->timestamp
+        );
+        $isometricAvatar->render($size);
+
+        return $isometricAvatar;
+    }
+
+    /**
+     * Default Avatar (Isometric)
+     *
+     * @param int $size
+     * @return IsometricAvatar (rendered)
+     */
+    public function defaultIsometricAvatar(int $size = 0): IsometricAvatar {
+        $isometricAvatar = new IsometricAvatar(
+            env("DEFAULT_UUID"),
+            0
+        );
+        $isometricAvatar->checkCacheStatus(false);
+        $isometricAvatar->render($size);
+
+        return $isometricAvatar;
     }
 
     /*==================================================================================================================
@@ -609,12 +667,12 @@ class Core
             $mojangClient = new MojangClient();
             try {
                 $skinData = $mojangClient->getSkin($this->userdata->skin);
-                return File::saveSkin($this->userdata->uuid, $skinData);
+                return SkinsStorage::save($this->userdata->uuid, $skinData);
             } catch (\Exception $e) {
                 $this->error = $e->getMessage();
             }
         }
-        return File::copyAsSteve($this->userdata->uuid);
+        return SkinsStorage::copyAsSteve($this->userdata->uuid);
     }
 
     /**

@@ -2,7 +2,7 @@
 namespace App\Console\Commands;
 
 use App\Database\Accounts;
-use App\Helpers\File;
+use App\Helpers\Storage\Files\SkinsStorage;
 use App\Minecraft\MojangClient;
 use Illuminate\Console\Command;
 
@@ -64,10 +64,10 @@ class CheckUuid extends Command {
 
                         try {
                             $skinData = $mojangClient->getSkin($account->uuid);
-                            File::saveSkin($account->uuid, $skinData);
+                            SkinsStorage::save($account->uuid, $skinData);
                             $this->info("    Skin png updated   ");
                         } catch (\Exception $e) {
-                            File::copyAsSteve($account->uuid);
+                            SkinsStorage::copyAsSteve($account->uuid);
                             $this->error("    Using Steve as skin    ");
                             $this->error("    ".$e->getMessage());
                         }

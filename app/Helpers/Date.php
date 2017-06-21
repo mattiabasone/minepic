@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 /**
- * Class DateHelper
+ * Class Date
  */
 class Date {
 

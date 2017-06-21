@@ -1,10 +1,18 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Helpers\Storage;
+
 /**
- * Class DateHelper
+ * Class Storage
  */
-class File {
+class Storage {
+
+    /**
+     * Storage folder type
+     *
+     * @var string
+     */
+    protected static $folder;
 
     /**
      * Skin Path
@@ -12,11 +20,11 @@ class File {
      * @param string $uuid
      * @return string
      */
-    public static function getFullPath(string $uuid = ''): string {
+    public static function getPath(string $uuid = ''): string {
         if ($uuid == '') {
             $uuid = env('DEFAULT_USERNAME');
         }
-        return sprintf(storage_path(env('SKINS_FOLDER').'/%s.png'), $uuid);
+        return sprintf(storage_path(static::$folder.'/%s.png'), $uuid);
     }
 
     /**
@@ -26,20 +34,20 @@ class File {
      * @return bool
      */
     public static function exists(string $uuid = ''): bool {
-        return file_exists(self::getFullPath($uuid));
+        return file_exists(static::getPath($uuid));
     }
 
     /**
      * Save the skin to file
      *
      * @param string $uuid
-     * @param mixed $skinData
+     * @param mixed $rawData
      * @return bool
      */
-    public static function saveSkin(string $uuid, $skinData): bool {
-        $fp = fopen(self::getFullPath($uuid), 'w');
+    public static function save(string $uuid, $rawData): bool {
+        $fp = fopen(static::getPath($uuid), 'w');
         if ($fp) {
-            fwrite($fp, $skinData);
+            fwrite($fp, $rawData);
             fclose($fp);
             return true;
         }
@@ -47,7 +55,7 @@ class File {
     }
 
     /**
-     * Use steve skin for given username
+     * Use Steve file for given uuid
      *
      * @access public
      * @param mixed
@@ -56,8 +64,8 @@ class File {
     public static function copyAsSteve(string $string = ''): bool {
         if ($string != '') {
             return copy(
-                File::getFullPath(env('DEFAULT_USERNAME')),
-                File::getFullPath($string)
+                static::getPath(env('DEFAULT_USERNAME')),
+                static::getPath($string)
             );
         }
         return false;

@@ -45,39 +45,39 @@
 <div class="main-cont container core">
     <div id="box">
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="block">
                     <h3>Usage</h3>
                     This is the simply way to get an avatar
 <pre>
-&lt;img src="<?php echo url(); ?>/avatar/<span class="pre-api-param">{username}</span>" />
-&lt;img src="<?php echo url(); ?>/avatar/<span class="pre-api-param">{uuid}</span>" />
+&lt;img src="<?php echo url(); ?>/avatar/<span class="pre-api-param">{uuid|username}</span>" />
 </pre>
                     Bigger is better
 <pre>
-&lt;img src="<?php echo url(); ?>/avatar/<span class="pre-api-param">512</span>/<span class="pre-api-param">{username}</span>" />
-&lt;img src="<?php echo url(); ?>/avatar/<span class="pre-api-param">512</span>/<span class="pre-api-param">{uuid}</span>" />
+&lt;img src="<?php echo url(); ?>/avatar/<span class="pre-api-param">512</span>/<span class="pre-api-param">{uuid|username}</span>" />
+</pre>
+
+                    <b style="color: red;">NEW!</b> Isometric head
+<pre>
+&lt;img src="<?php echo url(); ?>/head/<span class="pre-api-param">{uuid|username}</span>" />
+&lt;img src="<?php echo url(); ?>/head/<span class="pre-api-param">256</span>/<span class="pre-api-param">{uuid|username}</span>" />
 </pre>
                     If you need 2D skin
 <pre>
-&lt;img src="<?php echo url(); ?>/skin/<span class="pre-api-param">{username}</span>" />
-&lt;img src="<?php echo url(); ?>/skin/<span class="pre-api-param">{uuid}</span>" />
-&lt;img src="<?php echo url(); ?>/skin/<span class="pre-api-param">{size}</span>/<span class="pre-api-param">{username}</span>" />
-&lt;img src="<?php echo url(); ?>/skin/<span class="pre-api-param">{size}</span>/<span class="pre-api-param">{uuid}</span>" />
+&lt;img src="<?php echo url(); ?>/skin/<span class="pre-api-param">{uuid|username}</span>" />
+&lt;img src="<?php echo url(); ?>/skin/<span class="pre-api-param">{size}</span>/<span class="pre-api-param">{uuid|username}</span>" />
 </pre>
+                    2D back skin
 <pre>
-&lt;img src="<?php echo url(); ?>/skin-back/<span class="pre-api-param">{username}</span>" />
-&lt;img src="<?php echo url(); ?>/skin-back/<span class="pre-api-param">{uuid}</span>" />
+&lt;img src="<?php echo url(); ?>/skin-back/<span class="pre-api-param">{uuid|username}</span>" />
 </pre>
                     Can I force update of my avatar/skin on MinePic? Sure!
 <pre>
-<?php echo url(); ?>/update/<span class="pre-api-param">{username}</span>
-<?php echo url(); ?>/update/<span class="pre-api-param">{uuid}</span>
+<?php echo url(); ?>/update/<span class="pre-api-param">{uuid|username}</span>
 </pre>
                     Download the full skin image
 <pre>
-<?php echo url(); ?>/download/<span class="pre-api-param">{username}</span>
-<?php echo url(); ?>/download/<span class="pre-api-param">{uuid}</span>
+<?php echo url(); ?>/download/<span class="pre-api-param">{uuid|username}</span>
 </pre>
                 </div>
             </div>
@@ -107,7 +107,7 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="block">
 
                     <div class="block" style="word-break: break-all;">
@@ -131,8 +131,6 @@
                         <a target="_blank" href="https://www.minecraft-italia.it">Minecraft ITALIA</a><br />
                         <a target="_blank" href="http://minecraftevi.com/">Minecraft Evi - Turkish Minecraft community</a><br />
                         <a target="_blank" href="http://arenacraft.it">Arenacraft.it - Minecraft Server</a><br />
-                        <a target="_blank" href="http://www.sphx.it/forum">SpHx Community</a><br />
-                        <a target="_blank" href="http://ghostwar.net/">GhostWar Community</a><br />
                         <br />Are you using MinePic? <a href="mailto:info@minepic.org">Tell us!</a>
                     </div>
                     <div class="block" style="margin-top: 20px;">

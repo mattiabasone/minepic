@@ -1,53 +1,23 @@
 <?php
 
-namespace App\Image;
+namespace App\Image\Sections;
+
+use App\Image\ImageSection;
 
 /**
  * Class Skin
+ *
  * @package App\Image
  */
-class Skin {
-
-    /**
-     * Skin Path
-     *
-     * @var string
-     */
-    private $skinPath = '';
-
-    /**
-     * Resource with the image
-     *
-     * @var resource
-     */
-    private $imgResource;
-
-    /**
-     * Skin constructor.
-     * @param string $skinPath
-     */
-    public function __construct(string $skinPath) {
-        $this->skinPath = $skinPath;
-    }
-
-    /**
-     * From resource to string
-     *
-     * @return string
-     */
-    public function __toString() : string {
-        ob_start();
-        imagepng($this->imgResource);
-        $imgToString = ob_get_contents();
-        ob_end_clean();
-        return $imgToString;
-    }
+class Skin extends ImageSection {
 
     /**
      * Create a PNG with raw texture
      */
     public function prepareTextureDownload() {
         $this->imgResource = imagecreatefrompng($this->skinPath);
+        imagealphablending($this->imgResource, true);
+        imagesavealpha($this->imgResource, true);
     }
 
     /**
@@ -132,15 +102,6 @@ class Skin {
         imagealphablending($this->imgResource, true);
         imagesavealpha($this->imgResource, true);
         return;
-    }
-
-    /**
-     * Destructor
-     */
-    public function __destruct() {
-        if ($this->imgResource) {
-            imagedestroy($this->imgResource);
-        }
     }
 
 }

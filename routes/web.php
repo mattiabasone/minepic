@@ -28,6 +28,10 @@ $app->group(['prefix' => 'json'], function () use ($app) {
 $app->get('/avatar/{uuidOrName}', 'Api@serveAvatar');
 $app->get('/avatar/{size}/{uuidOrName}', 'Api@avatarWithSize');
 
+// Avatar (Isometric)
+$app->get('/head/{uuidOrName}', 'Api@serveIsometricAvatar');
+$app->get('/head/{size}/{uuidOrName}', 'Api@isometricAvatarWithSize');
+
 // Skin
 $app->get('/skin/{uuidOrName}', 'Api@serveSkin');
 $app->get('/skin/{size}/{uuidOrName}', 'Api@skinFrontWithSize');
