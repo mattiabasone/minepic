@@ -12,35 +12,35 @@
 */
 
 // HTML
-$app->get('/', 'Website@index');
-$app->get('/user/{uuidOrName}', 'Website@user');
+$router->get('/', 'Website@index');
+$router->get('/user/{uuidOrName}', 'Website@user');
 
 // JSON
-$app->group(['prefix' => 'json'], function () use ($app) {
-    $app->get('user/{uuidOrName}', 'Json@user');
+$router->group(['prefix' => 'json'], function () use ($router) {
+    $router->get('user/{uuidOrName}', 'Json@user');
 
-    $app->get('uuid/{uuid}', 'Json@uuidToUsername');
+    $router->get('uuid/{uuid}', 'Json@uuidToUsername');
 
-    $app->get('typeahead/{username}', 'Json@userTypeahead');
+    $router->get('typeahead/{username}', 'Json@userTypeahead');
 });
 
 // Avatar
-$app->get('/avatar/{uuidOrName}', 'Api@serveAvatar');
-$app->get('/avatar/{size}/{uuidOrName}', 'Api@avatarWithSize');
+$router->get('/avatar/{uuidOrName}', 'Api@serveAvatar');
+$router->get('/avatar/{size}/{uuidOrName}', 'Api@avatarWithSize');
 
 // Avatar (Isometric)
-$app->get('/head/{uuidOrName}', 'Api@serveIsometricAvatar');
-$app->get('/head/{size}/{uuidOrName}', 'Api@isometricAvatarWithSize');
+$router->get('/head/{uuidOrName}', 'Api@serveIsometricAvatar');
+$router->get('/head/{size}/{uuidOrName}', 'Api@isometricAvatarWithSize');
 
 // Skin
-$app->get('/skin/{uuidOrName}', 'Api@serveSkin');
-$app->get('/skin/{size}/{uuidOrName}', 'Api@skinFrontWithSize');
+$router->get('/skin/{uuidOrName}', 'Api@serveSkin');
+$router->get('/skin/{size}/{uuidOrName}', 'Api@skinFrontWithSize');
 
-$app->get('/skin-back/{uuidOrName}', 'Api@skinBackWithoutSize');
-$app->get('/skin-back/{size}/{uuidOrName}', 'Api@skinBackWithSize');
+$router->get('/skin-back/{uuidOrName}', 'Api@skinBackWithoutSize');
+$router->get('/skin-back/{size}/{uuidOrName}', 'Api@skinBackWithSize');
 
 // Download
-$app->get('/download/{uuidOrName}', 'Api@downloadTexture');
+$router->get('/download/{uuidOrName}', 'Api@downloadTexture');
 
 // Update
-$app->get('/update/{uuidOrName}', 'Api@update');
+$router->get('/update/{uuidOrName}', 'Api@update');

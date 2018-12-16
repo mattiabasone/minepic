@@ -5,14 +5,14 @@
     "license": "BSD-3-Clause",
     "type": "project",
     "require": {
-        "php": ">=7.0",
-        "laravel/lumen-framework": "5.4.*",
+        "php": ">=7.1",
+        "laravel/lumen-framework": "5.7.*",
         "vlucas/phpdotenv": "^2.4",
         "guzzlehttp/guzzle": "^6.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
-        "phpunit/phpunit": "~5.0",
+        "phpunit/phpunit": "^7.0",
         "mockery/mockery": "~0.9"
     },
     "autoload": {

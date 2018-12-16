@@ -214,7 +214,7 @@ class MojangClient {
     /**
      * Get Skin
      *
-     * @param $skin
+     * @param string $skin
      * @throws \Exception
      */
     public function getSkin(string $skin) {

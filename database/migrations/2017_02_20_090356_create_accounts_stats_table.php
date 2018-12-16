@@ -18,10 +18,10 @@ class CreateAccountsStatsTable extends Migration
     {
         Schema::create('accounts_stats', function (Blueprint $table) {
             $table->string('uuid', 32);
-            $table->integer('count_request')->unsigned()->default(0);
-            $table->integer('count_search')->unsigned()->default(0);
-            $table->timestamp('time_request');
-            $table->timestamp('time_search');
+            $table->unsignedInteger('count_request')->default(0);
+            $table->unsignedInteger('count_search')->default(0);
+            $table->unsignedInteger('time_request');
+            $table->unsignedInteger('time_search');
 
             // Index
             $table->primary('uuid');

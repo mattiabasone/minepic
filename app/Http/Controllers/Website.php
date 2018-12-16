@@ -12,7 +12,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Website extends BaseController
 {
-
     /**
      * Default title
      *
@@ -52,7 +51,10 @@ class Website extends BaseController
      * @return Response
      */
     private static function renderPage(
-        string $page = '', array $bodyData = [], array $headerData = []) : Response {
+        string $page = '',
+        array $bodyData = [],
+        array $headerData = []
+    ): Response {
         $realHeaderData = [];
         $realHeaderData['title'] = (
             isset($headerData['title']) ? $headerData['title'] : self::$pageTitle
@@ -109,7 +111,9 @@ class Website extends BaseController
                     'minecraft skin, avatar, minecraft avatar, generator, skin generator, skin viewer'
             ];
 
-
+            echo '<pre>';
+            dd($userstats->time_request);
+            echo '</pre>';
             $bodyData = [
                 'user' => [
                     'uuid'          => $userdata->uuid,
@@ -126,5 +130,4 @@ class Website extends BaseController
             throw new NotFoundHttpException();
         }
     }
-
 }
