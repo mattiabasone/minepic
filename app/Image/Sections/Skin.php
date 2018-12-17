@@ -9,12 +9,13 @@ use App\Image\ImageSection;
  *
  * @package App\Image
  */
-class Skin extends ImageSection {
-
+class Skin extends ImageSection
+{
     /**
      * Create a PNG with raw texture
      */
-    public function prepareTextureDownload() {
+    public function prepareTextureDownload()
+    {
         $this->imgResource = imagecreatefrompng($this->skinPath);
         imagealphablending($this->imgResource, true);
         imagesavealpha($this->imgResource, true);
@@ -26,13 +27,15 @@ class Skin extends ImageSection {
      * @access public
      * @param int
      * @param string
+     * @throws \Throwable
      */
-    public function renderSkin($skin_height = 256, $type = 'F') {
+    public function renderSkin($skin_height = 256, $type = 'F')
+    {
         if ($type != 'B') {
             $type = 'F';
         }
         $skin_height = (int) $skin_height;
-        if ($skin_height == 0 OR $skin_height < 0 OR $skin_height > env('MAX_SKINS_SIZE')) {
+        if ($skin_height == 0 || $skin_height < 0 || $skin_height > env('MAX_SKINS_SIZE')) {
             $skin_height = env('DEFAULT_SKIN_SIZE');
         }
 
@@ -81,27 +84,12 @@ class Skin extends ImageSection {
         for ($x = 0; $x < 4; $x++) {
             imagecopy($l_arm, $r_arm, $x, 0, 4 - $x - 1, 0, 1, 12);
         }
-        imagecopyresized($this->imgResource, $l_arm, 12*$scale,  8*$scale,  0,  0,  4*$scale,  12*$scale, 4,  12);
+        imagecopyresized($this->imgResource, $l_arm, 12*$scale, 8*$scale, 0, 0, 4*$scale, 12*$scale, 4, 12);
         // Left leg (right flipped)
         $l_leg = imagecreatetruecolor(4, 20);
         for ($x = 0; $x < 4; $x++) {
             imagecopy($l_leg, $r_leg, $x, 0, 4 - $x - 1, 0, 1, 20);
         }
-        imagecopyresized($this->imgResource, $l_leg, 8*$scale, 20*$scale,  0,  0,  4*$scale,  12*$scale, 4,  12);
-        return;
+        imagecopyresized($this->imgResource, $l_leg, 8 * $scale, 20 * $scale, 0, 0, 4 * $scale, 12 * $scale, 4, 12);
     }
-
-    /**
-     * Provide real skin
-     *
-     * @access public
-     * @param string
-     */
-    public function rawTextureImage() {
-        $this->imgResource = imagecreatefrompng($this->skinPath);
-        imagealphablending($this->imgResource, true);
-        imagesavealpha($this->imgResource, true);
-        return;
-    }
-
 }

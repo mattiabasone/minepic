@@ -128,7 +128,7 @@ class Core
      */
     public function isValidUuid(): bool {
         $uuid = strtolower($this->request);
-        if ( preg_match('#[a-f0-9]{32}#', $uuid) == 1 AND strlen($uuid) == 32) {
+        if ( preg_match('#[a-f0-9]{32}#', $uuid) == 1 && strlen($uuid) == 32) {
             return true;
         }
         return false;
@@ -284,7 +284,7 @@ class Core
      * @return bool
      */
     private function convertRequestToUuid(): bool {
-        if ($this->isValidUsername($this->request) OR $this->isValidEmail($this->request)) {
+        if ($this->isValidUsername($this->request) || $this->isValidEmail($this->request)) {
             $MojangClient = new MojangClient();
             try {
                 $account = $MojangClient->sendUsernameInfoRequest($this->request);
@@ -347,8 +347,9 @@ class Core
      * @param string $type
      * @return array
      */
-    public function generateHttpCacheHeaders($size, $type = 'avatar'): array {
-        if (isset($this->userdata->uuid) AND $this->userdata->uuid != '') {
+    public function generateHttpCacheHeaders($size, $type = 'avatar'): array
+    {
+        if (isset($this->userdata->uuid) && $this->userdata->uuid != '') {
             return [
                 'Cache-Control' => 'private, max-age=' . env('USERDATA_CACHE_TIME'),
                 'Last-Modified' => gmdate('D, d M Y H:i:s \G\M\T', $this->userdata->updated_at->timestamp),
@@ -372,20 +373,20 @@ class Core
      * @param string
      * @return bool
      */
-    public function initialize(string $string): bool {
+    public function initialize(string $string): bool
+    {
         $this->dataUpdated = false;
         $this->request = $string;
         $this->normalizeRequest();
 
-        if (!empty($this->request) AND strlen($this->request) <= 32) {
-
+        if (!empty($this->request) && strlen($this->request) <= 32) {
             // TODO these checks needs optimizations
             // Valid UUID format? Then check if UUID is in my database
-            if ($this->isValidUuid() AND $this->uuidInDb()) {
+            if ($this->isValidUuid() && $this->uuidInDb()) {
 
                 // Check if UUID is in my database
                 // Data cache still valid?
-                if (!$this->checkDbCache() OR $this->forceUpdatePossible()) {
+                if (!$this->checkDbCache() || $this->forceUpdatePossible()) {
                     // Nope, updating data
                     $this->updateDbUser();
                 } else {
@@ -397,9 +398,8 @@ class Core
 
                 return true;
             } else if ($this->nameInDb()) {
-
                 // Check DB datacache
-                if (!$this->checkDbCache() OR $this->forceUpdatePossible()) {
+                if (!$this->checkDbCache() || $this->forceUpdatePossible()) {
                     // Check UUID (username change/other)
                     if ($this->convertRequestToUuid()) {
                         if ($this->request === $this->userdata->uuid) {
@@ -422,33 +422,24 @@ class Core
                     }
                 }
                 return true;
-
             } else {
                 // Account not found? time to retry to get information from Mojang?
-                if (!$this->isUnexistentAccount() OR $this->retryUnexistentCheck) {
-                    if (!$this->isValidUuid()) {
-                        if (!$this->convertRequestToUuid()) {
-
-                            $this->saveUnexistentAccount();
-
-                            $this->userdata = null;
-                            $this->currentUserSkinImage = SkinsStorage::getPath(env('DEFAULT_USERNAME'));
-                            $this->error = "Invalid request username";
-                            $this->request = "";
-                            return false;
-
-                        }
+                if (!$this->isUnexistentAccount() || $this->retryUnexistentCheck) {
+                    if (!$this->isValidUuid() && !$this->convertRequestToUuid()) {
+                        $this->saveUnexistentAccount();
+                        $this->userdata = null;
+                        $this->currentUserSkinImage = SkinsStorage::getPath(env('DEFAULT_USERNAME'));
+                        $this->error = "Invalid request username";
+                        $this->request = "";
+                        return false;
                     }
 
                     // Check if the uuid is already in the database, maybe the user has changed username and the check
                     // nameInDb() has failed
                     if ($this->uuidInDb()) {
-
                         $this->updateDbUser();
                         return true;
-
                     } else {
-
                         // I'll try to insert the new user
                         if ($this->insertNewUuid()) {
                             if ($this->accountNotFound) {
@@ -456,7 +447,6 @@ class Core
                             }
                             return true;
                         }
-
                     }
                 }
             }
@@ -474,7 +464,8 @@ class Core
      *
      * @return bool
      */
-    private function updateUserFailUpdate(): bool {
+    private function updateUserFailUpdate(): bool
+    {
         if (isset($this->userdata->uuid)) {
             $this->userdata->fail_count++;
             return $this->userdata->save();
@@ -487,12 +478,11 @@ class Core
      *
      * @return bool
      */
-    private function updateDbUser(): bool {
-
-        if (isset($this->userdata->username) AND $this->userdata->uuid != '') {
+    private function updateDbUser(): bool
+    {
+        if (isset($this->userdata->username) && $this->userdata->uuid != '') {
             // Get data from API
             if ($this->getFullUserdataApi()) {
-
                 $originalUsername = $this->userdata->username;
 
                 // Update database
@@ -506,7 +496,7 @@ class Core
                 $this->saveRemoteSkin();
 
                 // Log username change
-                if ($this->userdata->username != $originalUsername AND $originalUsername != '') {
+                if ($this->userdata->username != $originalUsername && $originalUsername != '') {
                     $this->logUsernameChange($originalUsername, $this->userdata->username, $this->userdata->uuid);
                 }
                 $this->dataUpdated = true;
@@ -662,8 +652,9 @@ class Core
      * @param mixed
      * @return bool
      */
-    public function saveRemoteSkin(): bool {
-        if (isset($this->userdata->skin) AND strlen($this->userdata->skin) > 0) {
+    public function saveRemoteSkin(): bool
+    {
+        if (isset($this->userdata->skin) && strlen($this->userdata->skin) > 0) {
             $mojangClient = new MojangClient();
             try {
                 $skinData = $mojangClient->getSkin($this->userdata->skin);
@@ -683,7 +674,8 @@ class Core
      * @param string
      * @return Skin
      */
-    public function renderSkinCurrentUser(int $size = 0, string $type = 'F'): Skin {
+    public function renderSkinCurrentUser(int $size = 0, string $type = 'F'): Skin
+    {
         $skin = new Skin($this->currentUserSkinImage);
         $skin->renderSkin($size, $type);
         return $skin;
@@ -694,7 +686,8 @@ class Core
      *
      * @return Skin
      */
-    public function skinCurrentUser(): Skin {
+    public function skinCurrentUser(): Skin
+    {
         return new Skin($this->currentUserSkinImage);
     }
 
@@ -703,7 +696,8 @@ class Core
      *
      * @param bool $forceUpdate
      */
-    public function setForceUpdate(bool $forceUpdate) {
+    public function setForceUpdate(bool $forceUpdate)
+    {
         $this->forceUpdate = $forceUpdate;
     }
 
@@ -712,9 +706,10 @@ class Core
      *
      * @return bool
      */
-    private function forceUpdatePossible(): bool {
+    private function forceUpdatePossible(): bool
+    {
         return (
-            ($this->forceUpdate) AND
+            ($this->forceUpdate) &&
             ((time() - $this->userdata->updated_at->timestamp) > env('MIN_USERDATA_UPDATE_INTERVAL'))
         );
     }
@@ -728,11 +723,11 @@ class Core
      *
      * @access public
      * @param string
-     * @return bool
      */
-    public function updateStats($type = 'request') {
+    public function updateStats($type = 'request')
+    {
         if (env('STATS_ENABLED') === true) {
-            if (isset($this->userdata->uuid) AND $this->userdata->uuid !== env('DEFAULT_UUID')) {
+            if (isset($this->userdata->uuid) && $this->userdata->uuid !== env('DEFAULT_UUID')) {
                 $AccStats = new AccountsStats();
                 if ($type == 'request') {
                     $AccStats->incrementRequestStats($this->userdata->uuid);
@@ -742,5 +737,4 @@ class Core
             }
         }
     }
-
 }

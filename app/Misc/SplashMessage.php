@@ -1,12 +1,13 @@
 <?php
+
 namespace App\Misc;
 
 /**
  * Class SplashMessage
  * @package App\Misc
  */
-class SplashMessage {
-
+class SplashMessage
+{
     /**
      * @var array
      */
@@ -36,12 +37,13 @@ class SplashMessage {
      *
      * @return string
      */
-    public static function get() : string {
+    public static function get() : string
+    {
         return self::$messages[array_rand(self::$messages)];
     }
 
-    public static function get404() {
+    public static function get404()
+    {
         return self::$messages404[array_rand(self::$messages404)];
     }
-
 }

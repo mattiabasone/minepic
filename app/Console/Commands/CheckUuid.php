@@ -10,7 +10,8 @@ use Illuminate\Console\Command;
  * Class CleanAccountsTable
  * @package App\Console\Commands
  */
-class CheckUuid extends Command {
+class CheckUuid extends Command
+{
     /**
      * The console command name.
      *
@@ -48,7 +49,6 @@ class CheckUuid extends Command {
                 if ($account) {
                     $this->info("Checking {$account->username} [{$account->uuid}]...");
                     try {
-
                         $accountApiData = $mojangClient->getUuidInfo($account->uuid);
                         $this->info("    UUID Valid    ");
 
@@ -71,7 +71,6 @@ class CheckUuid extends Command {
                             $this->error("    Using Steve as skin    ");
                             $this->error("    ".$e->getMessage());
                         }
-
                     } catch (\Exception $e) {
                         $account->fail_count++;
                         $account->updated = time();
@@ -84,12 +83,10 @@ class CheckUuid extends Command {
                         }
                     }
                     $this->line("################################################");
-
                 }
             }
         } else {
             $this->info("No old uuid found");
         }
     }
-
 }

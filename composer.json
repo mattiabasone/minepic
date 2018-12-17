@@ -6,6 +6,9 @@
     "type": "project",
     "require": {
         "php": ">=7.1",
+        "ext-gd":  "*",
+        "ext-imagick":  "*",
+        "ext-json":  "*",
         "laravel/lumen-framework": "5.7.*",
         "vlucas/phpdotenv": "^2.4",
         "guzzlehttp/guzzle": "^6.2"

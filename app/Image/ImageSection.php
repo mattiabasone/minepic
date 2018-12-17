@@ -6,7 +6,8 @@ namespace App\Image;
  *
  * @package App\Image
  */
-class ImageSection {
+abstract class ImageSection
+{
 
     /**
      * Skin Path
@@ -26,7 +27,8 @@ class ImageSection {
      * Avatar constructor.
      * @param string $skinPath
      */
-    public function __construct(string $skinPath) {
+    public function __construct(string $skinPath)
+    {
         $this->skinPath = $skinPath;
     }
 
@@ -35,7 +37,8 @@ class ImageSection {
      *
      * @return string
      */
-    public function __toString(): string {
+    public function __toString(): string
+    {
         ob_start();
         imagepng($this->imgResource);
         $imgToString = ob_get_contents();
@@ -46,7 +49,8 @@ class ImageSection {
     /**
      * Destructor
      */
-    public function __destruct() {
+    public function __destruct()
+    {
         if ($this->imgResource) {
             imagedestroy($this->imgResource);
         }
@@ -57,8 +61,8 @@ class ImageSection {
      *
      * @return resource
      */
-    public function getResource() {
+    public function getResource()
+    {
         return $this->imgResource;
     }
-
 }

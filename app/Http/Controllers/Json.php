@@ -10,8 +10,6 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Json extends BaseController
 {
-
-
     /**
      * Send response to the user
      *

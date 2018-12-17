@@ -56,5 +56,4 @@ class CleanAccountsTable extends Command {
             $this->info("No duplicates found");
         }
     }
-
 }

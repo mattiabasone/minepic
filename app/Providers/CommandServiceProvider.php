@@ -6,7 +6,6 @@ use App\Console\Commands\CleanAccountsTable;
 
 class CommandServiceProvider extends ServiceProvider
 {
-
     /**
      * Register any application services.
      *
@@ -14,13 +13,11 @@ class CommandServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('command.minepic.clean-accounts', function()
-        {
+        $this->app->singleton('command.minepic.clean-accounts', function () {
             return new CleanAccountsTable;
         });
 
-        $this->app->singleton('command.minepic.check-uuid', function()
-        {
+        $this->app->singleton('command.minepic.check-uuid', function () {
             return new CheckUuid;
         });
 

@@ -4,15 +4,16 @@ namespace App\Image;
 
 use App\Image\Sections\Avatar;
 use App\Helpers\Storage\Files\SkinsStorage;
+use App\Image\Exceptions\SkinNotFountException;
 use App\Helpers\Storage\Files\IsometricsStorage;
-use Mockery\Exception;
 
 /**
  * Class IsometricAvatar
  *
  * @package App\Image\Sections
  */
-class IsometricAvatar {
+class IsometricAvatar
+{
 
     /**
      * Cosine PI/6
@@ -83,16 +84,17 @@ class IsometricAvatar {
      * IsometricAvatar constructor.
      * @param string $uuid
      * @param int $lastUpdate
+     * @throws \Exception
      */
-    public function __construct(string $uuid, int $lastUpdate) {
-
+    public function __construct(string $uuid, int $lastUpdate)
+    {
         $this->uuid = $uuid;
         $this->lastUpdate = $lastUpdate;
 
         if (SkinsStorage::exists($uuid)) {
             $this->skinPath = SkinsStorage::getPath($uuid);
         } else {
-            throw new Exception("UUID skin file not found");
+            throw new SkinNotFountException();
         }
 
         if (IsometricsStorage::exists($uuid)) {
@@ -101,12 +103,23 @@ class IsometricAvatar {
     }
 
     /**
-     * ImageMagick __toString()
+     * __toString()
      *
      * @return string
      */
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return $this->head->__toString();
+    }
+
+    /**
+     * Get ImagickPixel transparent object
+     *
+     * @return \ImagickPixel
+     */
+    final protected function getImagickPixelTransparent()
+    {
+        return new \ImagickPixel('transparent');
     }
 
     /**
@@ -114,7 +127,8 @@ class IsometricAvatar {
      *
      * @param bool $flag
      */
-    public function checkCacheStatus(bool $flag) {
+    public function checkCacheStatus(bool $flag)
+    {
         $this->checkCacheStatusFlag = $flag;
     }
 
@@ -124,11 +138,10 @@ class IsometricAvatar {
      * @param int $size
      * @return array
      */
-    private function getFrontPoints($size = self::HEAD_BASE_SIZE): array {
-
+    private function getFrontPoints($size = self::HEAD_BASE_SIZE): array
+    {
         $cosine_result = round(self::COSINE_PI_6 * $size);
         $half_size = round($size / 2);
-
         return [
             0,0, 0,0,
             0,$size, 0,$size,
@@ -142,8 +155,8 @@ class IsometricAvatar {
      * @param int $size
      * @return array
      */
-    private function getTopPoints($size = self::HEAD_BASE_SIZE) {
-
+    private function getTopPoints($size = self::HEAD_BASE_SIZE)
+    {
         $cosine_result = round(self::COSINE_PI_6 * $size);
         $half_size = round($size / 2);
 
@@ -160,8 +173,8 @@ class IsometricAvatar {
      * @param int $size
      * @return array
      */
-    private function getRightPoints($size = self::HEAD_BASE_SIZE) {
-
+    private function getRightPoints($size = self::HEAD_BASE_SIZE)
+    {
         $cosine_result = round(self::COSINE_PI_6 * $size);
         $half_size = round($size / 2);
 
@@ -174,9 +187,10 @@ class IsometricAvatar {
 
     /**
      * Render Isometric from avatar sections
+     * @throws \Throwable
      */
-    protected function renderFullSize() {
-
+    protected function renderFullSize()
+    {
         // Create Avatar Object
         $avatar = new Avatar($this->skinPath);
 
@@ -187,7 +201,9 @@ class IsometricAvatar {
         $face->readImageBlob($avatar->__toString());
         $face->brightnessContrastImage(8, 8);
         $face->setImageVirtualPixelMethod(\Imagick::VIRTUALPIXELMETHOD_TRANSPARENT);
-        $face->setBackgroundColor(new \ImagickPixel('transparent'));
+        $face->setBackgroundColor(
+            $this->getImagickPixelTransparent()
+        );
 
         $face->distortImage(
             \Imagick::DISTORTION_AFFINE,
@@ -202,7 +218,9 @@ class IsometricAvatar {
         $top->readImageBlob($avatar->__toString());
         $top->brightnessContrastImage(6, 6);
         $top->setImageVirtualPixelMethod(\Imagick::VIRTUALPIXELMETHOD_TRANSPARENT);
-        $top->setBackgroundColor(new \ImagickPixel('transparent'));
+        $top->setBackgroundColor(
+            $this->getImagickPixelTransparent()
+        );
 
         $top->distortImage(
             \Imagick::DISTORTION_AFFINE,
@@ -218,7 +236,9 @@ class IsometricAvatar {
         $right->brightnessContrastImage(4, 4);
 
         $right->setImageVirtualPixelMethod(\Imagick::VIRTUALPIXELMETHOD_TRANSPARENT);
-        $right->setBackgroundColor(new \ImagickPixel('transparent'));
+        $right->setBackgroundColor(
+            $this->getImagickPixelTransparent()
+        );
 
         $right->distortImage(
             \Imagick::DISTORTION_AFFINE,
@@ -231,7 +251,7 @@ class IsometricAvatar {
         $finalImageSize = $doubleAvatarSize + (self::HEAD_MARGIN * 2);
 
         $this->head = new \Imagick();
-        $this->head->newImage($finalImageSize, $finalImageSize, new \ImagickPixel('transparent'));
+        $this->head->newImage($finalImageSize, $finalImageSize, $this->getImagickPixelTransparent());
 
         // This is weird, but it works
         $faceX = round(($doubleAvatarSize / 2)) - 2 + self::HEAD_MARGIN;
@@ -258,7 +278,8 @@ class IsometricAvatar {
     /**
      * Create $head Imagick Object from previously rendered head
      */
-    protected function createFromFile() {
+    protected function createFromFile()
+    {
         $this->head = new \Imagick($this->isometricPath);
     }
 
@@ -267,17 +288,13 @@ class IsometricAvatar {
      *
      * @return bool
      */
-    protected function verifyCachedFile() {
-
+    protected function verifyCachedFile()
+    {
         if (!$this->checkCacheStatusFlag) {
             return true;
         }
 
-        if (!$this->isometricPath) {
-            return false;
-        }
-
-        if (filemtime($this->isometricPath) <= $this->lastUpdate) {
+        if (!$this->isometricPath || (filemtime($this->isometricPath) <= $this->lastUpdate)) {
             return false;
         }
 
@@ -286,11 +303,12 @@ class IsometricAvatar {
 
     /**
      * Render image resized
-     *
      * @param $size
+     * @throws \Throwable
      */
-    public function render($size) {
-        if ($size < self::MIN_SIZE OR $size > self::MAX_SIZE) {
+    public function render($size)
+    {
+        if ($size < self::MIN_SIZE || $size > self::MAX_SIZE) {
             $size = 256;
         }
 
@@ -303,6 +321,5 @@ class IsometricAvatar {
         if ($size !== self::MAX_SIZE) {
             $this->head->resizeImage($size, $size, \Imagick::FILTER_LANCZOS2, 0.9);
         }
-
     }
 }

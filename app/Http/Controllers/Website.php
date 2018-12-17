@@ -111,9 +111,6 @@ class Website extends BaseController
                     'minecraft skin, avatar, minecraft avatar, generator, skin generator, skin viewer'
             ];
 
-            echo '<pre>';
-            dd($userstats->time_request);
-            echo '</pre>';
             $bodyData = [
                 'user' => [
                     'uuid'          => $userdata->uuid,

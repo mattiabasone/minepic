@@ -21,7 +21,8 @@ class Api extends BaseController
     /**
      * Api constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->minepic = new MinepicCore();
     }
 
@@ -32,7 +33,8 @@ class Api extends BaseController
      * @param int $size
      * @return Response
      */
-    public function serveAvatar($uuidOrName = '', $size = 0): Response {
+    public function serveAvatar($uuidOrName = '', $size = 0): Response
+    {
         $size = (int) $size;
 
         $this->minepic->initialize($uuidOrName);
@@ -59,7 +61,8 @@ class Api extends BaseController
      * @param string $uuidOrName
      * @return Response
      */
-    public function avatarWithSize($size = 0, $uuidOrName = ''): Response {
+    public function avatarWithSize($size = 0, $uuidOrName = ''): Response
+    {
         return $this->serveAvatar($uuidOrName, $size);
     }
 
@@ -70,7 +73,8 @@ class Api extends BaseController
      * @param int $size
      * @return Response
      */
-    public function serveIsometricAvatar($uuidOrName = '', $size = 0): Response {
+    public function serveIsometricAvatar($uuidOrName = '', $size = 0): Response
+    {
         $size = (int) $size;
 
         $this->minepic->initialize($uuidOrName);
@@ -96,7 +100,8 @@ class Api extends BaseController
      * @param string $uuidOrName
      * @return Response
      */
-    public function isometricAvatarWithSize($size = 0, $uuidOrName = ''): Response {
+    public function isometricAvatarWithSize($size = 0, $uuidOrName = ''): Response
+    {
         return $this->serveIsometricAvatar($uuidOrName, $size);
     }
 
@@ -108,7 +113,8 @@ class Api extends BaseController
      * @param string $type
      * @return Response
      */
-    public function serveSkin($uuidOrName = '', $size = 0, $type = 'F'): Response {
+    public function serveSkin($uuidOrName = '', $size = 0, $type = 'F'): Response
+    {
         $size = (int) $size;
         $this->minepic->initialize($uuidOrName);
         $headers = $this->minepic->generateHttpCacheHeaders($size, 'avatar');
@@ -133,7 +139,8 @@ class Api extends BaseController
      * @param $size
      * @return Response
      */
-    public function skinFrontWithSize($uuidOrName, $size): Response {
+    public function skinFrontWithSize($uuidOrName, $size): Response
+    {
         return $this->serveSkin($uuidOrName, $size);
     }
 
@@ -143,7 +150,8 @@ class Api extends BaseController
      * @param $uuidOrName
      * @return Response
      */
-    public function skinBackWithoutSize($uuidOrName): Response {
+    public function skinBackWithoutSize($uuidOrName): Response
+    {
         return $this->serveSkin($uuidOrName, 0, 'B');
     }
 
@@ -154,7 +162,8 @@ class Api extends BaseController
      * @param $size
      * @return Response
      */
-    public function skinBackWithSize($uuidOrName, $size): Response {
+    public function skinBackWithSize($uuidOrName, $size): Response
+    {
         return $this->serveSkin($uuidOrName, $size, 'B');
     }
 
@@ -164,7 +173,8 @@ class Api extends BaseController
      * @param string $uuidOrName
      * @return Response
      */
-    public function downloadTexture(string $uuidOrName = ''): Response {
+    public function downloadTexture(string $uuidOrName = ''): Response
+    {
         $headers = [
             'Content-Disposition' => 'Attachment;filename='.$uuidOrName.'.png',
             'Content-Type' => 'image/png'
@@ -182,7 +192,8 @@ class Api extends BaseController
      * @param string $uuidOrName
      * @return Response
      */
-    public function update(string $uuidOrName): Response {
+    public function update(string $uuidOrName): Response
+    {
         // Force user update
         $this->minepic->setForceUpdate(true);
 
@@ -194,7 +205,6 @@ class Api extends BaseController
                 $response = ['ok' => true, 'message' => 'Data updated'];
                 $httpStatus = 200;
             } else {
-
                 $userdata = $this->minepic->getUserdata();
                 $dateString = $userdata->updated_at->toW3cString();
 
@@ -211,7 +221,6 @@ class Api extends BaseController
             $httpStatus = 404;
         }
 
-        return Response::create($response, $httpStatus, ['Content-Type' =>'application-json']);
+        return Response::create($response, $httpStatus, ['Content-Type' => 'application-json']);
     }
-
 }

@@ -5,7 +5,8 @@ namespace App\Helpers\Storage;
 /**
  * Class Storage
  */
-class Storage {
+class Storage
+{
 
     /**
      * Storage folder type
@@ -20,7 +21,8 @@ class Storage {
      * @param string $uuid
      * @return string
      */
-    public static function getPath(string $uuid = ''): string {
+    public static function getPath(string $uuid = ''): string
+    {
         if ($uuid == '') {
             $uuid = env('DEFAULT_USERNAME');
         }
@@ -33,7 +35,8 @@ class Storage {
      * @param string $uuid
      * @return bool
      */
-    public static function exists(string $uuid = ''): bool {
+    public static function exists(string $uuid = ''): bool
+    {
         return file_exists(static::getPath($uuid));
     }
 
@@ -44,7 +47,8 @@ class Storage {
      * @param mixed $rawData
      * @return bool
      */
-    public static function save(string $uuid, $rawData): bool {
+    public static function save(string $uuid, $rawData): bool
+    {
         $fp = fopen(static::getPath($uuid), 'w');
         if ($fp) {
             fwrite($fp, $rawData);
@@ -61,7 +65,8 @@ class Storage {
      * @param mixed
      * @return bool
      */
-    public static function copyAsSteve(string $string = ''): bool {
+    public static function copyAsSteve(string $string = ''): bool
+    {
         if ($string != '') {
             return copy(
                 static::getPath(env('DEFAULT_USERNAME')),
