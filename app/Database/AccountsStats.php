@@ -1,36 +1,39 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Database;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model as Model;
 
 /**
- * Class AccountsStats
- * @package App\Database
+ * Class AccountsStats.
  *
  * @property string $uuid
- * @property int $count_request
- * @property int $count_search
- * @property int $time_request
- * @property int $time_search
+ * @property int    $count_request
+ * @property int    $count_search
+ * @property int    $time_request
+ * @property int    $time_search
  */
 class AccountsStats extends Model
 {
     /**
-     * Table name
+     * Table name.
      *
      * @var string
      */
     protected $table = 'accounts_stats';
 
     /**
-     * Primary key
+     * Primary key.
      *
      * @var string
      */
     protected $primaryKey = 'uuid';
 
     /**
-     * No primary key
+     * No primary key.
      *
      * @var bool
      */
@@ -42,39 +45,43 @@ class AccountsStats extends Model
     public $timestamps = false;
 
     /**
-     * Increment request counter
+     * Increment request counter.
      *
      * @param string $uuid
      */
-    public function incrementRequestStats(string $uuid = '') {
+    public function incrementRequestStats(string $uuid = '')
+    {
         $this->where('uuid', $uuid)
             ->update([
                 'count_request' => app('db')->raw('count_request + 1'),
-                'time_request' => time(),
+                'time_request' => \time(),
             ]);
     }
 
     /**
-     * Increment search counter
+     * Increment search counter.
      *
      * @param string $uuid
      */
-    public function incrementSearchStats(string $uuid = '') {
+    public function incrementSearchStats(string $uuid = '')
+    {
         $this->where('uuid', $uuid)
             ->update([
                 'count_search' => app('db')->raw('count_search + 1'),
-                'time_search' => time(),
+                'time_search' => \time(),
             ]);
     }
 
     /**
-     * Get most wanted users
+     * Get most wanted users.
      *
      * @return mixed
      */
-    public static function getMostWanted() {
+    public static function getMostWanted()
+    {
         $default_uuid = env('DEFAULT_UUID');
-        return app('db')->select(
+
+        return DB::select(
             "SELECT a.`uuid`, a.`username`, s.`count_request`
              FROM (
               SELECT `uuid`, `count_request` FROM `accounts_stats`
@@ -82,26 +89,27 @@ class AccountsStats extends Model
               ORDER BY `count_request` DESC
               LIMIT 14
             ) s
-            INNER JOIN `accounts` a USING(`uuid`)
+            INNER JOIN `accounts` AS a USING(`uuid`)
             ORDER BY s.`count_request` DESC"
         );
     }
 
     /**
-     * Get last users
+     * Get last users.
      *
      * @return mixed
      */
-    public static function getLastUsers() {
-        return app('db')->select(
-            "SELECT a.`uuid`, a.`username`, s.`count_request`
+    public static function getLastUsers()
+    {
+        return DB::select(
+            'SELECT a.`uuid`, a.`username`, s.`count_request`
               FROM (
                 SELECT `uuid`, `count_request` FROM `accounts_stats`
                 ORDER BY `time_request` DESC
                 LIMIT 9
               ) s
             INNER JOIN `accounts` a USING(`uuid`)
-            ORDER BY s.`count_request` DESC"
+            ORDER BY s.`count_request` DESC'
         );
     }
 }

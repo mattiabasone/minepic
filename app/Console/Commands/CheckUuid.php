@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Database\Accounts;
@@ -7,8 +10,7 @@ use App\Minecraft\MojangClient;
 use Illuminate\Console\Command;
 
 /**
- * Class CleanAccountsTable
- * @package App\Console\Commands
+ * Class CleanAccountsTable.
  */
 class CheckUuid extends Command
 {
@@ -28,65 +30,62 @@ class CheckUuid extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
     public function fire()
     {
         $this->info('Selecting old uuid...');
 
         $results = Accounts::select('id')
-            ->where('updated', '<', (time() - 2419200))
+            ->where('updated', '<', (\time() - 2419200))
             ->orderBy('updated', 'ASC')
             ->take(300)
             ->get();
 
-
         $mojangClient = new MojangClient();
-        if (count($results) > 0) {
+        if (\count($results) > 0) {
             foreach ($results as $result) {
                 $account = Accounts::find($result->id);
                 if ($account) {
                     $this->info("Checking {$account->username} [{$account->uuid}]...");
                     try {
                         $accountApiData = $mojangClient->getUuidInfo($account->uuid);
-                        $this->info("    UUID Valid    ");
+                        $this->info('    UUID Valid    ');
 
                         // Update database
                         $account->username = $accountApiData->username;
                         $account->skin = $accountApiData->skin;
                         $account->cape = $accountApiData->cape;
                         $account->fail_count = 0;
-                        $account->updated = time();
+                        $account->updated = \time();
                         if ($account->save()) {
-                            $this->info("    Data updated    ");
+                            $this->info('    Data updated    ');
                         }
 
                         try {
                             $skinData = $mojangClient->getSkin($account->uuid);
                             SkinsStorage::save($account->uuid, $skinData);
-                            $this->info("    Skin png updated   ");
+                            $this->info('    Skin png updated   ');
                         } catch (\Exception $e) {
                             SkinsStorage::copyAsSteve($account->uuid);
-                            $this->error("    Using Steve as skin    ");
-                            $this->error("    ".$e->getMessage());
+                            $this->error('    Using Steve as skin    ');
+                            $this->error('    '.$e->getMessage());
                         }
                     } catch (\Exception $e) {
-                        $account->fail_count++;
-                        $account->updated = time();
+                        ++$account->fail_count;
+                        $account->updated = \time();
                         $this->warn("    Failed. Fail count: {$account->fail_count}    ");
                         if ($account->fail_count > 10) {
                             $account->delete();
-                            $this->error("    DELETED!    ");
+                            $this->error('    DELETED!    ');
                         } else {
                             $account->save();
                         }
                     }
-                    $this->line("################################################");
+                    $this->line('################################################');
                 }
             }
         } else {
-            $this->info("No old uuid found");
+            $this->info('No old uuid found');
         }
     }
 }

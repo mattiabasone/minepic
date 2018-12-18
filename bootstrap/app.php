@@ -23,7 +23,7 @@ $app = new Laravel\Lumen\Application(
     realpath(__DIR__.'/../')
 );
 
-//$app->withFacades();
+$app->withFacades();
 $app->withEloquent();
 
 /*
@@ -76,7 +76,10 @@ $app->singleton(
 | totally optional, so you are not required to uncomment this line.
 |
 */
-$app->register(App\Providers\CommandServiceProvider::class);
+if (env('APP_DEBUG')) {
+    $app->configure('debugbar');
+    $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
+}
 
 /*
 |--------------------------------------------------------------------------

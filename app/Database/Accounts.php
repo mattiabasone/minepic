@@ -1,18 +1,18 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Database;
 
 use Illuminate\Database\Eloquent\Model as Model;
 
 /**
- * Class Accounts
- * @package App\Database
+ * Class Accounts.
  *
- * Table fields
- *
- * @property int $id
+ * @property int    $id
  * @property string $uuid
  * @property string $username
- * @property int $fail_count
+ * @property int    $fail_count
  * @property string $skin
  * @property string $cape
  * @property string $created_at
@@ -20,9 +20,8 @@ use Illuminate\Database\Eloquent\Model as Model;
  */
 class Accounts extends Model
 {
-
     /**
-     * Table name
+     * Table name.
      *
      * @var string
      */

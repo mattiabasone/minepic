@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Image;
 
 use App\Image\Sections\Avatar;
@@ -8,68 +10,65 @@ use App\Image\Exceptions\SkinNotFountException;
 use App\Helpers\Storage\Files\IsometricsStorage;
 
 /**
- * Class IsometricAvatar
- *
- * @package App\Image\Sections
+ * Class IsometricAvatar.
  */
 class IsometricAvatar
 {
-
     /**
-     * Cosine PI/6
+     * Cosine PI/6.
      */
     const COSINE_PI_6 = M_SQRT3 / 2;
 
     /**
-     * Base size (all requests must be <=)
+     * Base size (all requests must be <=).
      */
     const HEAD_BASE_SIZE = 252;
 
     /**
-     * Margin (in pixels) in the final image
+     * Margin (in pixels) in the final image.
      */
     const HEAD_MARGIN = 4;
 
     /**
-     * Maximum size for resize operation
+     * Maximum size for resize operation.
      */
     const MAX_SIZE = 512;
 
     /**
-     * Minimum size for resize operation
+     * Minimum size for resize operation.
      */
     const MIN_SIZE = 16;
 
     /**
-     * User UUID
+     * User UUID.
      *
      * @var string
      */
     protected $uuid = '';
 
     /**
-     * Last time user data has been updated
+     * Last time user data has been updated.
      *
      * @var int
      */
     protected $lastUpdate = 0;
 
     /**
-     * Flag for checking cache
+     * Flag for checking cache.
      *
      * @var bool
      */
     protected $checkCacheStatusFlag = true;
 
     /**
-     * Skin Path
+     * Skin Path.
      *
      * @var string
      */
     protected $skinPath = '';
 
     /**
-     * Skin Path
+     * Skin Path.
      *
      * @var string
      */
@@ -82,8 +81,10 @@ class IsometricAvatar
 
     /**
      * IsometricAvatar constructor.
+     *
      * @param string $uuid
-     * @param int $lastUpdate
+     * @param int    $lastUpdate
+     *
      * @throws \Exception
      */
     public function __construct(string $uuid, int $lastUpdate)
@@ -103,7 +104,7 @@ class IsometricAvatar
     }
 
     /**
-     * __toString()
+     * __toString().
      *
      * @return string
      */
@@ -113,7 +114,7 @@ class IsometricAvatar
     }
 
     /**
-     * Get ImagickPixel transparent object
+     * Get ImagickPixel transparent object.
      *
      * @return \ImagickPixel
      */
@@ -123,7 +124,7 @@ class IsometricAvatar
     }
 
     /**
-     * Change checkCacheStatusFlag value
+     * Change checkCacheStatusFlag value.
      *
      * @param bool $flag
      */
@@ -133,60 +134,65 @@ class IsometricAvatar
     }
 
     /**
-     * Point for face section
+     * Point for face section.
      *
      * @param int $size
+     *
      * @return array
      */
     private function getFrontPoints($size = self::HEAD_BASE_SIZE): array
     {
-        $cosine_result = round(self::COSINE_PI_6 * $size);
-        $half_size = round($size / 2);
+        $cosine_result = \round(self::COSINE_PI_6 * $size);
+        $half_size = \round($size / 2);
+
         return [
-            0,0, 0,0,
-            0,$size, 0,$size,
-            $size,0, -$cosine_result,$half_size
+            0, 0, 0, 0,
+            0, $size, 0, $size,
+            $size, 0, -$cosine_result, $half_size,
         ];
     }
 
     /**
-     * Points for top section
+     * Points for top section.
      *
      * @param int $size
+     *
      * @return array
      */
     private function getTopPoints($size = self::HEAD_BASE_SIZE)
     {
-        $cosine_result = round(self::COSINE_PI_6 * $size);
-        $half_size = round($size / 2);
+        $cosine_result = \round(self::COSINE_PI_6 * $size);
+        $half_size = \round($size / 2);
 
         return [
-            0,$size, 0,0,
-            0,0, -$cosine_result,-($half_size),
-            $size,$size, $cosine_result,-($half_size)
+            0, $size, 0, 0,
+            0, 0, -$cosine_result, -($half_size),
+            $size, $size, $cosine_result, -($half_size),
         ];
     }
 
     /**
-     * Points for right section
+     * Points for right section.
      *
      * @param int $size
+     *
      * @return array
      */
     private function getRightPoints($size = self::HEAD_BASE_SIZE)
     {
-        $cosine_result = round(self::COSINE_PI_6 * $size);
-        $half_size = round($size / 2);
+        $cosine_result = \round(self::COSINE_PI_6 * $size);
+        $half_size = \round($size / 2);
 
         return [
-            $size,0, 0,0,
-            0,0, -($cosine_result),-($half_size),
-            $size,$size, 0,$size
+            $size, 0, 0, 0,
+            0, 0, -($cosine_result), -($half_size),
+            $size, $size, 0, $size,
         ];
     }
 
     /**
-     * Render Isometric from avatar sections
+     * Render Isometric from avatar sections.
+     *
      * @throws \Throwable
      */
     protected function renderFullSize()
@@ -254,9 +260,9 @@ class IsometricAvatar
         $this->head->newImage($finalImageSize, $finalImageSize, $this->getImagickPixelTransparent());
 
         // This is weird, but it works
-        $faceX = round(($doubleAvatarSize / 2)) - 2 + self::HEAD_MARGIN;
-        $faceY = $rightY = round($doubleAvatarSize / 4) - 1 + self::HEAD_MARGIN;
-        $topX = $rightX = round($doubleAvatarSize / 16) + self::HEAD_MARGIN;
+        $faceX = \round(($doubleAvatarSize / 2)) - 2 + self::HEAD_MARGIN;
+        $faceY = $rightY = \round($doubleAvatarSize / 4) - 1 + self::HEAD_MARGIN;
+        $topX = $rightX = \round($doubleAvatarSize / 16) + self::HEAD_MARGIN;
         $topY = -1 + self::HEAD_MARGIN;
 
         // Add Face Section
@@ -276,7 +282,7 @@ class IsometricAvatar
     }
 
     /**
-     * Create $head Imagick Object from previously rendered head
+     * Create $head Imagick Object from previously rendered head.
      */
     protected function createFromFile()
     {
@@ -284,7 +290,7 @@ class IsometricAvatar
     }
 
     /**
-     * Check cached file
+     * Check cached file.
      *
      * @return bool
      */
@@ -294,7 +300,7 @@ class IsometricAvatar
             return true;
         }
 
-        if (!$this->isometricPath || (filemtime($this->isometricPath) <= $this->lastUpdate)) {
+        if (!$this->isometricPath || (\filemtime($this->isometricPath) <= $this->lastUpdate)) {
             return false;
         }
 
@@ -302,8 +308,10 @@ class IsometricAvatar
     }
 
     /**
-     * Render image resized
+     * Render image resized.
+     *
      * @param $size
+     *
      * @throws \Throwable
      */
     public function render($size)
@@ -318,7 +326,7 @@ class IsometricAvatar
             $this->createFromFile();
         }
 
-        if ($size !== self::MAX_SIZE) {
+        if (self::MAX_SIZE !== $size) {
             $this->head->resizeImage($size, $size, \Imagick::FILTER_LANCZOS2, 0.9);
         }
     }

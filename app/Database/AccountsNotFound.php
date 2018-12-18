@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Database;
 
 use Illuminate\Database\Eloquent\Model as Model;
 
 /**
- * Class AccountsNotFound
- * @package App\Database
+ * Class AccountsNotFound.
  *
  * @property string request
  * @property int time
@@ -13,21 +15,21 @@ use Illuminate\Database\Eloquent\Model as Model;
 class AccountsNotFound extends Model
 {
     /**
-     * Table name
+     * Table name.
      *
      * @var string
      */
     protected $table = 'accounts_not_found';
 
     /**
-     * Primary key
+     * Primary key.
      *
      * @var string
      */
     protected $primaryKey = 'request';
 
     /**
-     * No primary key autoincrement
+     * No primary key autoincrement.
      *
      * @var bool
      */

@@ -1,51 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Image\Sections;
 
 use App\Image\ImageSection;
 
 /**
- * Class Avatar
- * @package App\Image\Sections
+ * Class Avatar.
  */
 class Avatar extends ImageSection
 {
-
     /**
-     * Max Standard Deviation value for helm check
+     * Max Standard Deviation value for helm check.
      */
     const DEFAULT_STDDEV = 0.2;
 
     /**
-     * Mean Alpha value (Helm)
+     * Mean Alpha value (Helm).
      *
      * @var int
      */
     protected $meanAlpha = 0;
 
     /**
-     * Red Standard Deviation value (Helm)
+     * Red Standard Deviation value (Helm).
      *
      * @var int
      */
     protected $redStdDev = 0;
 
     /**
-     * Green Standard Deviation value (Helm)
+     * Green Standard Deviation value (Helm).
      *
      * @var int
      */
     protected $greenStdDev = 0;
 
     /**
-     * Blue Standard Deviation value (Helm)
+     * Blue Standard Deviation value (Helm).
      *
      * @var int
      */
     protected $blueStdDev = 0;
 
     /**
-     * Calculate sttdev for merging helm
+     * Calculate sttdev for merging helm.
      *
      * @param $head_part
      */
@@ -60,64 +60,65 @@ class Avatar extends ImageSection
         while ($x < 8) {
             $y = 0;
             while ($y < 8) {
-                $color=imagecolorat($head_part, $x, $y);
-                $colors = imagecolorsforindex($head_part, $color);
-                array_push($all_red, $colors['red']);
-                array_push($all_green, $colors['green']);
-                array_push($all_blue, $colors['blue']);
-                array_push($all_alpha, $colors['alpha']);
-                $y++;
+                $color = \imagecolorat($head_part, $x, $y);
+                $colors = \imagecolorsforindex($head_part, $color);
+                \array_push($all_red, $colors['red']);
+                \array_push($all_green, $colors['green']);
+                \array_push($all_blue, $colors['blue']);
+                \array_push($all_alpha, $colors['alpha']);
+                ++$y;
             }
-            $x++;
+            ++$x;
         }
         // mean value for each color
-        $mean_red = array_sum($all_red) / 64;
-        $mean_green = array_sum($all_green) / 64;
-        $mean_blue = array_sum($all_blue) / 64;
-        $this->meanAlpha = array_sum($all_alpha) / 64;
+        $mean_red = \array_sum($all_red) / 64;
+        $mean_green = \array_sum($all_green) / 64;
+        $mean_blue = \array_sum($all_blue) / 64;
+        $this->meanAlpha = \array_sum($all_alpha) / 64;
         // Arrays deviation
         $devs_red = [];
         $devs_green = [];
         $devs_blue = [];
         $i = 0;
         while ($i < 64) {
-            $devs_red[] = pow($all_red[$i] - $mean_red, 2);
-            $devs_green[] = pow($all_green[$i] - $mean_green, 2);
-            $devs_blue[] = pow($all_blue[$i] - $mean_blue, 2);
-            $i++;
+            $devs_red[] = \pow($all_red[$i] - $mean_red, 2);
+            $devs_green[] = \pow($all_green[$i] - $mean_green, 2);
+            $devs_blue[] = \pow($all_blue[$i] - $mean_blue, 2);
+            ++$i;
         }
         // stddev for each color
-        $this->redStdDev = sqrt(array_sum($devs_red) / 64);
-        $this->greenStdDev = sqrt(array_sum($devs_green) / 64);
-        $this->blueStdDev = sqrt(array_sum($devs_blue) / 64);
+        $this->redStdDev = \sqrt(\array_sum($devs_red) / 64);
+        $this->greenStdDev = \sqrt(\array_sum($devs_green) / 64);
+        $this->blueStdDev = \sqrt(\array_sum($devs_blue) / 64);
     }
 
     /**
-     * Render avatar image
+     * Render avatar image.
      *
-     * @param int $size
+     * @param int    $size
      * @param string $type
+     *
      * @throws \Throwable
      */
     public function renderAvatar(int $size = 0, string $type = 'F')
     {
         if ($size <= 0 || $size > env('MAX_AVATAR_SIZE')) {
-            $size = env('DEFAULT_AVATAR_SIZE');
+            $size = (int) env('DEFAULT_AVATAR_SIZE');
         }
         // generate png from url/path
-        $image = imagecreatefrompng($this->skinPath);
-        imagealphablending($image, false);
-        imagesavealpha($image, true);
+        $image = \imagecreatefrompng($this->skinPath);
+        \imagealphablending($image, false);
+        \imagesavealpha($image, true);
 
         // Head
-        $this->imgResource = imagecreatetruecolor($size, $size);
+        $this->imgResource = \imagecreatetruecolor($size, $size);
 
         // Helm
-        $helm_check = imagecreatetruecolor($size, $size);
-        imagealphablending($helm_check, false);
-        imagesavealpha($helm_check, true);
-        $transparent = imagecolorallocatealpha($helm_check, 255, 255, 255, 127);
-        imagefilledrectangle($helm_check, 0, 0, 8, 8, $transparent);
+        $helm_check = \imagecreatetruecolor($size, $size);
+        \imagealphablending($helm_check, false);
+        \imagesavealpha($helm_check, true);
+        $transparent = \imagecolorallocatealpha($helm_check, 255, 255, 255, 127);
+        \imagefilledrectangle($helm_check, 0, 0, 8, 8, $transparent);
 
         switch ($type) {
             case 'F':
@@ -176,12 +177,12 @@ class Avatar extends ImageSection
                 break;
             default:
                 // TODO: Custom exception
-                throw new \Exception("Invalid avatar section specified");
+                throw new \Exception('Invalid avatar section specified');
                 break;
         }
 
-        @imagecopyresampled($this->imgResource, $image, 0, 0, $sectionSrcX, $sectionSrcY, $size, $size, 8, 8);
-        @imagecopyresampled($helm_check, $image, 0, 0, $sectionHelmSrcX, $sectionHelmSrcY, 8, 8, 8, 8);
+        @\imagecopyresampled($this->imgResource, $image, 0, 0, $sectionSrcX, $sectionSrcY, $size, $size, 8, 8);
+        @\imagecopyresampled($helm_check, $image, 0, 0, $sectionHelmSrcX, $sectionHelmSrcY, 8, 8, 8, 8);
 
         $this->calcSttDevHelm($helm_check);
 
@@ -191,17 +192,17 @@ class Avatar extends ImageSection
             ($this->redStdDev > self::DEFAULT_STDDEV && $this->blueStdDev > self::DEFAULT_STDDEV) ||
             ($this->greenStdDev > self::DEFAULT_STDDEV && $this->blueStdDev > self::DEFAULT_STDDEV)
             ) ||
-            ($this->meanAlpha == 127)) {
-            $helm = imagecreatetruecolor($size, $size);
-            imagealphablending($helm, false);
-            imagesavealpha($helm, true);
-            $transparent = imagecolorallocatealpha($helm, 255, 255, 255, 127);
-            imagefilledrectangle($helm, 0, 0, $size, $size, $transparent);
-            imagecopyresampled($helm, $image, 0, 0, $sectionHelmSrcX, $sectionHelmSrcY, $size, $size, 8, 8);
-            $merge = imagecreatetruecolor($size, $size);
-            imagecopy($merge, $this->imgResource, 0, 0, 0, 0, $size, $size);
-            imagecopy($merge, $helm, 0, 0, 0, 0, $size, $size);
-            imagecopymerge($this->imgResource, $merge, 0, 0, 0, 0, $size, $size, 0);
+            (127 == $this->meanAlpha)) {
+            $helm = \imagecreatetruecolor($size, $size);
+            \imagealphablending($helm, false);
+            \imagesavealpha($helm, true);
+            $transparent = \imagecolorallocatealpha($helm, 255, 255, 255, 127);
+            \imagefilledrectangle($helm, 0, 0, $size, $size, $transparent);
+            \imagecopyresampled($helm, $image, 0, 0, $sectionHelmSrcX, $sectionHelmSrcY, $size, $size, 8, 8);
+            $merge = \imagecreatetruecolor($size, $size);
+            \imagecopy($merge, $this->imgResource, 0, 0, 0, 0, $size, $size);
+            \imagecopy($merge, $helm, 0, 0, 0, 0, $size, $size);
+            \imagecopymerge($this->imgResource, $merge, 0, 0, 0, 0, $size, $size, 0);
             $this->imgResource = $merge;
             unset($merge);
         }

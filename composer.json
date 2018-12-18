@@ -16,7 +16,9 @@
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "phpunit/phpunit": "^7.0",
-        "mockery/mockery": "~0.9"
+        "mockery/mockery": "~0.9",
+        "friendsofphp/php-cs-fixer": "^2.13",
+        "barryvdh/laravel-debugbar": "^3.2"
     },
     "autoload": {
         "psr-4": {
@@ -32,7 +34,8 @@
     "scripts": {
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""
-        ]
+        ],
+        "fix": "@php vendor/bin/php-cs-fixer fix"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Core as MinepicCore;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 /**
- * Class Api
- *
- * @package App\Http\Controllers
+ * Class Api.
  */
 class Api extends BaseController
 {
@@ -27,13 +28,15 @@ class Api extends BaseController
     }
 
     /**
-     * Serve Avatar
+     * Serve Avatar.
      *
+     * @param \Illuminate\Http\Request
      * @param string $uuidOrName
-     * @param int $size
+     * @param int    $size
+     *
      * @return Response
      */
-    public function serveAvatar($uuidOrName = '', $size = 0): Response
+    public function serveAvatar(Request $request, $uuidOrName = '', $size = 0): Response
     {
         $size = (int) $size;
 
@@ -41,8 +44,7 @@ class Api extends BaseController
         $headers = $this->minepic->generateHttpCacheHeaders($size, 'avatar');
         $this->minepic->updateStats();
 
-
-        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+        if ($request->server('HTTP_IF_MODIFIED_SINCE')) {
             $avatarImage = '';
             $httpCode = 304;
         } else {
@@ -55,25 +57,29 @@ class Api extends BaseController
     }
 
     /**
-     * Serve avatar with size
+     * Serve avatar with size.
      *
+     * @param \Illuminate\Http\Request $request
      * @param int $size
      * @param string $uuidOrName
+     *
      * @return Response
      */
-    public function avatarWithSize($size = 0, $uuidOrName = ''): Response
+    public function avatarWithSize(Request $request, int $size = 0, string $uuidOrName = ''): Response
     {
-        return $this->serveAvatar($uuidOrName, $size);
+        return $this->serveAvatar($request, $uuidOrName, $size);
     }
 
     /**
-     * Serve isometric avatar
+     * Serve isometric avatar.
      *
+     * @param \Illuminate\Http\Request
      * @param string $uuidOrName
-     * @param int $size
+     * @param int    $size
+     *
      * @return Response
      */
-    public function serveIsometricAvatar($uuidOrName = '', $size = 0): Response
+    public function serveIsometricAvatar(Request $request, $uuidOrName = '', $size = 0): Response
     {
         $size = (int) $size;
 
@@ -81,7 +87,7 @@ class Api extends BaseController
         $headers = $this->minepic->generateHttpCacheHeaders($size, 'avatar-isometric');
         $this->minepic->updateStats();
 
-        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+        if ($request->server('HTTP_IF_MODIFIED_SINCE')) {
             $avatarImage = '';
             $httpCode = 304;
         } else {
@@ -94,33 +100,37 @@ class Api extends BaseController
     }
 
     /**
-     * Isometric Avatar with Size
+     * Isometric Avatar with Size.
      *
+     * @param \Illuminate\Http\Request $request
      * @param int $size
      * @param string $uuidOrName
+     *
      * @return Response
      */
-    public function isometricAvatarWithSize($size = 0, $uuidOrName = ''): Response
+    public function isometricAvatarWithSize(Request $request, $size = 0, $uuidOrName = ''): Response
     {
-        return $this->serveIsometricAvatar($uuidOrName, $size);
+        return $this->serveIsometricAvatar($request, $uuidOrName, $size);
     }
 
     /**
-     * Serve skin
+     * Serve skin.
      *
+     * @param \Illuminate\Http\Request $request
      * @param string $uuidOrName
-     * @param int $size
+     * @param int    $size
      * @param string $type
+     *
      * @return Response
      */
-    public function serveSkin($uuidOrName = '', $size = 0, $type = 'F'): Response
+    public function serveSkin(Request $request, $uuidOrName = '', $size = 0, $type = 'F'): Response
     {
         $size = (int) $size;
         $this->minepic->initialize($uuidOrName);
         $headers = $this->minepic->generateHttpCacheHeaders($size, 'avatar');
         $this->minepic->updateStats();
 
-        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+        if ($request->server('HTTP_IF_MODIFIED_SINCE')) {
             $avatarImage = '';
             $httpCode = 304;
         } else {
@@ -133,51 +143,58 @@ class Api extends BaseController
     }
 
     /**
-     * Skin front with size parameter
+     * Skin front with size parameter.
      *
-     * @param $uuidOrName
+     * @param \Illuminate\Http\Request $request
+     * @param string $uuidOrName
      * @param $size
+     *
      * @return Response
      */
-    public function skinFrontWithSize($uuidOrName, $size): Response
+    public function skinFrontWithSize(Request $request, $uuidOrName, $size): Response
     {
-        return $this->serveSkin($uuidOrName, $size);
+        return $this->serveSkin($request, $uuidOrName, $size);
     }
 
     /**
-     * Skin back without size parameter
+     * Skin back without size parameter.
      *
+     * @param \Illuminate\Http\Request $request
      * @param $uuidOrName
+     *
      * @return Response
      */
-    public function skinBackWithoutSize($uuidOrName): Response
+    public function skinBackWithoutSize(Request $request, $uuidOrName): Response
     {
-        return $this->serveSkin($uuidOrName, 0, 'B');
+        return $this->serveSkin($request, $uuidOrName, 0, 'B');
     }
 
     /**
-     * Skin back with size parameter
+     * Skin back with size parameter.
      *
-     * @param $uuidOrName
+     * @param \Illuminate\Http\Request $request
+     * @param string $uuidOrName
      * @param $size
+     *
      * @return Response
      */
-    public function skinBackWithSize($uuidOrName, $size): Response
+    public function skinBackWithSize(Request $request, $uuidOrName, $size): Response
     {
-        return $this->serveSkin($uuidOrName, $size, 'B');
+        return $this->serveSkin($request, $uuidOrName, $size, 'B');
     }
 
     /**
-     * Download the skin
+     * Download the skin.
      *
      * @param string $uuidOrName
+     *
      * @return Response
      */
     public function downloadTexture(string $uuidOrName = ''): Response
     {
         $headers = [
             'Content-Disposition' => 'Attachment;filename='.$uuidOrName.'.png',
-            'Content-Type' => 'image/png'
+            'Content-Type' => 'image/png',
         ];
         $this->minepic->initialize($uuidOrName);
         $avatarImage = $this->minepic->skinCurrentUser();
@@ -187,9 +204,10 @@ class Api extends BaseController
     }
 
     /**
-     * Update userdata
+     * Update userdata.
      *
      * @param string $uuidOrName
+     *
      * @return Response
      */
     public function update(string $uuidOrName): Response
@@ -199,7 +217,6 @@ class Api extends BaseController
 
         // Check if user exists
         if ($this->minepic->initialize($uuidOrName)) {
-
             // Check if data has been updated
             if ($this->minepic->userDataUpdated()) {
                 $response = ['ok' => true, 'message' => 'Data updated'];
@@ -209,9 +226,9 @@ class Api extends BaseController
                 $dateString = $userdata->updated_at->toW3cString();
 
                 $response = [
-                    'ok'            => false,
-                    'message'       => 'Cannot update user, userdata has been updated recently',
-                    'last_update'   => $dateString
+                    'ok' => false,
+                    'message' => 'Cannot update user, userdata has been updated recently',
+                    'last_update' => $dateString,
                 ];
 
                 $httpStatus = 403;

@@ -1,30 +1,31 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Image;
 
 /**
- * Class ImageSection
- *
- * @package App\Image
+ * Class ImageSection.
  */
 abstract class ImageSection
 {
-
     /**
-     * Skin Path
+     * Skin Path.
      *
      * @var string
      */
     protected $skinPath = '';
 
     /**
-     * Resource with the image
+     * Resource with the image.
      *
-     * @var  resource
+     * @var resource
      */
     protected $imgResource;
 
     /**
      * Avatar constructor.
+     *
      * @param string $skinPath
      */
     public function __construct(string $skinPath)
@@ -33,31 +34,32 @@ abstract class ImageSection
     }
 
     /**
-     * From resource to string
+     * From resource to string.
      *
      * @return string
      */
     public function __toString(): string
     {
-        ob_start();
-        imagepng($this->imgResource);
-        $imgToString = ob_get_contents();
-        ob_end_clean();
+        \ob_start();
+        \imagepng($this->imgResource);
+        $imgToString = \ob_get_contents();
+        \ob_end_clean();
+
         return $imgToString;
     }
 
     /**
-     * Destructor
+     * Destructor.
      */
     public function __destruct()
     {
         if ($this->imgResource) {
-            imagedestroy($this->imgResource);
+            \imagedestroy($this->imgResource);
         }
     }
 
     /**
-     * Get generated resource image
+     * Get generated resource image.
      *
      * @return resource
      */

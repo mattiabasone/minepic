@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Core as MinepicCore;
@@ -13,14 +15,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Website extends BaseController
 {
     /**
-     * Default title
+     * Default title.
      *
      * @var string
      */
     private static $pageTitle = 'Minecraft avatar generator - Minepic';
 
     /**
-     * Default description
+     * Default description.
      *
      * @var string
      */
@@ -28,7 +30,7 @@ class Website extends BaseController
     'that allow users and developers to pick them for their projects';
 
     /**
-     * Default keywords
+     * Default keywords.
      *
      * @var string
      */
@@ -36,18 +38,19 @@ class Website extends BaseController
     'minecraft skin, avatar, minecraft avatar, generator, skin generator, skin viewer';
 
     /**
-     * HTTP Response code
+     * HTTP Response code.
      *
      * @var int
      */
     private static $httpCode = 200;
 
     /**
-     * Render fullpage (headers, body, footer)
+     * Render fullpage (headers, body, footer).
      *
      * @param string $page
-     * @param array $bodyData
-     * @param array $headerData
+     * @param array  $bodyData
+     * @param array  $headerData
+     *
      * @return Response
      */
     private static function renderPage(
@@ -76,50 +79,50 @@ class Website extends BaseController
     }
 
     /**
-     * Index
+     * Index.
      *
      * @return Response
      */
-    public function index() : Response {
-
+    public function index(): Response
+    {
         $bodyData = [
             'lastRequests' => AccountsStats::getLastUsers(),
-            'mostWanted'    => AccountsStats::getMostWanted()
+            'mostWanted' => AccountsStats::getMostWanted(),
         ];
 
         return self::renderPage('index', $bodyData);
     }
 
     /**
-     * User stats page
+     * User stats page.
      *
      * @param string $uuidOrName
+     *
      * @return Response
      */
-    public function user(string $uuidOrName) : Response {
-
+    public function user(string $uuidOrName): Response
+    {
         $minepicCore = new MinepicCore();
 
         if ($minepicCore->initialize($uuidOrName)) {
-
             list($userdata, $userstats) = $minepicCore->getFullUserdata();
 
             $headerData = [
                 'title' => $userdata->username.' usage statistics - Minepic',
                 'description' => 'MinePic usage statistics for the user '.$userdata->username,
-                'keywords' => 'Minecraft, Minecraft avatar viewer, pic, minepic avatar viewer, skin, ' .
-                    'minecraft skin, avatar, minecraft avatar, generator, skin generator, skin viewer'
+                'keywords' => 'Minecraft, Minecraft avatar viewer, pic, minepic avatar viewer, skin, '.
+                    'minecraft skin, avatar, minecraft avatar, generator, skin generator, skin viewer',
             ];
 
             $bodyData = [
                 'user' => [
-                    'uuid'          => $userdata->uuid,
-                    'username'      => $userdata->username,
+                    'uuid' => $userdata->uuid,
+                    'username' => $userdata->username,
                     'count_request' => $userstats->count_request,
-                    'count_search'  => $userstats->count_search,
-                    'last_request'  => DateHelper::humanizeTimestamp($userstats->time_request),
-                    'last_search'   => DateHelper::humanizeTimestamp($userstats->time_search),
-                ]
+                    'count_search' => $userstats->count_search,
+                    'last_request' => DateHelper::humanizeTimestamp($userstats->time_request),
+                    'last_search' => DateHelper::humanizeTimestamp($userstats->time_search),
+                ],
             ];
 
             return self::renderPage('user', $bodyData, $headerData);

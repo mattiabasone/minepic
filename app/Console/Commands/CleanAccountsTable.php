@@ -1,14 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Database\Accounts;
 use Illuminate\Console\Command;
 
 /**
- * Class CleanAccountsTable
- * @package App\Console\Commands
+ * Class CleanAccountsTable.
  */
-class CleanAccountsTable extends Command {
+class CleanAccountsTable extends Command
+{
     /**
      * The console command name.
      *
@@ -25,8 +28,6 @@ class CleanAccountsTable extends Command {
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
     public function fire()
     {
@@ -41,19 +42,19 @@ class CleanAccountsTable extends Command {
             ->where('total', '>', 1)
             ->get();
 
-        if (count($results) > 0) {
+        if (\count($results) > 0) {
             foreach ($results as $result) {
                 $this->info("Removing {$result->username}...");
                 $deletedRows = Accounts::where('username', $result->username)->orderBy('updated', 'ASC')->take(1)->delete();
-                if ($deletedRows == 1) {
-                    $this->info("Deleted");
+                if (1 == $deletedRows) {
+                    $this->info('Deleted');
                 } else {
-                    $this->error("Error!");
+                    $this->error('Error!');
                 }
-                $this->info("--------------------------------------------");
+                $this->info('--------------------------------------------');
             }
         } else {
-            $this->info("No duplicates found");
+            $this->info('No duplicates found');
         }
     }
 }

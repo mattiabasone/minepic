@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helpers\Storage\Files;
 
 use App\Helpers\Storage\Storage;
@@ -7,9 +9,9 @@ use App\Helpers\Storage\Storage;
 class IsometricsStorage extends Storage
 {
     /**
-     * Skins storage location
+     * Skins storage location.
      *
      * @var string
      */
-    protected static $folder = "isometrics";
+    protected static $folder = 'isometrics';
 }
