@@ -272,8 +272,10 @@ class Core
             $this->userdata = new Accounts();
             $this->userdata->username = $this->apiUserdata->username;
             $this->userdata->uuid = $this->apiUserdata->uuid;
-            $this->userdata->skin = (\mb_strlen($this->apiUserdata->skin) > 1 ? $this->apiUserdata->skin : '');
-            $this->userdata->cape = (\mb_strlen($this->apiUserdata->cape) > 1 ? $this->apiUserdata->cape : '');
+            $this->userdata->skin = ($this->apiUserdata->skin && \mb_strlen($this->apiUserdata->skin) > 1 ?
+                $this->apiUserdata->skin : '');
+            $this->userdata->cape = ($this->apiUserdata->cape && \mb_strlen($this->apiUserdata->cape) > 1 ?
+                $this->apiUserdata->cape : '');
             $this->userdata->save();
 
             $this->saveRemoteSkin();
