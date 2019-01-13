@@ -122,7 +122,6 @@ class Avatar extends ImageSection
 
         switch ($type) {
             case 'F':
-
                 // Avatar front
                 $sectionSrcX = 8;
                 $sectionSrcY = 8;
@@ -133,7 +132,6 @@ class Avatar extends ImageSection
 
                 break;
             case 'B':
-
                 // Avatar back
                 $sectionSrcX = 24;
                 $sectionSrcY = 8;
@@ -144,7 +142,6 @@ class Avatar extends ImageSection
 
                 break;
             case 'R':
-
                 // Avatar right
                 $sectionSrcX = 0;
                 $sectionSrcY = 8;
@@ -155,7 +152,6 @@ class Avatar extends ImageSection
 
                 break;
             case 'L':
-
                 // Avatar left
                 $sectionSrcX = 16;
                 $sectionSrcY = 8;
@@ -166,7 +162,6 @@ class Avatar extends ImageSection
 
                 break;
             case 'T':
-
                 // Avatar right
                 $sectionSrcX = 8;
                 $sectionSrcY = 0;

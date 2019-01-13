@@ -577,7 +577,6 @@ class Core
         $accountNameChange->prev_name = $prev;
         $accountNameChange->new_name = $new;
         $accountNameChange->time_change = \time();
-
         return $accountNameChange->save();
     }
 
@@ -663,7 +662,6 @@ class Core
      * Default Avatar Isometric.
      *
      * @param int $size
-     *
      * @return IsometricAvatar
      */
     public function isometricAvatarCurrentUser(int $size = 0): IsometricAvatar
@@ -681,7 +679,6 @@ class Core
      * Default Avatar (Isometric).
      *
      * @param int $size
-     *
      * @return IsometricAvatar (rendered)
      */
     public function defaultIsometricAvatar(int $size = 0): IsometricAvatar
@@ -709,7 +706,7 @@ class Core
      */
     public function saveRemoteSkin(): bool
     {
-        if (isset($this->userdata->skin) && \mb_strlen($this->userdata->skin) > 0) {
+        if (!empty($this->userdata->skin) && \mb_strlen($this->userdata->skin) > 0) {
             $mojangClient = new MojangClient();
             try {
                 $skinData = $mojangClient->getSkin($this->userdata->skin);
@@ -728,8 +725,8 @@ class Core
      *
      * @param int
      * @param string
-     *
      * @return Skin
+     * @throws \Throwable
      */
     public function renderSkinCurrentUser(int $size = 0, string $type = 'F'): Skin
     {
@@ -769,7 +766,7 @@ class Core
         return
             ($this->forceUpdate) &&
             ((\time() - $this->userdata->updated_at->timestamp) > env('MIN_USERDATA_UPDATE_INTERVAL'))
-        ;
+            ;
     }
 
     /*==================================================================================================================
@@ -783,14 +780,12 @@ class Core
      */
     public function updateStats($type = 'request')
     {
-        if (true === env('STATS_ENABLED')) {
-            if (isset($this->userdata->uuid) && $this->userdata->uuid !== env('DEFAULT_UUID')) {
-                $AccStats = new AccountsStats();
-                if ('request' == $type) {
-                    $AccStats->incrementRequestStats($this->userdata->uuid);
-                } elseif ('search' == $type) {
-                    $AccStats->incrementSearchStats($this->userdata->uuid);
-                }
+        if (env('STATS_ENABLED') && !empty($this->userdata->uuid) && $this->userdata->uuid !== env('DEFAULT_UUID')) {
+            $AccStats = new AccountsStats();
+            if ('request' == $type) {
+                $AccStats->incrementRequestStats($this->userdata->uuid);
+            } elseif ('search' == $type) {
+                $AccStats->incrementSearchStats($this->userdata->uuid);
             }
         }
     }

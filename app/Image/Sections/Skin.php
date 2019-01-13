@@ -40,7 +40,10 @@ class Skin extends ImageSection
         }
 
         $image = \imagecreatefrompng($this->skinPath);
-        $scale = $skin_height / 32;
+        $scale = (int) $skin_height / 32;
+        if ($scale === 0) {
+            $scale = 1;
+        }
         $this->imgResource = \imagecreatetruecolor(16 * $scale, 32 * $scale);
         \imagealphablending($this->imgResource, false);
         \imagesavealpha($this->imgResource, true);
