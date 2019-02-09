@@ -260,9 +260,9 @@ class IsometricAvatar
         $this->head->newImage($finalImageSize, $finalImageSize, $this->getImagickPixelTransparent());
 
         // This is weird, but it works
-        $faceX = \round(($doubleAvatarSize / 2)) - 2 + self::HEAD_MARGIN;
-        $faceY = $rightY = \round($doubleAvatarSize / 4) - 1 + self::HEAD_MARGIN;
-        $topX = $rightX = \round($doubleAvatarSize / 16) + self::HEAD_MARGIN;
+        $faceX = ((int) \round(($doubleAvatarSize / 2))) - 2 + self::HEAD_MARGIN;
+        $faceY = $rightY = ((int) \round($doubleAvatarSize / 4)) - 1 + self::HEAD_MARGIN;
+        $topX = $rightX = ((int)\round($doubleAvatarSize / 16)) + self::HEAD_MARGIN;
         $topY = -1 + self::HEAD_MARGIN;
 
         // Add Face Section
