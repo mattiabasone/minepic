@@ -65,7 +65,7 @@ class Api extends BaseController
      *
      * @return Response
      */
-    public function avatarWithSize(Request $request, int $size = 0, string $uuidOrName = ''): Response
+    public function avatarWithSize(Request $request, $size = 0, string $uuidOrName = ''): Response
     {
         return $this->serveAvatar($request, $uuidOrName, $size);
     }
