@@ -16,7 +16,7 @@ unit_test:php73:
     MYSQL_DATABASE: "app"
     MYSQL_ROOT_PASSWORD: "root"
   before_script:
-    - composer install
+    - composer install --no-interaction --no-suggest --no-ansi --no-progress
     - cp .env.ci_testing .env
     - php artisan migrate
   script:
