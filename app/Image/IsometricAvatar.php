@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Image;
 
-use App\Image\Sections\Avatar;
+use App\Helpers\Storage\Files\IsometricsStorage;
 use App\Helpers\Storage\Files\SkinsStorage;
 use App\Image\Exceptions\SkinNotFountException;
-use App\Helpers\Storage\Files\IsometricsStorage;
+use App\Image\Sections\Avatar;
 
 /**
  * Class IsometricAvatar.
@@ -262,7 +262,7 @@ class IsometricAvatar
         // This is weird, but it works
         $faceX = ((int) \round(($doubleAvatarSize / 2))) - 2 + self::HEAD_MARGIN;
         $faceY = $rightY = ((int) \round($doubleAvatarSize / 4)) - 1 + self::HEAD_MARGIN;
-        $topX = $rightX = ((int)\round($doubleAvatarSize / 16)) + self::HEAD_MARGIN;
+        $topX = $rightX = ((int) \round($doubleAvatarSize / 16)) + self::HEAD_MARGIN;
         $topY = -1 + self::HEAD_MARGIN;
 
         // Add Face Section

@@ -1,0 +1,29 @@
+stages:
+  - test
+  - deploy
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - vendor/
+
+unit_test:php73:
+  stage: test
+  image: mattiabasone/php:7.3-cli
+  services:
+    - mysql:5.7
+  variables:
+    MYSQL_DATABASE: "root"
+    MYSQL_ROOT_PASSWORD: "root"
+  before_script:
+    - composer install
+    - php artisan migrate
+  script:
+    - vendor/bin/phpunit --coverage-text
+
+deploy:
+  stage: deploy
+  image: mattiabasone/php:7.3-cli
+  script:
+    - echo "Hello World"
+  when: manual

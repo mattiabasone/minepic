@@ -41,7 +41,7 @@ class Skin extends ImageSection
 
         $image = \imagecreatefrompng($this->skinPath);
         $scale = (int) $skin_height / 32;
-        if ($scale === 0) {
+        if (0 === $scale) {
             $scale = 1;
         }
         $this->imgResource = \imagecreatetruecolor(16 * $scale, 32 * $scale);

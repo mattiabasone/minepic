@@ -12,7 +12,7 @@ use Illuminate\Http\Response;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class Website extends BaseController
+class WebsiteController extends BaseController
 {
     /**
      * Default title.

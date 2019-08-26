@@ -5,26 +5,31 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Core as MinepicCore;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 /**
  * Class Api.
  */
-class Api extends BaseController
+class ApiController extends BaseController
 {
     /**
      * @var MinepicCore
      */
     private $minepic;
 
+    private $responseFactory;
+
     /**
      * Api constructor.
      */
-    public function __construct()
+    public function __construct(MinepicCore $minepic, ResponseFactory $responseFactory)
     {
-        $this->minepic = new MinepicCore();
+        $this->minepic = $minepic;
+        $this->responseFactory = $responseFactory;
     }
 
     /**
@@ -53,15 +58,15 @@ class Api extends BaseController
             $headers['Content-Type'] = 'image/png';
         }
 
-        return Response::create($avatarImage, $httpCode, $headers);
+        return $this->responseFactory->make($avatarImage, $httpCode, $headers);
     }
 
     /**
      * Serve avatar with size.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int $size
-     * @param string $uuidOrName
+     * @param int                      $size
+     * @param string                   $uuidOrName
      *
      * @return Response
      */
@@ -96,15 +101,15 @@ class Api extends BaseController
             $headers['Content-Type'] = 'image/png';
         }
 
-        return Response::create($avatarImage, $httpCode, $headers);
+        return $this->responseFactory->make($avatarImage, $httpCode, $headers);
     }
 
     /**
      * Isometric Avatar with Size.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int $size
-     * @param string $uuidOrName
+     * @param int                      $size
+     * @param string                   $uuidOrName
      *
      * @return Response
      */
@@ -117,9 +122,9 @@ class Api extends BaseController
      * Serve skin.
      *
      * @param \Illuminate\Http\Request $request
-     * @param string $uuidOrName
-     * @param int    $size
-     * @param string $type
+     * @param string                   $uuidOrName
+     * @param int                      $size
+     * @param string                   $type
      *
      * @return Response
      */
@@ -139,14 +144,14 @@ class Api extends BaseController
             $headers['Content-Type'] = 'image/png';
         }
 
-        return Response::create($avatarImage, $httpCode, $headers);
+        return $this->responseFactory->make($avatarImage, $httpCode, $headers);
     }
 
     /**
      * Skin front with size parameter.
      *
      * @param \Illuminate\Http\Request $request
-     * @param string $uuidOrName
+     * @param string                   $uuidOrName
      * @param $size
      *
      * @return Response
@@ -173,7 +178,7 @@ class Api extends BaseController
      * Skin back with size parameter.
      *
      * @param \Illuminate\Http\Request $request
-     * @param string $uuidOrName
+     * @param string                   $uuidOrName
      * @param $size
      *
      * @return Response
@@ -200,7 +205,7 @@ class Api extends BaseController
         $avatarImage = $this->minepic->skinCurrentUser();
         $avatarImage->prepareTextureDownload();
 
-        return Response::create($avatarImage, 200, $headers);
+        return $this->responseFactory->make($avatarImage, 200, $headers);
     }
 
     /**
@@ -208,9 +213,9 @@ class Api extends BaseController
      *
      * @param string $uuidOrName
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function update(string $uuidOrName): Response
+    public function update(string $uuidOrName): JsonResponse
     {
         // Force user update
         $this->minepic->setForceUpdate(true);
@@ -238,6 +243,6 @@ class Api extends BaseController
             $httpStatus = 404;
         }
 
-        return Response::create($response, $httpStatus, ['Content-Type' => 'application-json']);
+        return $this->responseFactory->json($response, $httpStatus);
     }
 }

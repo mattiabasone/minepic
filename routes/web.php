@@ -14,35 +14,35 @@ declare(strict_types=1);
 */
 
 // HTML
-$router->get('/', 'Website@index');
-$router->get('/user/{uuidOrName}', 'Website@user');
+$router->get('/', 'WebsiteController@index');
+$router->get('/user/{uuidOrName}', 'WebsiteController@user');
 
 // JSON
 $router->group(['prefix' => 'json'], function () use ($router) {
-    $router->get('user/{uuidOrName}', 'Json@user');
+    $router->get('user/{uuidOrName}', 'JsonController@user');
 
-    $router->get('uuid/{uuid}', 'Json@uuidToUsername');
+    $router->get('uuid/{uuid}', 'JsonController@uuidToUsername');
 
-    $router->get('typeahead/{username}', 'Json@userTypeahead');
+    $router->get('typeahead/{username}', 'JsonController@userTypeahead');
 });
 
 // Avatar
-$router->get('/avatar/{uuidOrName}', 'Api@serveAvatar');
-$router->get('/avatar/{size}/{uuidOrName}', 'Api@avatarWithSize');
+$router->get('/avatar/{uuidOrName}', 'ApiController@serveAvatar');
+$router->get('/avatar/{size}/{uuidOrName}', 'ApiController@avatarWithSize');
 
 // Avatar (Isometric)
-$router->get('/head/{uuidOrName}', 'Api@serveIsometricAvatar');
-$router->get('/head/{size}/{uuidOrName}', 'Api@isometricAvatarWithSize');
+$router->get('/head/{uuidOrName}', 'ApiController@serveIsometricAvatar');
+$router->get('/head/{size}/{uuidOrName}', 'ApiController@isometricAvatarWithSize');
 
 // Skin
-$router->get('/skin/{uuidOrName}', 'Api@serveSkin');
-$router->get('/skin/{size}/{uuidOrName}', 'Api@skinFrontWithSize');
+$router->get('/skin/{uuidOrName}', 'ApiController@serveSkin');
+$router->get('/skin/{size}/{uuidOrName}', 'ApiController@skinFrontWithSize');
 
-$router->get('/skin-back/{uuidOrName}', 'Api@skinBackWithoutSize');
-$router->get('/skin-back/{size}/{uuidOrName}', 'Api@skinBackWithSize');
+$router->get('/skin-back/{uuidOrName}', 'ApiController@skinBackWithoutSize');
+$router->get('/skin-back/{size}/{uuidOrName}', 'ApiController@skinBackWithSize');
 
 // Download
-$router->get('/download/{uuidOrName}', 'Api@downloadTexture');
+$router->get('/download/{uuidOrName}', 'ApiController@downloadTexture');
 
 // Update
-$router->get('/update/{uuidOrName}', 'Api@update');
+$router->get('/update/{uuidOrName}', 'ApiController@update');

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use Carbon\Carbon;
 use App\Database\Accounts;
-use App\Minecraft\MojangClient;
-use Illuminate\Console\Command;
 use App\Helpers\Storage\Files\SkinsStorage;
+use App\Minecraft\MojangClient;
+use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 /**
  * Class CleanAccountsTable.

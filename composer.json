@@ -11,14 +11,16 @@
         "ext-json":  "*",
         "laravel/lumen-framework": "5.7.*",
         "vlucas/phpdotenv": "^2.4",
-        "guzzlehttp/guzzle": "^6.2"
+        "guzzlehttp/guzzle": "^6.2",
+        "league/flysystem": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "phpunit/phpunit": "^7.0",
         "mockery/mockery": "~0.9",
         "friendsofphp/php-cs-fixer": "^2.13",
-        "barryvdh/laravel-debugbar": "^3.2"
+        "barryvdh/laravel-debugbar": "^3.2",
+        "barryvdh/laravel-ide-helper": "^2.6"
     },
     "autoload": {
         "psr-4": {
@@ -35,7 +37,8 @@
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""
         ],
-        "fix": "@php vendor/bin/php-cs-fixer fix"
+        "fix": "@php vendor/bin/php-cs-fixer fix",
+        "ihg": "@php artisan ide-helper:generate"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

@@ -471,15 +471,14 @@ class Core
                         $this->updateDbUser();
 
                         return true;
-                    } else {
-                        // I'll try to insert the new user
-                        if ($this->insertNewUuid()) {
-                            if ($this->accountNotFound) {
-                                $this->removeFailedRequest();
-                            }
+                    }
 
-                            return true;
+                    if ($this->insertNewUuid()) {
+                        if ($this->accountNotFound) {
+                            $this->removeFailedRequest();
                         }
+
+                        return true;
                     }
                 }
             }
@@ -577,6 +576,7 @@ class Core
         $accountNameChange->prev_name = $prev;
         $accountNameChange->new_name = $new;
         $accountNameChange->time_change = \time();
+
         return $accountNameChange->save();
     }
 
@@ -662,6 +662,7 @@ class Core
      * Default Avatar Isometric.
      *
      * @param int $size
+     *
      * @return IsometricAvatar
      */
     public function isometricAvatarCurrentUser(int $size = 0): IsometricAvatar
@@ -679,6 +680,7 @@ class Core
      * Default Avatar (Isometric).
      *
      * @param int $size
+     *
      * @return IsometricAvatar (rendered)
      */
     public function defaultIsometricAvatar(int $size = 0): IsometricAvatar
@@ -725,7 +727,9 @@ class Core
      *
      * @param int
      * @param string
+     *
      * @return Skin
+     *
      * @throws \Throwable
      */
     public function renderSkinCurrentUser(int $size = 0, string $type = 'F'): Skin

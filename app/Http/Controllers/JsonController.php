@@ -10,7 +10,7 @@ use App\Helpers\Date as DateHelper;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
-class Json extends BaseController
+class JsonController extends BaseController
 {
     /**
      * Send response to the user.
@@ -37,7 +37,7 @@ class Json extends BaseController
         $minepicCore = new MinepicCore();
         if ($minepicCore->initialize($uuidOrName)) {
             $httpStatus = 200;
-            list($userdata, $userstats) = $minepicCore->getFullUserdata();
+            [$userdata, $userstats] = $minepicCore->getFullUserdata();
 
             $response = [
                 'ok' => true,

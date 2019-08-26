@@ -81,6 +81,7 @@ $app->register(App\Providers\AppServiceProvider::class);
 if (env('APP_DEBUG')) {
     $app->configure('debugbar');
     $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
+    $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 }
 
 /*
