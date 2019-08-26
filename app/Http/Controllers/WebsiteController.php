@@ -60,13 +60,13 @@ class WebsiteController extends BaseController
     ): Response {
         $realHeaderData = [];
         $realHeaderData['title'] = (
-            isset($headerData['title']) ? $headerData['title'] : self::$pageTitle
+            $headerData['title'] ?? self::$pageTitle
         );
         $realHeaderData['description'] = (
-            isset($headerData['description']) ? $headerData['description'] : self::$pageDescription
+            $headerData['description'] ?? self::$pageDescription
         );
         $realHeaderData['keywords'] = (
-            isset($headerData['keywords']) ? $headerData['keywords'] : self::$pageKeywords
+            $headerData['keywords'] ?? self::$pageKeywords
         );
         $realHeaderData['randomMessage'] = SplashMessage::get();
 
@@ -105,7 +105,7 @@ class WebsiteController extends BaseController
         $minepicCore = new MinepicCore();
 
         if ($minepicCore->initialize($uuidOrName)) {
-            list($userdata, $userstats) = $minepicCore->getFullUserdata();
+            [$userdata, $userstats] = $minepicCore->getFullUserdata();
 
             $headerData = [
                 'title' => $userdata->username.' usage statistics - Minepic',
@@ -126,8 +126,8 @@ class WebsiteController extends BaseController
             ];
 
             return self::renderPage('user', $bodyData, $headerData);
-        } else {
-            throw new NotFoundHttpException();
         }
+
+        throw new NotFoundHttpException();
     }
 }

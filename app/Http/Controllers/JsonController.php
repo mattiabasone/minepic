@@ -7,22 +7,20 @@ namespace App\Http\Controllers;
 use App\Core as MinepicCore;
 use App\Database\Accounts;
 use App\Helpers\Date as DateHelper;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class JsonController extends BaseController
 {
     /**
-     * Send response to the user.
-     *
-     * @param $response
-     * @param $httpStatus
-     *
-     * @return Response
+     * @var ResponseFactory
      */
-    private static function sendResponse($response, $httpStatus): Response
+    private $responseFactory;
+
+    public function __construct(ResponseFactory $responseFactory)
     {
-        return Response::create($response, $httpStatus, ['Content-Type' => 'application-json']);
+        $this->responseFactory = $responseFactory;
     }
 
     /**
@@ -30,9 +28,9 @@ class JsonController extends BaseController
      *
      * @param string $uuidOrName
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function user($uuidOrName = ''): Response
+    public function user($uuidOrName = ''): JsonResponse
     {
         $minepicCore = new MinepicCore();
         if ($minepicCore->initialize($uuidOrName)) {
@@ -58,7 +56,7 @@ class JsonController extends BaseController
             ];
         }
 
-        return self::sendResponse($response, $httpStatus);
+        return $this->responseFactory->json($response, $httpStatus);
     }
 
     /**
@@ -66,16 +64,20 @@ class JsonController extends BaseController
      *
      * @param $term
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function userTypeahead($term): Response
+    public function userTypeahead($term): JsonResponse
     {
         $response = [];
-        $accounts = Accounts::select('username')->where('username', 'LIKE', $term.'%')->take(15)->get();
+        $accounts = Accounts::query()
+            ->select(['username'])
+            ->where('username', 'LIKE', $term.'%')
+            ->take(15)
+            ->get();
         foreach ($accounts as $account) {
             $response[]['value'] = $account->username;
         }
 
-        return self::sendResponse($response, 200);
+        return $this->responseFactory->json($response);
     }
 }

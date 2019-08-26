@@ -25,7 +25,7 @@ class Storage
      */
     public static function getPath(string $uuid = ''): string
     {
-        if ('' == $uuid) {
+        if ($uuid === '') {
             $uuid = env('DEFAULT_USERNAME');
         }
 
@@ -54,7 +54,7 @@ class Storage
      */
     public static function save(string $uuid, $rawData): bool
     {
-        $fp = \fopen(static::getPath($uuid), 'w');
+        $fp = \fopen(static::getPath($uuid), 'wb');
         if ($fp) {
             \fwrite($fp, $rawData);
             \fclose($fp);
@@ -74,7 +74,7 @@ class Storage
      */
     public static function copyAsSteve(string $string = ''): bool
     {
-        if ('' != $string) {
+        if ($string !== '') {
             return \copy(
                 static::getPath(env('DEFAULT_USERNAME')),
                 static::getPath($string)

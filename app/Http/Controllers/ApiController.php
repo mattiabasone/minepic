@@ -25,6 +25,9 @@ class ApiController extends BaseController
 
     /**
      * Api constructor.
+     *
+     * @param MinepicCore     $minepic
+     * @param ResponseFactory $responseFactory
      */
     public function __construct(MinepicCore $minepic, ResponseFactory $responseFactory)
     {
