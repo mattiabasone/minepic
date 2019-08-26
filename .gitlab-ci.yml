@@ -13,10 +13,11 @@ unit_test:php73:
   services:
     - mysql:5.7
   variables:
-    MYSQL_DATABASE: "root"
+    MYSQL_DATABASE: "app"
     MYSQL_ROOT_PASSWORD: "root"
   before_script:
     - composer install
+    - cp .env.ci_testing .env
     - php artisan migrate
   script:
     - vendor/bin/phpunit --coverage-text
