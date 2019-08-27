@@ -3,3 +3,4 @@ vendor
 .env
 .php_cs.cache
 _ide_helper.php
+phpunit.xml.dist

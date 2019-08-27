@@ -212,7 +212,7 @@ class Core
      *
      * @return Accounts
      */
-    public function getUserdata(): Accounts
+    public function getUserdata(): ?Accounts
     {
         return $this->userdata;
     }
@@ -379,21 +379,21 @@ class Core
      */
     public function generateHttpCacheHeaders($size, $type = 'avatar'): array
     {
-        if (isset($this->userdata->uuid) && '' != $this->userdata->uuid) {
+        if (isset($this->userdata->uuid) && $this->userdata->uuid !== '') {
             return [
                 'Cache-Control' => 'private, max-age='.env('USERDATA_CACHE_TIME'),
                 'Last-Modified' => \gmdate('D, d M Y H:i:s \G\M\T', $this->userdata->updated_at->timestamp),
                 'Expires' => \gmdate('D, d M Y H:i:s \G\M\T', $this->userdata->updated_at->timestamp + env('USERDATA_CACHE_TIME')),
                 'ETag' => \md5($type.$this->userdata->updated_at->timestamp.$this->userdata->uuid.$this->userdata->username.$size),
             ];
-        } else {
-            return [
-                'Cache-Control' => 'private, max-age=7776000',
-                'ETag' => \md5("{$type}_FFS_STOP_STEVE_SPAM_{$size}"),
-                'Last-Modified' => \gmdate('D, d M Y H:i:s \G\M\T', \strtotime('2017-02-01 00:00')),
-                'Expires' => \gmdate('D, d M Y H:i:s \G\M\T', \strtotime('2017-02-01 00:00')),
-            ];
         }
+
+        return [
+            'Cache-Control' => 'private, max-age=7776000',
+            'ETag' => \md5("{$type}_FFS_STOP_STEVE_SPAM_{$size}"),
+            'Last-Modified' => \gmdate('D, d M Y H:i:s \G\M\T', \strtotime('2017-02-01 00:00')),
+            'Expires' => \gmdate('D, d M Y H:i:s \G\M\T', \strtotime('2017-02-01 00:00')),
+        ];
     }
 
     /**
@@ -631,7 +631,7 @@ class Core
     public function randomAvatar(int $size = 0): Avatar
     {
         $all_skin = \scandir(storage_path(env('SKINS_FOLDER')));
-        $rand = \rand(2, \count($all_skin));
+        $rand = \random_int(2, \count($all_skin));
 
         $avatar = new Avatar(SkinsStorage::getPath($all_skin[$rand]));
         $avatar->renderAvatar($size);
@@ -667,9 +667,12 @@ class Core
      */
     public function isometricAvatarCurrentUser(int $size = 0): IsometricAvatar
     {
+        // TODO: Needs refactoring
+        $uuid = $this->userdata->uuid ?? env('DEFAULT_UUID');
+        $timestamp = $this->userdata->updated_at->timestamp ?? time();
         $isometricAvatar = new IsometricAvatar(
-            $this->userdata->uuid,
-            $this->userdata->updated_at->timestamp
+            $uuid,
+            $timestamp
         );
         $isometricAvatar->render($size);
 

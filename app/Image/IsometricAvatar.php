@@ -284,7 +284,7 @@ class IsometricAvatar
     /**
      * Create $head Imagick Object from previously rendered head.
      */
-    protected function createFromFile()
+    protected function createFromFile(): void
     {
         $this->head = new \Imagick($this->isometricPath);
     }
@@ -294,7 +294,7 @@ class IsometricAvatar
      *
      * @return bool
      */
-    protected function verifyCachedFile()
+    protected function verifyCachedFile(): bool
     {
         if (!$this->checkCacheStatusFlag) {
             return true;
