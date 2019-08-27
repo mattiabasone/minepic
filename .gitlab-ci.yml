@@ -20,7 +20,7 @@ unit_test:php73:
     - cp .env.ci_testing .env
     - php artisan migrate
   script:
-    - vendor/bin/phpunit --coverage-text
+    - vendor/bin/phpunit --configuration phpunit-ci.xml
 
 deploy:
   stage: deploy
