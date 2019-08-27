@@ -33,6 +33,7 @@ class ApiControllerTest extends TestCase
         $this->assertEquals($expectedImage, $actualImage);
     }
 
+    /** @test */
     public function shouldReturnSteveSkin(): void
     {
         $this->get('/skin/Steve');
@@ -41,7 +42,6 @@ class ApiControllerTest extends TestCase
         $this->assertEquals($expectedImage, $actualImage);
     }
 
-    /** @test */
     public function shouldReturnSteveHead(): void
     {
         $this->get('/head/Steve');
