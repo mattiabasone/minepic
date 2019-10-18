@@ -1,11 +1,21 @@
 stages:
+  - build
   - test
   - deploy
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - vendor/
+composer_install:
+  stage: build
+  image: mattiabasone/php:7.3-cli
+  cache:
+    key: "${CI_COMMIT_REF_SLUG}"
+    paths:
+      - vendor/
+  script:
+    - composer install --no-interaction --no-suggest --no-ansi --no-progress
+  artifacts:
+    paths:
+      - vendor/
+    expire_in: 7 days
 
 unit_test:php73:
   stage: test
@@ -16,7 +26,21 @@ unit_test:php73:
     MYSQL_DATABASE: "app"
     MYSQL_ROOT_PASSWORD: "root"
   before_script:
-    - composer install --no-interaction --no-suggest --no-ansi --no-progress
+    - cp .env.ci_testing .env
+    - php artisan migrate
+  script:
+    - vendor/bin/phpunit --configuration phpunit-ci.xml
+
+unit_test:php74:
+  stage: test
+  image: mattiabasone/php:7.4-rc-cli
+  allow_failure: true
+  services:
+    - mysql:5.7
+  variables:
+    MYSQL_DATABASE: "app"
+    MYSQL_ROOT_PASSWORD: "root"
+  before_script:
     - cp .env.ci_testing .env
     - php artisan migrate
   script:
@@ -26,5 +50,5 @@ deploy:
   stage: deploy
   image: mattiabasone/php:7.3-cli
   script:
-    - echo "Hello World"
+    - echo "Hello World (VULEVI!)"
   when: manual
