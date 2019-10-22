@@ -60,6 +60,7 @@ deploy_production:
     - eval $(ssh-agent -s)
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - ssh-add <(echo "$CI_PRIVATE_KEY")
+    - composer --no-interaction --no-suggest --no-ansi --no-progress --no-dev
   script:
     - rsync -rav -e "ssh -p$SERVER_PORT" --exclude-from=$BASE_EXCLUDE --delete $CI_PROJECT_DIR/ $SERVER_USER@$SERVER_ADDRESS:$SERVER_APP_PATH
   only:
