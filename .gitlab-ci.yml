@@ -66,7 +66,7 @@ deploy_staging:
     - ssh -p $SERVER_PORT $SERVER_USER@$SERVER_ADDRESS "sudo chmod -R 770 $SERVER_APP_PATH_STAG"
     - ssh -p $SERVER_PORT $SERVER_USER@$SERVER_ADDRESS "docker exec -t staging-minepic.org-backend php /var/www/app/artisan migrate"
   only:
-    - master
+    - staging
 
 deploy_production:
   stage: deploy
