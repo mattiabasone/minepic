@@ -312,6 +312,7 @@ class Core
 
                 return true;
             } catch (\Exception $e) {
+                \Log::error($e);
                 return false;
             }
         }
@@ -719,6 +720,7 @@ class Core
 
                 return SkinsStorage::save($this->userdata->uuid, $skinData);
             } catch (\Exception $e) {
+                \Log::error($e);
                 $this->error = $e->getMessage();
             }
         }
