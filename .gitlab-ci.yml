@@ -63,6 +63,8 @@ deploy_staging:
     - composer install --no-interaction --no-suggest --no-ansi --no-progress --no-dev
   script:
     - rsync -rav -e "ssh -p$SERVER_PORT" --exclude-from=$BASE_EXCLUDE --delete $CI_PROJECT_DIR/ $SERVER_USER@$SERVER_ADDRESS:$SERVER_APP_PATH_STAG
+    - ssh -p $SERVER_PORT $SERVER_USER@$SERVER_ADDRESS "sudo chmod -R 770 $SERVER_APP_PATH_STAG"
+    - ssh -p $SERVER_PORT $SERVER_USER@$SERVER_ADDRESS "docker exec -t staging-minepic.org-backend php /var/www/app/artisan migrate"
   only:
     - master
 
@@ -83,5 +85,7 @@ deploy_production:
     - composer install --no-interaction --no-suggest --no-ansi --no-progress --no-dev
   script:
     - rsync -rav -e "ssh -p$SERVER_PORT" --exclude-from=$BASE_EXCLUDE --delete $CI_PROJECT_DIR/ $SERVER_USER@$SERVER_ADDRESS:$SERVER_APP_PATH_PROD
+    - ssh -p $SERVER_PORT $SERVER_USER@$SERVER_ADDRESS "sudo chmod -R 770 $SERVER_APP_PATH_PROD"
+    - ssh -p $SERVER_PORT $SERVER_USER@$SERVER_ADDRESS "docker exec -t minepic.org-backend php /var/www/app/artisan migrate"
   only:
     - master
