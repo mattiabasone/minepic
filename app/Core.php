@@ -595,6 +595,7 @@ class Core
 
             return true;
         } catch (\Exception $e) {
+            \Log::error($e);
             $this->apiUserdata = null;
 
             return false;
