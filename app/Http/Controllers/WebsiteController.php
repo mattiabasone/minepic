@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Core as MinepicCore;
-use App\Misc\SplashMessage;
-use Illuminate\Http\Response;
 use App\Database\AccountsStats;
 use App\Helpers\Date as DateHelper;
+use App\Misc\SplashMessage;
+use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class WebsiteController
+ * Class WebsiteController.
  */
 class WebsiteController extends BaseController
 {
@@ -48,6 +48,7 @@ class WebsiteController extends BaseController
 
     /**
      * WebsiteController constructor.
+     *
      * @param ResponseFactory $responseFactory
      */
     public function __construct(
@@ -56,14 +57,23 @@ class WebsiteController extends BaseController
         $this->responseFactory = $responseFactory;
     }
 
+    /**
+     * Compose view with header and footer.
+     *
+     * @param string $page
+     * @param array  $bodyData
+     * @param array  $headerData
+     *
+     * @return string
+     */
     private function composeView(
         string $page = '',
         array $bodyData = [],
         array $headerData = []
     ): string {
         return view('public.template.header', $headerData).
-                view('public.'.$page, $bodyData).
-                view('public.template.footer');
+            view('public.'.$page, $bodyData).
+            view('public.template.footer');
     }
 
     /**
@@ -87,6 +97,7 @@ class WebsiteController extends BaseController
         $realHeaderData['randomMessage'] = SplashMessage::get();
 
         $view = $this->composeView($page, $bodyData, $realHeaderData);
+
         return $this->responseFactory->make(
             $view,
             Response::HTTP_OK

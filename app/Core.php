@@ -313,6 +313,7 @@ class Core
                 return true;
             } catch (\Exception $e) {
                 \Log::error($e);
+
                 return false;
             }
         }
@@ -671,7 +672,7 @@ class Core
     {
         // TODO: Needs refactoring
         $uuid = $this->userdata->uuid ?? env('DEFAULT_UUID');
-        $timestamp = $this->userdata->updated_at->timestamp ?? time();
+        $timestamp = $this->userdata->updated_at->timestamp ?? \time();
         $isometricAvatar = new IsometricAvatar(
             $uuid,
             $timestamp

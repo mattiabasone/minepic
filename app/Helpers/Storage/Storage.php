@@ -54,7 +54,7 @@ class Storage
      */
     public static function save(string $uuid, $rawData): bool
     {
-        $fp = \fopen(static::getPath($uuid), 'wb');
+        $fp = \fopen(static::getPath($uuid), 'w');
         if ($fp) {
             \fwrite($fp, $rawData);
             \fclose($fp);

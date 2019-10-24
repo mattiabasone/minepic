@@ -12,7 +12,7 @@ use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 /**
- * Class Api.
+ * Class ApiController.
  */
 class ApiController extends BaseController
 {
@@ -21,6 +21,7 @@ class ApiController extends BaseController
      */
     private $minepic;
 
+    /** @var ResponseFactory */
     private $responseFactory;
 
     /**
@@ -130,6 +131,8 @@ class ApiController extends BaseController
      * @param string                   $type
      *
      * @return Response
+     *
+     * @throws \Throwable
      */
     public function serveSkin(Request $request, $uuidOrName = '', $size = 0, $type = 'F'): Response
     {
@@ -158,6 +161,8 @@ class ApiController extends BaseController
      * @param $size
      *
      * @return Response
+     *
+     * @throws \Throwable
      */
     public function skinFrontWithSize(Request $request, $uuidOrName, $size): Response
     {
@@ -171,6 +176,8 @@ class ApiController extends BaseController
      * @param $uuidOrName
      *
      * @return Response
+     *
+     * @throws \Throwable
      */
     public function skinBackWithoutSize(Request $request, $uuidOrName): Response
     {
@@ -185,6 +192,8 @@ class ApiController extends BaseController
      * @param $size
      *
      * @return Response
+     *
+     * @throws \Throwable
      */
     public function skinBackWithSize(Request $request, $uuidOrName, $size): Response
     {
@@ -212,7 +221,7 @@ class ApiController extends BaseController
     }
 
     /**
-     * Update userdata.
+     * Update User data.
      *
      * @param string $uuidOrName
      *

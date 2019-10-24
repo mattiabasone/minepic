@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Class WebsiteControllerTest
+ * Class WebsiteControllerTest.
  */
 class WebsiteControllerTest extends TestCase
 {
