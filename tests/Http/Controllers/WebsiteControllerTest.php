@@ -20,4 +20,11 @@ class WebsiteControllerTest extends TestCase
         $response = $this->get('/user/_Cyb3r');
         $response->assertResponseStatus(200);
     }
+
+    /** @test */
+    public function shouldDisplay404ForUnExistentUser(): void
+    {
+        $response = $this->get('/user/IHopeThisUserDoesNotExists');
+        $response->assertResponseStatus(404);
+    }
 }
