@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Core as MinepicCore;
-use App\Database\AccountsStats;
-use App\Helpers\Date as DateHelper;
 use App\Misc\SplashMessage;
 use Illuminate\Http\Response;
+use App\Database\AccountsStats;
+use App\Helpers\Date as DateHelper;
+use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class WebsiteController
+ */
 class WebsiteController extends BaseController
 {
     /**
@@ -19,14 +23,14 @@ class WebsiteController extends BaseController
      *
      * @var string
      */
-    private static $pageTitle = 'Minecraft avatar generator - Minepic';
+    private const DEFAULT_PAGE_TITLE = 'Minecraft avatar generator - Minepic';
 
     /**
      * Default description.
      *
      * @var string
      */
-    private static $pageDescription = 'MinePic is a free Minecraft avatar and skin viewer '.
+    private const DEFAULT_PAGE_DESCRIPTION = 'MinePic is a free Minecraft avatar and skin viewer '.
     'that allow users and developers to pick them for their projects';
 
     /**
@@ -34,15 +38,33 @@ class WebsiteController extends BaseController
      *
      * @var string
      */
-    private static $pageKeywords = 'Minecraft, Minecraft avatar viewer, pic, minepic avatar viewer, skin, '.
+    private const DEFAULT_PAGE_KEYWORDS = 'Minecraft, Minecraft avatar viewer, pic, minepic avatar viewer, skin, '.
     'minecraft skin, avatar, minecraft avatar, generator, skin generator, skin viewer';
 
     /**
-     * HTTP Response code.
-     *
-     * @var int
+     * @var ResponseFactory
      */
-    private static $httpCode = 200;
+    private $responseFactory;
+
+    /**
+     * WebsiteController constructor.
+     * @param ResponseFactory $responseFactory
+     */
+    public function __construct(
+        ResponseFactory $responseFactory
+    ) {
+        $this->responseFactory = $responseFactory;
+    }
+
+    private function composeView(
+        string $page = '',
+        array $bodyData = [],
+        array $headerData = []
+    ): string {
+        return view('public.template.header', $headerData).
+                view('public.'.$page, $bodyData).
+                view('public.template.footer');
+    }
 
     /**
      * Render fullpage (headers, body, footer).
@@ -53,28 +75,21 @@ class WebsiteController extends BaseController
      *
      * @return Response
      */
-    private static function renderPage(
+    private function renderPage(
         string $page = '',
         array $bodyData = [],
         array $headerData = []
     ): Response {
         $realHeaderData = [];
-        $realHeaderData['title'] = (
-            $headerData['title'] ?? self::$pageTitle
-        );
-        $realHeaderData['description'] = (
-            $headerData['description'] ?? self::$pageDescription
-        );
-        $realHeaderData['keywords'] = (
-            $headerData['keywords'] ?? self::$pageKeywords
-        );
+        $realHeaderData['title'] = $headerData['title'] ?? self::DEFAULT_PAGE_TITLE;
+        $realHeaderData['description'] = $headerData['description'] ?? self::DEFAULT_PAGE_DESCRIPTION;
+        $realHeaderData['keywords'] = $headerData['keywords'] ?? self::DEFAULT_PAGE_KEYWORDS;
         $realHeaderData['randomMessage'] = SplashMessage::get();
 
-        return Response::create(
-            view('public.template.header', $realHeaderData).
-            view('public.'.$page, $bodyData).
-            view('public.template.footer'),
-            self::$httpCode
+        $view = $this->composeView($page, $bodyData, $realHeaderData);
+        return $this->responseFactory->make(
+            $view,
+            Response::HTTP_OK
         );
     }
 
@@ -90,7 +105,7 @@ class WebsiteController extends BaseController
             'mostWanted' => AccountsStats::getMostWanted(),
         ];
 
-        return self::renderPage('index', $bodyData);
+        return $this->renderPage('index', $bodyData);
     }
 
     /**
@@ -125,7 +140,7 @@ class WebsiteController extends BaseController
                 ],
             ];
 
-            return self::renderPage('user', $bodyData, $headerData);
+            return $this->renderPage('user', $bodyData, $headerData);
         }
 
         throw new NotFoundHttpException();
