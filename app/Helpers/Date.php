@@ -16,7 +16,7 @@ class Date
      */
     public static function humanizeTimestamp(int $timestamp = 0): string
     {
-        if (0 == $timestamp) {
+        if ($timestamp === 0) {
             return 'Never';
         }
 

@@ -239,7 +239,7 @@ class MojangClient
         $this->setMethod('GET');
         $this->setURL(env('MINECRAFT_TEXTURE_URL').$skin);
         if ($this->sendRequest()) {
-            if ('image/png' == $this->lastContentType) {
+            if ($this->lastContentType == 'image/png') {
                 return $this->lastResponse;
             }
             throw new \Exception('Invalid format: ');

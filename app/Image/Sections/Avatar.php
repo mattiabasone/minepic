@@ -187,7 +187,7 @@ class Avatar extends ImageSection
             ($this->redStdDev > self::DEFAULT_STDDEV && $this->blueStdDev > self::DEFAULT_STDDEV) ||
             ($this->greenStdDev > self::DEFAULT_STDDEV && $this->blueStdDev > self::DEFAULT_STDDEV)
             ) ||
-            (127 == $this->meanAlpha)) {
+            ($this->meanAlpha == 127)) {
             $helm = \imagecreatetruecolor($size, $size);
             \imagealphablending($helm, false);
             \imagesavealpha($helm, true);

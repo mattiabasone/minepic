@@ -22,6 +22,10 @@ return PhpCsFixer\Config::create()
         'mb_str_functions' => true,
         'strict_param' => true,
         'native_function_invocation' => true,
-        'yoda_style' => false
+        'yoda_style' => [
+            'always_move_variable' => false,
+            'equal' => false,
+            'identical' => false,
+        ]
     ])
     ->setRiskyAllowed(true);

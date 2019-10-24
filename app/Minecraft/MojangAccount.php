@@ -69,7 +69,7 @@ class MojangAccount
     {
         if (isset($response['properties'])) {
             foreach ($response['properties'] as $property) {
-                if ('textures' == $property['name']) {
+                if ($property['name'] == 'textures') {
                     $tmp = \json_decode(\base64_decode($property['value'], true), true);
 
                     $this->username = $tmp['profileName'];

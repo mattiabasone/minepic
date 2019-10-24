@@ -46,7 +46,7 @@ class CleanAccountsTable extends Command
             foreach ($results as $result) {
                 $this->info("Removing {$result->username}...");
                 $deletedRows = Accounts::where('username', $result->username)->orderBy('updated', 'ASC')->take(1)->delete();
-                if (1 == $deletedRows) {
+                if ($deletedRows == 1) {
                     $this->info('Deleted');
                 } else {
                     $this->error('Error!');

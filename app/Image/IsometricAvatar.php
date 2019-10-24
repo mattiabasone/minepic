@@ -326,7 +326,7 @@ class IsometricAvatar
             $this->createFromFile();
         }
 
-        if (self::MAX_SIZE !== $size) {
+        if ($size !== self::MAX_SIZE) {
             $this->head->resizeImage($size, $size, \Imagick::FILTER_LANCZOS2, 0.9);
         }
     }

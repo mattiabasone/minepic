@@ -31,17 +31,17 @@ class Skin extends ImageSection
      */
     public function renderSkin($skin_height = 256, $type = 'F')
     {
-        if ('B' != $type) {
+        if ($type != 'B') {
             $type = 'F';
         }
         $skin_height = (int) $skin_height;
-        if (0 == $skin_height || $skin_height < 0 || $skin_height > env('MAX_SKINS_SIZE')) {
+        if ($skin_height == 0 || $skin_height < 0 || $skin_height > env('MAX_SKINS_SIZE')) {
             $skin_height = (int) env('DEFAULT_SKIN_SIZE');
         }
 
         $image = \imagecreatefrompng($this->skinPath);
         $scale = (int) $skin_height / 32;
-        if (0 === $scale) {
+        if ($scale === 0) {
             $scale = 1;
         }
         $this->imgResource = \imagecreatetruecolor(16 * $scale, 32 * $scale);
@@ -53,7 +53,7 @@ class Skin extends ImageSection
         $tmpAvatar = new Avatar($this->skinPath);
         $tmpAvatar->renderAvatar(8, $type);
         // Front
-        if ('F' == $type) {
+        if ($type == 'F') {
             // Head
             \imagecopyresized($this->imgResource, $tmpAvatar->getResource(), 4 * $scale, 0 * $scale, 0, 0, 8 * $scale, 8 * $scale, 8, 8);
             // Body Front

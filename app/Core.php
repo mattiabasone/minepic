@@ -109,7 +109,7 @@ class Core
      */
     public function isValidUsername($username): bool
     {
-        if (1 == \preg_match('#[^a-zA-Z0-9_]+#', $username)) {
+        if (\preg_match('#[^a-zA-Z0-9_]+#', $username) == 1) {
             return false;
         }
 
@@ -126,7 +126,7 @@ class Core
     public function isValidUuid(): bool
     {
         $uuid = \mb_strtolower($this->request);
-        if (1 == \preg_match('#[a-f0-9]{32}#', $uuid) && 32 == \mb_strlen($uuid)) {
+        if (\preg_match('#[a-f0-9]{32}#', $uuid) == 1 && \mb_strlen($uuid) == 32) {
             return true;
         }
 
@@ -142,7 +142,7 @@ class Core
      */
     public function isValidEmail($email): bool
     {
-        if (1 == \preg_match('#^[a-zA-Z0-9\.\_\%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,8}$#', $email)) {
+        if (\preg_match('#^[a-zA-Z0-9\.\_\%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,8}$#', $email) == 1) {
             return false;
         }
 
@@ -184,7 +184,7 @@ class Core
      */
     private function loadDbUserdata($type = 'uuid', $value = ''): bool
     {
-        if ('username' != $type) {
+        if ($type != 'username') {
             $result = Accounts::where('uuid', $value)
                 ->take(1)
                 ->get();
@@ -344,7 +344,7 @@ class Core
     public function isUnexistentAccount(): bool
     {
         $result = AccountsNotFound::find($this->request);
-        if (null != $result) {
+        if ($result != null) {
             if ((\time() - $result->updated_at->timestamp) > env('USERDATA_CACHE_TIME')) {
                 $this->retryUnexistentCheck = true;
             } else {
@@ -517,7 +517,7 @@ class Core
      */
     private function updateDbUser(): bool
     {
-        if (isset($this->userdata->username) && '' != $this->userdata->uuid) {
+        if (isset($this->userdata->username) && $this->userdata->uuid != '') {
             // Get data from API
             if ($this->getFullUserdataApi()) {
                 $originalUsername = $this->userdata->username;
@@ -533,7 +533,7 @@ class Core
                 $this->saveRemoteSkin();
 
                 // Log username change
-                if ($this->userdata->username != $originalUsername && '' != $originalUsername) {
+                if ($this->userdata->username != $originalUsername && $originalUsername != '') {
                     $this->logUsernameChange($originalUsername, $this->userdata->username, $this->userdata->uuid);
                 }
                 $this->dataUpdated = true;
@@ -793,9 +793,9 @@ class Core
     {
         if (env('STATS_ENABLED') && !empty($this->userdata->uuid) && $this->userdata->uuid !== env('DEFAULT_UUID')) {
             $AccStats = new AccountsStats();
-            if ('request' == $type) {
+            if ($type == 'request') {
                 $AccStats->incrementRequestStats($this->userdata->uuid);
-            } elseif ('search' == $type) {
+            } elseif ($type == 'search') {
                 $AccStats->incrementSearchStats($this->userdata->uuid);
             }
         }
