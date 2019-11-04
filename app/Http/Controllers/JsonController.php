@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Core as MinepicCore;
 use App\Database\Accounts;
+use App\Database\AccountsStats;
 use App\Helpers\Date as DateHelper;
 use Illuminate\Http\JsonResponse;
 use Laravel\Lumen\Http\ResponseFactory;
@@ -121,5 +122,16 @@ class JsonController extends BaseController
         }
 
         return $this->responseFactory->json($response);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getMostWantedUsers(): JsonResponse
+    {
+        return $this->responseFactory->json([
+            'ok' => true,
+            'data' => AccountsStats::getMostWanted(),
+        ]);
     }
 }
