@@ -3,4 +3,5 @@ vendor
 .env
 .php_cs.cache
 _ide_helper.php
+.phpstorm.meta.php
 phpunit.xml.dist

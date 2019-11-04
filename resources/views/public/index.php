@@ -73,7 +73,7 @@
 </pre>
                     Can I force update of my avatar/skin on MinePic? Sure!
 <pre>
-<?php echo url(); ?>/update/<span class="pre-api-param">{uuid|username}</span>
+<?php echo url(); ?>/user/<span class="pre-api-param">{uuid|username}</span>/update
 </pre>
                     Download the full skin image
 <pre>
@@ -113,10 +113,12 @@
                     <div class="block" style="word-break: break-all;">
 
                         <h3>Donors list</h3>
-                        <a target="_blank" href="<?php url('user/BaluMonster'); ?>">BaluMonster</a><br />
-                        <a target="_blank" href="<?php url('user/cd42f23f2edd4e7982a176464a9603a8'); ?>">zKerbs</a><br />
-                        <a target="_blank" href="<?php url('user/Giulio17'); ?>">Giulio17</a><br />
-                        <a target="_blank" href="<?php url('user/terminetor1717'); ?>">terminetor1717</a><br /><br />
+                        <a target="_blank" href="<?php echo url('user/hackLover'); ?>">hackLover</a><br />
+                        <a target="_blank" href="<?php echo url('user/BaluMonster'); ?>">BaluMonster</a><br />
+                        <a target="_blank" href="<?php echo url('user/cd42f23f2edd4e7982a176464a9603a8'); ?>">zKerbs</a><br />
+                        <a target="_blank" href="<?php echo url('user/Giulio17'); ?>">Giulio17</a><br />
+                        <a target="_blank" href="<?php echo url('user/terminetor1717'); ?>">terminetor1717</a><br />
+                        <a target="_blank" href="https://github.com/lucapitzoi">Luca Pitzoi</a><br /><br />
 
                         <table style="width: 100%;">
                             <tr>

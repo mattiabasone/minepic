@@ -11,7 +11,7 @@
             <div class="block">
                 <h3>Powered by</h3>
                 <a href="https://php.net/" target="_blank">PHP</a>,
-                <a href="https://www.freebsd.org/" target="_blank">FreeBSD</a> ,
+                <a href="https://www.docker.com/" target="_blank">Docker</a>,
                 <a href="https://nginx.org" target="_blank">nginx</a> and
                 <a href="https://mariadb.org/" target="_blank">MariaDB</a>
             </div>

@@ -17,9 +17,14 @@ class JsonController extends BaseController
      * @var ResponseFactory
      */
     private $responseFactory;
+    /**
+     * @var MinepicCore
+     */
+    private $minepicCore;
 
-    public function __construct(ResponseFactory $responseFactory)
+    public function __construct(MinepicCore $minepicCore, ResponseFactory $responseFactory)
     {
+        $this->minepicCore = $minepicCore;
         $this->responseFactory = $responseFactory;
     }
 
@@ -32,10 +37,9 @@ class JsonController extends BaseController
      */
     public function user($uuidOrName = ''): JsonResponse
     {
-        $minepicCore = new MinepicCore();
-        if ($minepicCore->initialize($uuidOrName)) {
+        if ($this->minepicCore->initialize($uuidOrName)) {
             $httpStatus = 200;
-            [$userdata, $userstats] = $minepicCore->getFullUserdata();
+            [$userdata, $userstats] = $this->minepicCore->getFullUserdata();
 
             $response = [
                 'ok' => true,
@@ -54,6 +58,44 @@ class JsonController extends BaseController
                 'ok' => false,
                 'message' => 'User not found',
             ];
+        }
+
+        return $this->responseFactory->json($response, $httpStatus);
+    }
+
+    /**
+     * Update User data.
+     *
+     * @param string $uuidOrName
+     *
+     * @return JsonResponse
+     */
+    public function updateUser(string $uuidOrName): JsonResponse
+    {
+        // Force user update
+        $this->minepicCore->setForceUpdate(true);
+
+        // Check if user exists
+        if ($this->minepicCore->initialize($uuidOrName)) {
+            // Check if data has been updated
+            if ($this->minepicCore->userDataUpdated()) {
+                $response = ['ok' => true, 'message' => 'Data updated'];
+                $httpStatus = 200;
+            } else {
+                $userdata = $this->minepicCore->getUserdata();
+                $dateString = $userdata->updated_at->toW3cString();
+
+                $response = [
+                    'ok' => false,
+                    'message' => 'Cannot update user, userdata has been updated recently',
+                    'last_update' => $dateString,
+                ];
+
+                $httpStatus = 403;
+            }
+        } else {
+            $response = ['ok' => false, 'message' => 'User not found'];
+            $httpStatus = 404;
         }
 
         return $this->responseFactory->json($response, $httpStatus);
