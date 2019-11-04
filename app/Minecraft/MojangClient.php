@@ -14,14 +14,14 @@ class MojangClient
     /**
      * User Agent used for requests.
      */
-    const USER_AGENT = 'Minepic 2.0 (minepic.org)';
+    private const USER_AGENT = 'Minepic 2.0 (minepic.org)';
 
     /**
      * HTTP Client for requests.
      *
      * @var GuzzleHttp\Client
      */
-    private $HttpClient;
+    private $httpClient;
 
     /**
      * Method for Guzzle.
@@ -77,7 +77,7 @@ class MojangClient
      */
     public function __construct()
     {
-        $this->HttpClient = new GuzzleHttp\Client(
+        $this->httpClient = new GuzzleHttp\Client(
             [
                 'headers' => [
                     'User-Agent' => self::USER_AGENT,
@@ -134,7 +134,7 @@ class MojangClient
     private function sendRequestApi(): bool
     {
         try {
-            $response = $this->HttpClient->request($this->method, $this->url, $this->data);
+            $response = $this->httpClient->request($this->method, $this->url, $this->data);
             $this->lastResponse = GuzzleHttp\json_decode($response->getBody()->getContents(), true);
             $this->lastContentType = $response->getHeader('content-type')[0];
             $this->lastErrorCode = 0;
@@ -162,7 +162,7 @@ class MojangClient
     private function sendRequest()
     {
         try {
-            $response = $this->HttpClient->request($this->method, $this->url, $this->data);
+            $response = $this->httpClient->request($this->method, $this->url, $this->data);
             $this->lastResponse = $response->getBody()->getContents();
             $this->lastContentType = $response->getHeader('content-type')[0];
             $this->lastErrorCode = 0;

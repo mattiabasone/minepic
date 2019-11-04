@@ -17,7 +17,9 @@ class WebsiteControllerTest extends TestCase
     /** @test */
     public function shouldDisplayUserInfoPage(): void
     {
-        $response = $this->get('/user/_Cyb3r');
+        $users = ['_Cyb3r', 'hackLover', 'RaynLegends', 'xPeppe'];
+        $user = array_rand($users);
+        $response = $this->get('/user/'.$users[$user]);
         $response->assertResponseStatus(200);
     }
 
