@@ -35,8 +35,6 @@ class SplashMessage
 
     /**
      * get random message.
-     *
-     * @return string
      */
     public static function get(): string
     {

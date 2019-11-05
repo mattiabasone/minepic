@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Core as MinepicCore;
-use App\Database\Accounts;
-use App\Database\AccountsStats;
 use App\Helpers\Date as DateHelper;
+use App\Models\Account;
+use App\Models\AccountStats;
 use Illuminate\Http\JsonResponse;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
@@ -33,8 +33,6 @@ class JsonController extends BaseController
      * User info.
      *
      * @param string $uuidOrName
-     *
-     * @return JsonResponse
      */
     public function user($uuidOrName = ''): JsonResponse
     {
@@ -66,10 +64,6 @@ class JsonController extends BaseController
 
     /**
      * Update User data.
-     *
-     * @param string $uuidOrName
-     *
-     * @return JsonResponse
      */
     public function updateUser(string $uuidOrName): JsonResponse
     {
@@ -106,13 +100,11 @@ class JsonController extends BaseController
      * Username Typeahead.
      *
      * @param $term
-     *
-     * @return JsonResponse
      */
     public function userTypeahead($term): JsonResponse
     {
         $response = [];
-        $accounts = Accounts::query()
+        $accounts = Account::query()
             ->select(['username'])
             ->where('username', 'LIKE', $term.'%')
             ->take(15)
@@ -124,14 +116,11 @@ class JsonController extends BaseController
         return $this->responseFactory->json($response);
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function getMostWantedUsers(): JsonResponse
     {
         return $this->responseFactory->json([
             'ok' => true,
-            'data' => AccountsStats::getMostWanted(),
+            'data' => AccountStats::getMostWanted(),
         ]);
     }
 }

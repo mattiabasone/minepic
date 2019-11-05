@@ -108,8 +108,6 @@ class MojangClient
 
     /**
      * Set data.
-     *
-     * @param array $data
      */
     private function setData(array $data)
     {
@@ -128,8 +126,6 @@ class MojangClient
 
     /**
      * Send new request.
-     *
-     * @return bool
      */
     private function sendRequestApi(): bool
     {
@@ -185,10 +181,6 @@ class MojangClient
     /**
      * Account info from username.
      *
-     * @param string $username
-     *
-     * @return MojangAccount
-     *
      * @throws \Exception
      */
     public function sendUsernameInfoRequest(string $username): MojangAccount
@@ -206,10 +198,6 @@ class MojangClient
 
     /**
      * Account info from UUID.
-     *
-     * @param string $uuid
-     *
-     * @return MojangAccount
      *
      * @throws \Exception
      */
@@ -229,8 +217,6 @@ class MojangClient
 
     /**
      * Get Skin.
-     *
-     * @param string $skin
      *
      * @throws \Exception
      */

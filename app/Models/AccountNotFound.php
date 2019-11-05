@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Database;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Model;
 
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property string request
  * @property int time
  */
-class AccountsNotFound extends Model
+class AccountNotFound extends Model
 {
     /**
      * Table name.

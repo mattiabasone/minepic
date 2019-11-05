@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Database;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Model;
 
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property string $created_at
  * @property string $updated_at
  */
-class Accounts extends Model
+class Account extends Model
 {
     /**
      * Table name.

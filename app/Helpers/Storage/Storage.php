@@ -18,10 +18,6 @@ class Storage
 
     /**
      * Skin Path.
-     *
-     * @param string $uuid
-     *
-     * @return string
      */
     public static function getPath(string $uuid = ''): string
     {
@@ -34,10 +30,6 @@ class Storage
 
     /**
      * Checks if file exists.
-     *
-     * @param string $uuid
-     *
-     * @return bool
      */
     public static function exists(string $uuid = ''): bool
     {
@@ -47,10 +39,7 @@ class Storage
     /**
      * Save the skin to file.
      *
-     * @param string $uuid
-     * @param mixed  $rawData
-     *
-     * @return bool
+     * @param mixed $rawData
      */
     public static function save(string $uuid, $rawData): bool
     {
@@ -69,8 +58,6 @@ class Storage
      * Use Steve file for given uuid.
      *
      * @param mixed
-     *
-     * @return bool
      */
     public static function copyAsSteve(string $string = ''): bool
     {

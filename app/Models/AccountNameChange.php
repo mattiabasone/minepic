@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Database;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Model;
 
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model as Model;
  * @property string $new_name
  * @property int    $time_change
  */
-class AccountsNameChange extends Model
+class AccountNameChange extends Model
 {
     /**
      * Table name.

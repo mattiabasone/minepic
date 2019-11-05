@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Database\Accounts;
-use App\Database\AccountsNameChange;
-use App\Database\AccountsNotFound;
-use App\Database\AccountsStats;
 use App\Helpers\Storage\Files\SkinsStorage;
 use App\Image\IsometricAvatar;
 use App\Image\Sections\Avatar;
 use App\Image\Sections\Skin;
 use App\Minecraft\MojangAccount;
 use App\Minecraft\MojangClient;
+use App\Models\Account;
+use App\Models\AccountNameChange;
+use App\Models\AccountNotFound;
+use App\Models\AccountStats;
 
 class Core
 {
@@ -27,7 +27,7 @@ class Core
     /**
      * Userdata from/to DB.
      *
-     * @var Accounts
+     * @var Account
      */
     private $userdata;
 
@@ -82,8 +82,6 @@ class Core
 
     /**
      * Display error.
-     *
-     * @return string
      */
     public function error(): string
     {
@@ -104,8 +102,6 @@ class Core
      * Check if is a valid username.
      *
      * @param string
-     *
-     * @return bool
      */
     public function isValidUsername($username): bool
     {
@@ -116,8 +112,6 @@ class Core
      * Check if is a valid UUID.
      *
      * @param string
-     *
-     * @return bool
      */
     public function isValidUuid(): bool
     {
@@ -130,8 +124,6 @@ class Core
      * Check if is an email address has invalid characters.
      *
      * @param string
-     *
-     * @return bool
      */
     public function isValidEmail($email): bool
     {
@@ -151,8 +143,6 @@ class Core
      * Check if chache is still valid.
      *
      * @param int
-     *
-     * @return bool
      */
     private function checkDbCache(): bool
     {
@@ -164,25 +154,21 @@ class Core
      *
      * @param string $type
      * @param string $value
-     *
-     * @return bool
      */
     private function loadDbUserdata($type = 'uuid', $value = ''): bool
     {
-        if ($type != 'username') {
-            $result = Accounts::where('uuid', $value)
-                ->take(1)
-                ->get();
+        if ($type !== 'username') {
+            $result = Account::where('uuid', $value)
+                ->first();
         } else {
-            $result = Accounts::where('username', $value)
+            $result = Account::where('username', $value)
                 ->orderBy('username', 'desc')
-                ->take(1)
                 ->orderBy('updated_at', 'DESC')
-                ->get();
+                ->first();
         }
 
-        if (\count($result) > 0) {
-            $this->userdata = $result[0];
+        if ($result !== null) {
+            $this->userdata = $result;
             $this->currentUserSkinImage = SkinsStorage::getPath($this->userdata->uuid);
 
             return true;
@@ -195,9 +181,9 @@ class Core
     /**
      * Return loaded userdata.
      *
-     * @return Accounts
+     * @return Account
      */
-    public function getUserdata(): ?Accounts
+    public function getUserdata(): ?Account
     {
         return $this->userdata;
     }
@@ -207,7 +193,7 @@ class Core
      */
     public function getFullUserdata(): array
     {
-        $userstats = AccountsStats::find($this->userdata->uuid);
+        $userstats = AccountStats::find($this->userdata->uuid);
 
         return [$this->userdata, $userstats];
     }
@@ -216,8 +202,6 @@ class Core
      * Check if an UUID is in the database.
      *
      * @param bool $uuid
-     *
-     * @return bool
      */
     private function uuidInDb($uuid = false): bool
     {
@@ -232,8 +216,6 @@ class Core
      * Check if a username is in the database.
      *
      * @param mixed
-     *
-     * @return bool
      */
     private function nameInDb($name = false): bool
     {
@@ -248,13 +230,11 @@ class Core
      * Insert userdata in database.
      *
      * @param void
-     *
-     * @return bool
      */
     public function insertNewUuid(): bool
     {
         if ($this->getFullUserdataApi()) {
-            $this->userdata = new Accounts();
+            $this->userdata = new Account();
             $this->userdata->username = $this->apiUserdata->username;
             $this->userdata->uuid = $this->apiUserdata->uuid;
             $this->userdata->skin = ($this->apiUserdata->skin && \mb_strlen($this->apiUserdata->skin) > 1 ?
@@ -266,7 +246,7 @@ class Core
             $this->saveRemoteSkin();
             $this->currentUserSkinImage = SkinsStorage::getPath($this->apiUserdata->uuid);
 
-            $accountStats = new AccountsStats();
+            $accountStats = new AccountStats();
             $accountStats->uuid = $this->userdata->uuid;
             $accountStats->count_search = 0;
             $accountStats->count_request = 0;
@@ -284,8 +264,6 @@ class Core
      * Get UUID from username.
      *
      * @param string
-     *
-     * @return bool
      */
     private function convertRequestToUuid(): bool
     {
@@ -313,7 +291,7 @@ class Core
      */
     public function saveUnexistentAccount()
     {
-        $notFound = AccountsNotFound::firstOrNew(['request' => $this->request]);
+        $notFound = AccountNotFound::firstOrNew(['request' => $this->request]);
         $notFound->request = $this->request;
 
         return $notFound->save();
@@ -323,12 +301,10 @@ class Core
      * Check if requested string is a failed request.
      *
      * @param void
-     *
-     * @return bool
      */
     public function isUnexistentAccount(): bool
     {
-        $result = AccountsNotFound::find($this->request);
+        $result = AccountNotFound::find($this->request);
         if ($result != null) {
             if ((\time() - $result->updated_at->timestamp) > env('USERDATA_CACHE_TIME')) {
                 $this->retryUnexistentCheck = true;
@@ -346,12 +322,10 @@ class Core
 
     /**
      * Delete current request from failed cache.
-     *
-     * @return bool
      */
     public function removeFailedRequest(): bool
     {
-        $result = AccountsNotFound::where('request', $this->request)->delete();
+        $result = AccountNotFound::where('request', $this->request)->delete();
 
         return \count($result) > 0;
     }
@@ -361,8 +335,6 @@ class Core
      *
      * @param $size
      * @param string $type
-     *
-     * @return array
      */
     public function generateHttpCacheHeaders($size, $type = 'avatar'): array
     {
@@ -387,8 +359,6 @@ class Core
      * Check requested string and initialize objects.
      *
      * @param string
-     *
-     * @return bool
      */
     public function initialize(string $string): bool
     {
@@ -481,8 +451,6 @@ class Core
 
     /**
      * Update current user fail count.
-     *
-     * @return bool
      */
     private function updateUserFailUpdate(): bool
     {
@@ -497,8 +465,6 @@ class Core
 
     /**
      * Update db userdata.
-     *
-     * @return bool
      */
     private function updateDbUser(): bool
     {
@@ -539,8 +505,6 @@ class Core
 
     /**
      * Return if data has been updated.
-     *
-     * @return bool
      */
     public function userDataUpdated(): bool
     {
@@ -553,12 +517,10 @@ class Core
      * @param $prev string Previous username
      * @param $new string New username
      * @param $uuid string User UUID
-     *
-     * @return bool
      */
     private function logUsernameChange(string $prev, string $new, string $uuid): bool
     {
-        $accountNameChange = new AccountsNameChange();
+        $accountNameChange = new AccountNameChange();
         $accountNameChange->uuid = $uuid;
         $accountNameChange->prev_name = $prev;
         $accountNameChange->new_name = $new;
@@ -571,8 +533,6 @@ class Core
      * Get userdata from Mojang API.
      *
      * @param mixed
-     *
-     * @return bool
      */
     private function getFullUserdataApi(): bool
     {
@@ -598,8 +558,6 @@ class Core
      *
      * @param int
      * @param mixed
-     *
-     * @return Avatar
      */
     public function avatarCurrentUser(int $size = 0): Avatar
     {
@@ -613,8 +571,6 @@ class Core
      * Random avatar from saved.
      *
      * @param int
-     *
-     * @return Avatar
      */
     public function randomAvatar(int $size = 0): Avatar
     {
@@ -629,8 +585,6 @@ class Core
 
     /**
      * Default Avatar.
-     *
-     * @param int $size
      *
      * @return Avatar (rendered)
      */
@@ -648,10 +602,6 @@ class Core
 
     /**
      * Default Avatar Isometric.
-     *
-     * @param int $size
-     *
-     * @return IsometricAvatar
      */
     public function isometricAvatarCurrentUser(int $size = 0): IsometricAvatar
     {
@@ -669,8 +619,6 @@ class Core
 
     /**
      * Default Avatar (Isometric).
-     *
-     * @param int $size
      *
      * @return IsometricAvatar (rendered)
      */
@@ -694,8 +642,6 @@ class Core
      * Save skin image.
      *
      * @param mixed
-     *
-     * @return bool
      */
     public function saveRemoteSkin(): bool
     {
@@ -720,8 +666,6 @@ class Core
      * @param int
      * @param string
      *
-     * @return Skin
-     *
      * @throws \Throwable
      */
     public function renderSkinCurrentUser(int $size = 0, string $type = 'F'): Skin
@@ -734,8 +678,6 @@ class Core
 
     /**
      * Return a Skin object of the current user.
-     *
-     * @return Skin
      */
     public function skinCurrentUser(): Skin
     {
@@ -744,8 +686,6 @@ class Core
 
     /**
      * Set force update.
-     *
-     * @param bool $forceUpdate
      */
     public function setForceUpdate(bool $forceUpdate)
     {
@@ -754,8 +694,6 @@ class Core
 
     /**
      * Can I exec force update?
-     *
-     * @return bool
      */
     private function forceUpdatePossible(): bool
     {
@@ -777,7 +715,7 @@ class Core
     public function updateStats($type = 'request')
     {
         if (env('STATS_ENABLED') && !empty($this->userdata->uuid) && $this->userdata->uuid !== env('DEFAULT_UUID')) {
-            $AccStats = new AccountsStats();
+            $AccStats = new AccountStats();
             if ($type == 'request') {
                 $AccStats->incrementRequestStats($this->userdata->uuid);
             } elseif ($type == 'search') {

@@ -44,8 +44,6 @@ class MojangAccount
 
     /**
      * MinecraftAccount constructor.
-     *
-     * @param array $fields
      */
     public function __construct(array $fields = [])
     {
@@ -60,10 +58,6 @@ class MojangAccount
 
     /**
      * Load from API data response (JSON Decoded).
-     *
-     * @param array $response
-     *
-     * @return bool
      */
     public function loadFromApiResponse(array $response): bool
     {

@@ -25,8 +25,6 @@ abstract class ImageSection
 
     /**
      * Avatar constructor.
-     *
-     * @param string $skinPath
      */
     public function __construct(string $skinPath)
     {
@@ -35,8 +33,6 @@ abstract class ImageSection
 
     /**
      * From resource to string.
-     *
-     * @return string
      */
     public function __toString(): string
     {

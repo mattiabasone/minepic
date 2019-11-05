@@ -19,8 +19,6 @@ class SkinBackController extends BaseApiController
      * @param string $uuidOrName
      * @param int    $size
      *
-     * @return Response
-     *
      * @throws \Throwable
      */
     public function serve(Request $request, $uuidOrName = '', $size = 0): Response

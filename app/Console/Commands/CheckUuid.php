@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Database\Accounts;
 use App\Helpers\Storage\Files\SkinsStorage;
 use App\Minecraft\MojangClient;
+use App\Models\Account;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -38,7 +38,7 @@ class CheckUuid extends Command
 
         $timeCheck = Carbon::now()->subDays(28);
 
-        $results = Accounts::select('id')
+        $results = Account::select('id')
             ->whereDate('updated_at', '<', $timeCheck->toDateTimeString())
             ->orderBy('updated', 'ASC')
             ->take(300)
@@ -47,7 +47,7 @@ class CheckUuid extends Command
         $mojangClient = new MojangClient();
         if (\count($results) > 0) {
             foreach ($results as $result) {
-                $account = Accounts::find($result->id);
+                $account = Account::find($result->id);
                 if ($account) {
                     $this->info("Checking {$account->username} [{$account->uuid}]...");
                     try {

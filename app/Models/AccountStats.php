@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Database;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Model;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
  * @property int    $time_request
  * @property int    $time_search
  */
-class AccountsStats extends Model
+class AccountStats extends Model
 {
     /**
      * Table name.
@@ -46,8 +46,6 @@ class AccountsStats extends Model
 
     /**
      * Increment request counter.
-     *
-     * @param string $uuid
      */
     public function incrementRequestStats(string $uuid = '')
     {
@@ -60,8 +58,6 @@ class AccountsStats extends Model
 
     /**
      * Increment search counter.
-     *
-     * @param string $uuid
      */
     public function incrementSearchStats(string $uuid = '')
     {
