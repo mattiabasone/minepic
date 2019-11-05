@@ -9,15 +9,15 @@
         "ext-gd":  "*",
         "ext-imagick":  "*",
         "ext-json":  "*",
-        "laravel/lumen-framework": "5.8.*",
+        "laravel/lumen-framework": "^6.0",
         "vlucas/phpdotenv": "^3.3",
         "guzzlehttp/guzzle": "^6.2",
         "league/flysystem": "^1.0"
     },
     "require-dev": {
-        "fzaninotto/faker": "~1.4",
-        "phpunit/phpunit": "^7.5",
-        "mockery/mockery": "~0.9",
+        "fzaninotto/faker": "^1.4",
+        "phpunit/phpunit": "^8.0",
+        "mockery/mockery": "^1.0",
         "friendsofphp/php-cs-fixer": "^2.13",
         "barryvdh/laravel-debugbar": "^3.2",
         "barryvdh/laravel-ide-helper": "^2.6"
