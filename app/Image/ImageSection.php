@@ -42,8 +42,7 @@ abstract class ImageSection
     {
         \ob_start();
         \imagepng($this->imgResource);
-        $imgToString = \ob_get_contents();
-        \ob_end_clean();
+        $imgToString = (string) \ob_get_clean();
 
         return $imgToString;
     }
