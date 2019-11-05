@@ -14,7 +14,7 @@ class Skin extends ImageSection
     /**
      * Create a PNG with raw texture.
      */
-    public function prepareTextureDownload()
+    public function prepareTextureDownload(): void
     {
         $this->imgResource = \imagecreatefrompng($this->skinPath);
         \imagealphablending($this->imgResource, true);

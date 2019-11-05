@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot()
+    public function boot(): void
     {
         if (env('APP_FORCE_HTTPS')) {
             $this->app['request']->server->set('HTTPS', true);
@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register()
+    public function register(): void
     {
     }
 }

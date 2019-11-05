@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Minecraft;
 
 /**
- * Class MinecraftAccount.
+ * Class MojangAccount.
  */
 class MojangAccount
 {

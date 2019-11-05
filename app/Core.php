@@ -109,11 +109,7 @@ class Core
      */
     public function isValidUsername($username): bool
     {
-        if (\preg_match('#[^a-zA-Z0-9_]+#', $username) == 1) {
-            return false;
-        }
-
-        return true;
+        return !(\preg_match('#[^a-zA-Z0-9_]+#', $username) === 1);
     }
 
     /**
@@ -126,11 +122,8 @@ class Core
     public function isValidUuid(): bool
     {
         $uuid = \mb_strtolower($this->request);
-        if (\preg_match('#[a-f0-9]{32}#', $uuid) == 1 && \mb_strlen($uuid) == 32) {
-            return true;
-        }
 
-        return false;
+        return \preg_match('#[a-f0-9]{32}#', $uuid) === 1 && \mb_strlen($uuid) === 32;
     }
 
     /**
@@ -142,11 +135,7 @@ class Core
      */
     public function isValidEmail($email): bool
     {
-        if (\preg_match('#^[a-zA-Z0-9\.\_\%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,8}$#', $email) == 1) {
-            return false;
-        }
-
-        return true;
+        return !(\preg_match('#^[a-zA-Z0-9\.\_\%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,8}$#', $email) === 1);
     }
 
     /**
@@ -167,11 +156,7 @@ class Core
      */
     private function checkDbCache(): bool
     {
-        if ((\time() - $this->userdata->updated_at->timestamp) < env('USERDATA_CACHE_TIME')) {
-            return true;
-        }
-
-        return false;
+        return (\time() - $this->userdata->updated_at->timestamp) < env('USERDATA_CACHE_TIME');
     }
 
     /**
