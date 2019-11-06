@@ -243,7 +243,6 @@ class Core
      * Get UUID from username.
      *
      * @param string
-     * @return bool
      */
     private function convertRequestToUuid(): bool
     {
@@ -308,31 +307,6 @@ class Core
         $result = AccountNotFound::where('request', $this->request)->delete();
 
         return \count($result) > 0;
-    }
-
-    /**
-     * HTTP Headers for current user.
-     *
-     * @param $size
-     * @param string $type
-     */
-    public function generateHttpCacheHeaders($size, $type = 'avatar'): array
-    {
-        if (isset($this->userdata->uuid) && $this->userdata->uuid !== '') {
-            return [
-                'Cache-Control' => 'private, max-age='.env('USERDATA_CACHE_TIME'),
-                'Last-Modified' => \gmdate('D, d M Y H:i:s \G\M\T', $this->userdata->updated_at->timestamp),
-                'Expires' => \gmdate('D, d M Y H:i:s \G\M\T', $this->userdata->updated_at->timestamp + env('USERDATA_CACHE_TIME')),
-                'ETag' => \md5($type.$this->userdata->updated_at->timestamp.$this->userdata->uuid.$this->userdata->username.$size),
-            ];
-        }
-
-        return [
-            'Cache-Control' => 'private, max-age=7776000',
-            'ETag' => \md5("{$type}_FFS_STOP_STEVE_SPAM_{$size}"),
-            'Last-Modified' => \gmdate('D, d M Y H:i:s \G\M\T', \strtotime('2017-02-01 00:00')),
-            'Expires' => \gmdate('D, d M Y H:i:s \G\M\T', \strtotime('2017-02-01 00:00')),
-        ];
     }
 
     /**

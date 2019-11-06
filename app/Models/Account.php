@@ -26,9 +26,4 @@ class Account extends Model
      * @var string
      */
     protected $table = 'accounts';
-
-    /**
-     * @var bool
-     */
-    public $timestamps = true;
 }
