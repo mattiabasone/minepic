@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Database\Accounts;
+use App\Models\Account;
 use Illuminate\Console\Command;
 
 /**
@@ -33,7 +33,7 @@ class CleanAccountsTable extends Command
     {
         $this->info('Selecting all duplicates...');
 
-        $subQuery = Accounts::select('username', app('db')->raw('COUNT(id) AS total'))
+        $subQuery = Account::select('username', app('db')->raw('COUNT(id) AS total'))
             ->groupBy('username')
             ->orderBy('total', 'DESC')
             ->toSql();
@@ -45,7 +45,7 @@ class CleanAccountsTable extends Command
         if (\count($results) > 0) {
             foreach ($results as $result) {
                 $this->info("Removing {$result->username}...");
-                $deletedRows = Accounts::where('username', $result->username)->orderBy('updated', 'ASC')->take(1)->delete();
+                $deletedRows = Account::where('username', $result->username)->orderBy('updated', 'ASC')->take(1)->delete();
                 if ($deletedRows == 1) {
                     $this->info('Deleted');
                 } else {

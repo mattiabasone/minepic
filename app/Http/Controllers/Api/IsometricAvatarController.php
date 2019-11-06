@@ -18,8 +18,6 @@ class IsometricAvatarController extends BaseApiController
      * @param \Illuminate\Http\Request
      * @param string $uuidOrName
      * @param int    $size
-     *
-     * @return Response
      */
     public function serve(Request $request, $uuidOrName = '', $size = 0): Response
     {

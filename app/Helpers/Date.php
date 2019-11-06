@@ -9,11 +9,6 @@ namespace App\Helpers;
  */
 class Date
 {
-    /**
-     * @param int $timestamp
-     *
-     * @return string
-     */
     public static function humanizeTimestamp(int $timestamp = 0): string
     {
         if ($timestamp === 0) {

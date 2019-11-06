@@ -95,9 +95,6 @@ class Avatar extends ImageSection
     /**
      * Render avatar image.
      *
-     * @param int    $size
-     * @param string $type
-     *
      * @throws \Throwable
      */
     public function renderAvatar(int $size = 0, string $type = 'F'): void
