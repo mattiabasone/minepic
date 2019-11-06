@@ -154,6 +154,7 @@ class MojangClient
      * Generic request.
      *
      * @return bool
+     *
      * @throws GuzzleHttp\Exception\GuzzleException
      */
     private function sendRequest()
@@ -182,8 +183,6 @@ class MojangClient
     /**
      * Account info from username.
      *
-     * @param string $username
-     * @return MojangAccount
      * @throws \Exception
      */
     public function sendUsernameInfoRequest(string $username): MojangAccount

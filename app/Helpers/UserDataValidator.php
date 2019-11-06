@@ -10,10 +10,9 @@ namespace App\Helpers;
 class UserDataValidator
 {
     /**
-     * Checks if the given string is a valid username
+     * Checks if the given string is a valid username.
      *
      * @param $username
-     * @return bool
      */
     public static function isValidUsername(string $username): bool
     {
@@ -21,10 +20,7 @@ class UserDataValidator
     }
 
     /**
-     * Checks if the given string is a valid UUID
-     *
-     * @param string $uuid
-     * @return bool
+     * Checks if the given string is a valid UUID.
      */
     public static function isValidUuid(string $uuid): bool
     {
@@ -35,7 +31,6 @@ class UserDataValidator
      * Check if is an email address has invalid characters.
      *
      * @param string
-     * @return bool
      */
     public static function isValidEmail(string $email): bool
     {

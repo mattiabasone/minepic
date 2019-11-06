@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Events\Account\UsernameChangeEvent;
 use App\Helpers\Storage\Files\SkinsStorage;
 use App\Helpers\UserDataValidator;
 use App\Image\IsometricAvatar;
@@ -12,7 +13,6 @@ use App\Image\Sections\Skin;
 use App\Minecraft\MojangAccount;
 use App\Minecraft\MojangClient;
 use App\Models\Account;
-use App\Models\AccountNameChange;
 use App\Models\AccountNotFound;
 use App\Models\AccountStats;
 
@@ -90,16 +90,6 @@ class Core
     }
 
     /**
-     * Return current userdata.
-     *
-     * @return mixed
-     */
-    public function getApiUserdata(): MojangAccount
-    {
-        return $this->apiUserdata;
-    }
-
-    /**
      * Check if is a valid UUID.
      *
      * @param string
@@ -133,6 +123,7 @@ class Core
      *
      * @param string $type
      * @param string $value
+     * @return bool
      */
     private function loadDbUserdata($type = 'uuid', $value = ''): bool
     {
@@ -438,7 +429,7 @@ class Core
 
                 // Log username change
                 if ($this->userdata->username !== $originalUsername && $originalUsername !== '') {
-                    $this->logUsernameChange($originalUsername, $this->userdata->username, $this->userdata->uuid);
+                    $this->logUsernameChange($this->userdata->uuid, $originalUsername, $this->userdata->username);
                 }
                 $this->dataUpdated = true;
 
@@ -467,19 +458,14 @@ class Core
     /**
      * Log the username change.
      *
+     * @param $uuid string User UUID
      * @param $prev string Previous username
      * @param $new string New username
-     * @param $uuid string User UUID
+     * @return void
      */
-    private function logUsernameChange(string $prev, string $new, string $uuid): bool
+    private function logUsernameChange(string $uuid, string $prev, string $new): void
     {
-        $accountNameChange = new AccountNameChange();
-        $accountNameChange->uuid = $uuid;
-        $accountNameChange->prev_name = $prev;
-        $accountNameChange->new_name = $new;
-        $accountNameChange->time_change = \time();
-
-        return $accountNameChange->save();
+        \Event::dispatch(new UsernameChangeEvent($uuid, $prev, $new));
     }
 
     /**
@@ -522,39 +508,6 @@ class Core
         return $avatar;
     }
 
-    /**
-     * Random avatar from saved.
-     *
-     * @param int
-     *
-     * @throws \Throwable
-     */
-    public function randomAvatar(int $size = 0): Avatar
-    {
-        $all_skin = \scandir(storage_path(env('SKINS_FOLDER')));
-        $rand = \random_int(2, \count($all_skin));
-
-        $avatar = new Avatar(SkinsStorage::getPath($all_skin[$rand]));
-        $avatar->renderAvatar($size);
-
-        return $avatar;
-    }
-
-    /**
-     * Default Avatar.
-     *
-     * @return Avatar (rendered)
-     *
-     * @throws \Throwable
-     */
-    public function defaultAvatar(int $size = 0): Avatar
-    {
-        $avatar = new Avatar(SkinsStorage::getPath(env('DEFAULT_USERNAME')));
-        $avatar->renderAvatar($size);
-
-        return $avatar;
-    }
-
     /*==================================================================================================================
      * =ISOMETRIC_AVATAR
      *================================================================================================================*/
@@ -573,23 +526,6 @@ class Core
             $uuid,
             $timestamp
         );
-        $isometricAvatar->render($size);
-
-        return $isometricAvatar;
-    }
-
-    /**
-     * Default Avatar (Isometric).
-     *
-     * @return IsometricAvatar (rendered)
-     */
-    public function defaultIsometricAvatar(int $size = 0): IsometricAvatar
-    {
-        $isometricAvatar = new IsometricAvatar(
-            env('DEFAULT_UUID'),
-            0
-        );
-        $isometricAvatar->checkCacheStatus(false);
         $isometricAvatar->render($size);
 
         return $isometricAvatar;
