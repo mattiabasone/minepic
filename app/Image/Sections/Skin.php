@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Image\Sections;
 
+use App\Image\Exceptions\ImageResourceCreationFailedException;
 use App\Image\ImageSection;
 
 /**
@@ -13,10 +14,15 @@ class Skin extends ImageSection
 {
     /**
      * Create a PNG with raw texture.
+     *
+     * @throws \App\Image\Exceptions\ImageResourceCreationFailedException
      */
     public function prepareTextureDownload(): void
     {
         $this->imgResource = \imagecreatefrompng($this->skinPath);
+        if ($this->imgResource === false) {
+            throw new ImageResourceCreationFailedException($this->skinPath.' does not contain a valid PNG');
+        }
         \imagealphablending($this->imgResource, true);
         \imagesavealpha($this->imgResource, true);
     }
@@ -29,22 +35,24 @@ class Skin extends ImageSection
      *
      * @throws \Throwable
      */
-    public function renderSkin($skin_height = 256, $type = 'F')
+    public function renderSkin(int $skin_height = 256, $type = 'F'): void
     {
-        if ($type != 'B') {
+        if ($type !== 'B') {
             $type = 'F';
         }
-        $skin_height = (int) $skin_height;
-        if ($skin_height == 0 || $skin_height < 0 || $skin_height > env('MAX_SKINS_SIZE')) {
+        if ($skin_height === 0 || $skin_height < 0 || $skin_height > env('MAX_SKINS_SIZE')) {
             $skin_height = (int) env('DEFAULT_SKIN_SIZE');
         }
 
         $image = \imagecreatefrompng($this->skinPath);
-        $scale = (int) $skin_height / 32;
+        $scale = $skin_height / 32;
         if ($scale === 0) {
             $scale = 1;
         }
         $this->imgResource = \imagecreatetruecolor(16 * $scale, 32 * $scale);
+        if ($this->imgResource === false) {
+            throw new ImageResourceCreationFailedException('imagecreatetruecolor() failed');
+        }
         \imagealphablending($this->imgResource, false);
         \imagesavealpha($this->imgResource, true);
         $transparent = \imagecolorallocatealpha($this->imgResource, 255, 255, 255, 127);
@@ -53,7 +61,7 @@ class Skin extends ImageSection
         $tmpAvatar = new Avatar($this->skinPath);
         $tmpAvatar->renderAvatar(8, $type);
         // Front
-        if ($type == 'F') {
+        if ($type === 'F') {
             // Head
             \imagecopyresized($this->imgResource, $tmpAvatar->getResource(), 4 * $scale, 0 * $scale, 0, 0, 8 * $scale, 8 * $scale, 8, 8);
             // Body Front
@@ -80,7 +88,6 @@ class Skin extends ImageSection
             \imagecopy($r_leg, $image, 0, 0, 12, 20, 4, 12);
             \imagecopyresized($this->imgResource, $r_leg, 4 * $scale, 20 * $scale, 0, 0, 4 * $scale, 12 * $scale, 4, 12);
         }
-        $tmpAvatar = null;
 
         // Left Arm (right flipped)
         $l_arm = \imagecreatetruecolor(4, 12);
