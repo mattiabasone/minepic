@@ -25,9 +25,6 @@ abstract class BaseApiController extends BaseController
 
     /**
      * Api constructor.
-     *
-     * @param MinepicCore     $minepic
-     * @param ResponseFactory $responseFactory
      */
     public function __construct(
         MinepicCore $minepic,
@@ -38,22 +35,16 @@ abstract class BaseApiController extends BaseController
     }
 
     /**
-     * @param Request $request
-     * @param string  $uuidOrName
-     * @param int     $size
-     *
-     * @return Response
+     * @param string $uuidOrName
+     * @param int    $size
      */
     abstract public function serve(Request $request, $uuidOrName = '', $size = 0): Response;
 
     /**
      * Isometric Avatar with Size.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int                      $size
-     * @param string                   $uuidOrName
-     *
-     * @return Response
+     * @param int    $size
+     * @param string $uuidOrName
      */
     public function serveWithSize(Request $request, $size = 0, $uuidOrName = ''): Response
     {

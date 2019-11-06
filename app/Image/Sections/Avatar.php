@@ -14,7 +14,7 @@ class Avatar extends ImageSection
     /**
      * Max Standard Deviation value for helm check.
      */
-    const DEFAULT_STDDEV = 0.2;
+    private const DEFAULT_STANDARD_DEVIATION = 0.2;
 
     /**
      * Mean Alpha value (Helm).
@@ -49,7 +49,7 @@ class Avatar extends ImageSection
      *
      * @param $head_part
      */
-    protected function calcSttDevHelm($head_part)
+    protected function calculateHelmStandardDeviation($head_part): void
     {
         // Check for helm image
         $all_red = [];
@@ -62,10 +62,10 @@ class Avatar extends ImageSection
             while ($y < 8) {
                 $color = \imagecolorat($head_part, $x, $y);
                 $colors = \imagecolorsforindex($head_part, $color);
-                \array_push($all_red, $colors['red']);
-                \array_push($all_green, $colors['green']);
-                \array_push($all_blue, $colors['blue']);
-                \array_push($all_alpha, $colors['alpha']);
+                $all_red[] = $colors['red'];
+                $all_green[] = $colors['green'];
+                $all_blue[] = $colors['blue'];
+                $all_alpha[] = $colors['alpha'];
                 ++$y;
             }
             ++$x;
@@ -81,9 +81,9 @@ class Avatar extends ImageSection
         $devs_blue = [];
         $i = 0;
         while ($i < 64) {
-            $devs_red[] = \pow($all_red[$i] - $mean_red, 2);
-            $devs_green[] = \pow($all_green[$i] - $mean_green, 2);
-            $devs_blue[] = \pow($all_blue[$i] - $mean_blue, 2);
+            $devs_red[] = ($all_red[$i] - $mean_red) ** 2;
+            $devs_green[] = ($all_green[$i] - $mean_green) ** 2;
+            $devs_blue[] = ($all_blue[$i] - $mean_blue) ** 2;
             ++$i;
         }
         // stddev for each color
@@ -95,12 +95,9 @@ class Avatar extends ImageSection
     /**
      * Render avatar image.
      *
-     * @param int    $size
-     * @param string $type
-     *
      * @throws \Throwable
      */
-    public function renderAvatar(int $size = 0, string $type = 'F')
+    public function renderAvatar(int $size = 0, string $type = 'F'): void
     {
         if ($size <= 0 || $size > env('MAX_AVATAR_SIZE')) {
             $size = (int) env('DEFAULT_AVATAR_SIZE');
@@ -179,15 +176,15 @@ class Avatar extends ImageSection
         @\imagecopyresampled($this->imgResource, $image, 0, 0, $sectionSrcX, $sectionSrcY, $size, $size, 8, 8);
         @\imagecopyresampled($helm_check, $image, 0, 0, $sectionHelmSrcX, $sectionHelmSrcY, 8, 8, 8, 8);
 
-        $this->calcSttDevHelm($helm_check);
+        $this->calculateHelmStandardDeviation($helm_check);
 
         // if all pixel have transparency or the colors aren't the same
         if ((
-            ($this->redStdDev > self::DEFAULT_STDDEV && $this->greenStdDev > self::DEFAULT_STDDEV) ||
-            ($this->redStdDev > self::DEFAULT_STDDEV && $this->blueStdDev > self::DEFAULT_STDDEV) ||
-            ($this->greenStdDev > self::DEFAULT_STDDEV && $this->blueStdDev > self::DEFAULT_STDDEV)
+            ($this->redStdDev > self::DEFAULT_STANDARD_DEVIATION && $this->greenStdDev > self::DEFAULT_STANDARD_DEVIATION) ||
+            ($this->redStdDev > self::DEFAULT_STANDARD_DEVIATION && $this->blueStdDev > self::DEFAULT_STANDARD_DEVIATION) ||
+            ($this->greenStdDev > self::DEFAULT_STANDARD_DEVIATION && $this->blueStdDev > self::DEFAULT_STANDARD_DEVIATION)
             ) ||
-            ($this->meanAlpha == 127)) {
+            ($this->meanAlpha === 127)) {
             $helm = \imagecreatetruecolor($size, $size);
             \imagealphablending($helm, false);
             \imagesavealpha($helm, true);

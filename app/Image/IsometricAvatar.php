@@ -82,9 +82,6 @@ class IsometricAvatar
     /**
      * IsometricAvatar constructor.
      *
-     * @param string $uuid
-     * @param int    $lastUpdate
-     *
      * @throws \Exception
      */
     public function __construct(string $uuid, int $lastUpdate)
@@ -105,8 +102,6 @@ class IsometricAvatar
 
     /**
      * __toString().
-     *
-     * @return string
      */
     public function __toString(): string
     {
@@ -125,8 +120,6 @@ class IsometricAvatar
 
     /**
      * Change checkCacheStatusFlag value.
-     *
-     * @param bool $flag
      */
     public function checkCacheStatus(bool $flag)
     {
@@ -137,8 +130,6 @@ class IsometricAvatar
      * Point for face section.
      *
      * @param int $size
-     *
-     * @return array
      */
     private function getFrontPoints($size = self::HEAD_BASE_SIZE): array
     {
@@ -291,8 +282,6 @@ class IsometricAvatar
 
     /**
      * Check cached file.
-     *
-     * @return bool
      */
     protected function verifyCachedFile(): bool
     {

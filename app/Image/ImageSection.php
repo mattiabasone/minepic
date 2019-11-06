@@ -25,8 +25,6 @@ abstract class ImageSection
 
     /**
      * Avatar constructor.
-     *
-     * @param string $skinPath
      */
     public function __construct(string $skinPath)
     {
@@ -35,15 +33,12 @@ abstract class ImageSection
 
     /**
      * From resource to string.
-     *
-     * @return string
      */
     public function __toString(): string
     {
         \ob_start();
         \imagepng($this->imgResource);
-        $imgToString = \ob_get_contents();
-        \ob_end_clean();
+        $imgToString = (string) \ob_get_clean();
 
         return $imgToString;
     }

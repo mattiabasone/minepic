@@ -108,8 +108,6 @@ class MojangClient
 
     /**
      * Set data.
-     *
-     * @param array $data
      */
     private function setData(array $data)
     {
@@ -128,8 +126,6 @@ class MojangClient
 
     /**
      * Send new request.
-     *
-     * @return bool
      */
     private function sendRequestApi(): bool
     {
@@ -158,6 +154,7 @@ class MojangClient
      * Generic request.
      *
      * @return bool
+     * @throws GuzzleHttp\Exception\GuzzleException
      */
     private function sendRequest()
     {
@@ -186,9 +183,7 @@ class MojangClient
      * Account info from username.
      *
      * @param string $username
-     *
      * @return MojangAccount
-     *
      * @throws \Exception
      */
     public function sendUsernameInfoRequest(string $username): MojangAccount
@@ -206,10 +201,6 @@ class MojangClient
 
     /**
      * Account info from UUID.
-     *
-     * @param string $uuid
-     *
-     * @return MojangAccount
      *
      * @throws \Exception
      */
@@ -230,16 +221,15 @@ class MojangClient
     /**
      * Get Skin.
      *
-     * @param string $skin
-     *
      * @throws \Exception
+     * @throws GuzzleHttp\Exception\GuzzleException
      */
     public function getSkin(string $skin)
     {
         $this->setMethod('GET');
         $this->setURL(env('MINECRAFT_TEXTURE_URL').$skin);
         if ($this->sendRequest()) {
-            if ($this->lastContentType == 'image/png') {
+            if ($this->lastContentType === 'image/png') {
                 return $this->lastResponse;
             }
             throw new \Exception('Invalid format: ');

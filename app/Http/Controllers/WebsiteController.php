@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Core as MinepicCore;
-use App\Database\AccountsStats;
 use App\Helpers\Date as DateHelper;
 use App\Misc\SplashMessage;
+use App\Models\AccountStats;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
@@ -48,8 +48,6 @@ class WebsiteController extends BaseController
 
     /**
      * WebsiteController constructor.
-     *
-     * @param ResponseFactory $responseFactory
      */
     public function __construct(
         ResponseFactory $responseFactory
@@ -59,12 +57,6 @@ class WebsiteController extends BaseController
 
     /**
      * Compose view with header and footer.
-     *
-     * @param string $page
-     * @param array  $bodyData
-     * @param array  $headerData
-     *
-     * @return string
      */
     private function composeView(
         string $page = '',
@@ -78,12 +70,6 @@ class WebsiteController extends BaseController
 
     /**
      * Render fullpage (headers, body, footer).
-     *
-     * @param string $page
-     * @param array  $bodyData
-     * @param array  $headerData
-     *
-     * @return Response
      */
     private function renderPage(
         string $page = '',
@@ -106,14 +92,12 @@ class WebsiteController extends BaseController
 
     /**
      * Index.
-     *
-     * @return Response
      */
     public function index(): Response
     {
         $bodyData = [
-            'lastRequests' => AccountsStats::getLastUsers(),
-            'mostWanted' => AccountsStats::getMostWanted(),
+            'lastRequests' => AccountStats::getLastUsers(),
+            'mostWanted' => AccountStats::getMostWanted(),
         ];
 
         return $this->renderPage('index', $bodyData);
@@ -121,10 +105,6 @@ class WebsiteController extends BaseController
 
     /**
      * User stats page.
-     *
-     * @param string $uuidOrName
-     *
-     * @return Response
      */
     public function user(string $uuidOrName): Response
     {

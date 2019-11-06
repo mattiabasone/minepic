@@ -11,7 +11,7 @@
 |
 */
 
-$factory->define(App\Database\Accounts::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Account::class, function (Faker\Generator $faker) {
     return [
         'uuid'      => $faker->uuid,
         'username'  => $faker->name,
@@ -24,7 +24,7 @@ $factory->define(App\Database\Accounts::class, function (Faker\Generator $faker)
 });
 
 
-$factory->define(App\Database\AccountsNameChange::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\AccountNameChange::class, function (Faker\Generator $faker) {
     return [
         'uuid' => $faker->uuid,
         'prev_name' => $faker->name,
@@ -33,14 +33,14 @@ $factory->define(App\Database\AccountsNameChange::class, function (Faker\Generat
     ];
 });
 
-$factory->define(App\Database\AccountsNotFound::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\AccountNotFound::class, function (Faker\Generator $faker) {
     return [
         'request' => $faker->name,
         'time' => $faker->unixTime,
     ];
 });
 
-$factory->define(App\Database\AccountsStats::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\AccountStats::class, function (Faker\Generator $faker) {
     return [
         'uuid' => $faker->uuid,
         'count_request' => $faker->randomNumber(6),
