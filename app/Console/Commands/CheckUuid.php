@@ -31,8 +31,7 @@ class CheckUuid extends Command
 
     /**
      * Execute the console command.
-     * @param MojangClient $mojangClient
-     * @return int
+     *
      * @throws \Exception
      */
     public function handle(MojangClient $mojangClient): int
@@ -50,6 +49,7 @@ class CheckUuid extends Command
 
         if ($results->count() === 0) {
             $this->info('No old uuid found');
+
             return 0;
         }
 

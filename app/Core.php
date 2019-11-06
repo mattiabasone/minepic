@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Helpers\Storage\Files\SkinsStorage;
+use App\Helpers\UserDataValidator;
 use App\Image\IsometricAvatar;
 use App\Image\Sections\Avatar;
 use App\Image\Sections\Skin;
@@ -99,35 +100,13 @@ class Core
     }
 
     /**
-     * Check if is a valid username.
-     *
-     * @param string
-     */
-    public function isValidUsername($username): bool
-    {
-        return !(\preg_match('#[^a-zA-Z0-9_]+#', $username) === 1);
-    }
-
-    /**
      * Check if is a valid UUID.
      *
      * @param string
      */
-    public function isValidUuid(): bool
+    public function isCurrentRequestValidUuid(): bool
     {
-        $uuid = \mb_strtolower($this->request);
-
-        return \preg_match('#[a-f0-9]{32}#', $uuid) === 1 && \mb_strlen($uuid) === 32;
-    }
-
-    /**
-     * Check if is an email address has invalid characters.
-     *
-     * @param string
-     */
-    public function isValidEmail($email): bool
-    {
-        return !(\preg_match('#^[a-zA-Z0-9\.\_\%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,8}$#', $email) === 1);
+        return UserDataValidator::isValidUuid($this->request);
     }
 
     /**
@@ -264,10 +243,11 @@ class Core
      * Get UUID from username.
      *
      * @param string
+     * @return bool
      */
     private function convertRequestToUuid(): bool
     {
-        if ($this->isValidUsername($this->request) || $this->isValidEmail($this->request)) {
+        if (UserDataValidator::isValidUsername($this->request) || UserDataValidator::isValidEmail($this->request)) {
             $MojangClient = new MojangClient();
             try {
                 $account = $MojangClient->sendUsernameInfoRequest($this->request);
@@ -369,7 +349,7 @@ class Core
         if (!empty($this->request) && \mb_strlen($this->request) <= 32) {
             // TODO these checks needs optimizations
             // Valid UUID format? Then check if UUID is in my database
-            if ($this->isValidUuid() && $this->uuidInDb()) {
+            if ($this->isCurrentRequestValidUuid() && $this->uuidInDb()) {
                 // Check if UUID is in my database
                 // Data cache still valid?
                 if (!$this->checkDbCache() || $this->forceUpdatePossible()) {
@@ -411,8 +391,8 @@ class Core
                 return true;
             } else {
                 // Account not found? time to retry to get information from Mojang?
-                if (!$this->isUnexistentAccount() || $this->retryUnexistentCheck) {
-                    if (!$this->isValidUuid() && !$this->convertRequestToUuid()) {
+                if ($this->retryUnexistentCheck || !$this->isUnexistentAccount()) {
+                    if (!$this->isCurrentRequestValidUuid() && !$this->convertRequestToUuid()) {
                         $this->saveUnexistentAccount();
                         $this->userdata = null;
                         $this->currentUserSkinImage = SkinsStorage::getPath(env('DEFAULT_USERNAME'));
@@ -472,7 +452,6 @@ class Core
             // Get data from API
             if ($this->getFullUserdataApi()) {
                 $originalUsername = $this->userdata->username;
-
                 // Update database
                 $this->userdata->username = $this->apiUserdata->username;
                 $this->userdata->skin = $this->apiUserdata->skin;
@@ -484,7 +463,7 @@ class Core
                 $this->saveRemoteSkin();
 
                 // Log username change
-                if ($this->userdata->username != $originalUsername && $originalUsername != '') {
+                if ($this->userdata->username !== $originalUsername && $originalUsername !== '') {
                     $this->logUsernameChange($originalUsername, $this->userdata->username, $this->userdata->uuid);
                 }
                 $this->dataUpdated = true;
@@ -558,6 +537,8 @@ class Core
      *
      * @param int
      * @param mixed
+     *
+     * @throws \Throwable
      */
     public function avatarCurrentUser(int $size = 0): Avatar
     {
@@ -571,6 +552,8 @@ class Core
      * Random avatar from saved.
      *
      * @param int
+     *
+     * @throws \Throwable
      */
     public function randomAvatar(int $size = 0): Avatar
     {
@@ -587,6 +570,8 @@ class Core
      * Default Avatar.
      *
      * @return Avatar (rendered)
+     *
+     * @throws \Throwable
      */
     public function defaultAvatar(int $size = 0): Avatar
     {
@@ -602,6 +587,8 @@ class Core
 
     /**
      * Default Avatar Isometric.
+     *
+     * @throws \Throwable
      */
     public function isometricAvatarCurrentUser(int $size = 0): IsometricAvatar
     {
@@ -687,7 +674,7 @@ class Core
     /**
      * Set force update.
      */
-    public function setForceUpdate(bool $forceUpdate)
+    public function setForceUpdate(bool $forceUpdate): void
     {
         $this->forceUpdate = $forceUpdate;
     }
@@ -712,13 +699,13 @@ class Core
      *
      * @param string
      */
-    public function updateStats($type = 'request')
+    public function updateStats($type = 'request'): void
     {
-        if (env('STATS_ENABLED') && !empty($this->userdata->uuid) && $this->userdata->uuid !== env('DEFAULT_UUID')) {
+        if (!empty($this->userdata->uuid) && env('STATS_ENABLED') && $this->userdata->uuid !== env('DEFAULT_UUID')) {
             $AccStats = new AccountStats();
-            if ($type == 'request') {
+            if ($type === 'request') {
                 $AccStats->incrementRequestStats($this->userdata->uuid);
-            } elseif ($type == 'search') {
+            } elseif ($type === 'search') {
                 $AccStats->incrementSearchStats($this->userdata->uuid);
             }
         }
