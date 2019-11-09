@@ -17,27 +17,27 @@ class IsometricAvatar
     /**
      * Cosine PI/6.
      */
-    const COSINE_PI_6 = M_SQRT3 / 2;
+    private const COSINE_PI_6 = M_SQRT3 / 2;
 
     /**
      * Base size (all requests must be <=).
      */
-    const HEAD_BASE_SIZE = 252;
+    private const HEAD_BASE_SIZE = 252;
 
     /**
      * Margin (in pixels) in the final image.
      */
-    const HEAD_MARGIN = 4;
+    private const HEAD_MARGIN = 4;
 
     /**
      * Maximum size for resize operation.
      */
-    const MAX_SIZE = 512;
+    private const MAX_SIZE = 512;
 
     /**
      * Minimum size for resize operation.
      */
-    const MIN_SIZE = 16;
+    private const MIN_SIZE = 16;
 
     /**
      * User UUID.
@@ -274,6 +274,8 @@ class IsometricAvatar
 
     /**
      * Create $head Imagick Object from previously rendered head.
+     *
+     * @throws \ImagickException
      */
     protected function createFromFile(): void
     {
@@ -303,7 +305,7 @@ class IsometricAvatar
      *
      * @throws \Throwable
      */
-    public function render($size)
+    public function render($size): void
     {
         if ($size < self::MIN_SIZE || $size > self::MAX_SIZE) {
             $size = 256;
