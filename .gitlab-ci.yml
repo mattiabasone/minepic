@@ -1,10 +1,3 @@
-services:
-  - mysql:5.7
-
-variables:
-  MYSQL_DATABASE: "app"
-  MYSQL_ROOT_PASSWORD: "root"
-
 stages:
   - build
   - test
@@ -27,6 +20,12 @@ composer_install:
 unit_test:php73:
   stage: test
   image: mattiabasone/php:7.3-cli
+  services:
+    - name: mysql:5.7
+      alias: mysql
+  variables:
+    MYSQL_DATABASE: "app"
+    MYSQL_ROOT_PASSWORD: "root"
   before_script:
     - cp .env.ci_testing .env
     - php artisan migrate
@@ -37,6 +36,14 @@ unit_test:php74:
   stage: test
   image: mattiabasone/php:7.4-rc-cli
   allow_failure: true
+  dependencies:
+    - unit_test:php73
+  services:
+    - name: mysql:5.7
+      alias: mysql
+  variables:
+    MYSQL_DATABASE: "app"
+    MYSQL_ROOT_PASSWORD: "root"
   before_script:
     - cp .env.ci_testing .env
     - php artisan migrate
