@@ -3,7 +3,7 @@ stages:
   - test
   - deploy
 
-composer_install:
+build:composer_install:
   stage: build
   image: mattiabasone/php:7.3-cli
   cache:
@@ -17,12 +17,12 @@ composer_install:
       - vendor/
     expire_in: 7 days
 
-unit_test:php73:
+test:php73:
   stage: test
   image: mattiabasone/php:7.3-cli
   services:
-    - name: mysql:5.7
-      alias: mysql
+    - name: mariadb:10.2.19
+      alias: db
   variables:
     MYSQL_DATABASE: "app"
     MYSQL_ROOT_PASSWORD: "root"
@@ -32,15 +32,13 @@ unit_test:php73:
   script:
     - vendor/bin/phpunit --configuration phpunit-ci.xml
 
-unit_test:php74:
+test:php74:
   stage: test
   image: mattiabasone/php:7.4-rc-cli
   allow_failure: true
-  dependencies:
-    - unit_test:php73
   services:
     - name: mysql:5.7
-      alias: mysql
+      alias: db
   variables:
     MYSQL_DATABASE: "app"
     MYSQL_ROOT_PASSWORD: "root"
@@ -50,7 +48,7 @@ unit_test:php74:
   script:
     - vendor/bin/phpunit --configuration phpunit-ci.xml
 
-deploy_staging:
+deploy:staging:
   stage: deploy
   image: mattiabasone/php:7.3-cli
   environment:
@@ -72,7 +70,7 @@ deploy_staging:
   only:
     - staging
 
-deploy_production:
+deploy:production:
   stage: deploy
   image: mattiabasone/php:7.3-cli
   environment:
