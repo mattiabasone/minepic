@@ -48,6 +48,7 @@ class WebsiteController extends BaseController
 
     /**
      * WebsiteController constructor.
+     * @param ResponseFactory $responseFactory
      */
     public function __construct(
         ResponseFactory $responseFactory
@@ -57,6 +58,10 @@ class WebsiteController extends BaseController
 
     /**
      * Compose view with header and footer.
+     * @param string $page
+     * @param array $bodyData
+     * @param array $headerData
+     * @return string
      */
     private function composeView(
         string $page = '',
@@ -70,6 +75,10 @@ class WebsiteController extends BaseController
 
     /**
      * Render fullpage (headers, body, footer).
+     * @param string $page
+     * @param array $bodyData
+     * @param array $headerData
+     * @return Response
      */
     private function renderPage(
         string $page = '',
@@ -105,6 +114,8 @@ class WebsiteController extends BaseController
 
     /**
      * User stats page.
+     * @param string $uuidOrName
+     * @return Response
      */
     public function user(string $uuidOrName): Response
     {

@@ -124,8 +124,31 @@ class MojangClient
         return $this->lastResponse;
     }
 
+    private function handleGuzzleBadResponseException(
+        GuzzleHttp\Exception\BadResponseException $badResponseException
+    ): void {
+        $this->lastContentType = $badResponseException->getResponse()->getHeader('content-type')[0] ?? '';
+        $this->lastErrorCode = $badResponseException->getResponse()->getStatusCode();
+        $this->lastError = 'Error';
+        if (isset($this->lastResponse['errorMessage'])) {
+            $this->lastError .= ': '.$this->lastResponse['errorMessage'];
+        }
+    }
+
+    /**
+     * @param \Throwable $exception
+     */
+    private function handleThrowable(\Throwable $exception): void
+    {
+        $this->lastContentType = '';
+        $this->lastErrorCode = 0;
+        $this->lastError = $exception->getFile() . ':' . $exception->getLine() . ' - ' . $exception->getMessage();
+    }
+
     /**
      * Send new request.
+     *
+     * @return bool
      */
     private function sendRequestApi(): bool
     {
@@ -137,15 +160,12 @@ class MojangClient
             $this->lastError = '';
 
             return true;
-        } catch (GuzzleHttp\Exception\ClientException $e) {
-            $this->lastResponse = GuzzleHttp\json_decode($e->getResponse()->getBody()->getContents(), true);
-            $this->lastContentType = $e->getResponse()->getHeader('content-type')[0];
-            $this->lastErrorCode = $e->getResponse()->getStatusCode();
-            $this->lastError = 'Error';
-            if (isset($this->lastResponse['errorMessage'])) {
-                $this->lastError .= ': '.$this->lastResponse['errorMessage'];
-            }
-
+        } catch (GuzzleHttp\Exception\BadResponseException $exception) {
+            $this->lastResponse = GuzzleHttp\json_decode($exception->getResponse()->getBody()->getContents(), true);
+            $this->handleGuzzleBadResponseException($exception);
+            return false;
+        } catch (\Throwable $exception) {
+            $this->handleThrowable($exception);
             return false;
         }
     }
@@ -154,10 +174,8 @@ class MojangClient
      * Generic request.
      *
      * @return bool
-     *
-     * @throws GuzzleHttp\Exception\GuzzleException
      */
-    private function sendRequest()
+    private function sendRequest(): bool
     {
         try {
             $response = $this->httpClient->request($this->method, $this->url, $this->data);
@@ -167,15 +185,12 @@ class MojangClient
             $this->lastError = '';
 
             return true;
-        } catch (GuzzleHttp\Exception\ClientException $e) {
-            $this->lastResponse = $e->getResponse()->getBody()->getContents();
-            $this->lastContentType = $e->getResponse()->getHeader('content-type')[0];
-            $this->lastErrorCode = $e->getResponse()->getStatusCode();
-            $this->lastError = 'Error';
-            if (isset($this->lastResponse['errorMessage'])) {
-                $this->lastError .= ': '.$this->lastResponse['errorMessage'];
-            }
-
+        } catch (GuzzleHttp\Exception\BadResponseException $exception) {
+            $this->lastResponse = $exception->getResponse()->getBody()->getContents();
+            $this->handleGuzzleBadResponseException($exception);
+            return false;
+        } catch (\Throwable $exception) {
+            $this->handleThrowable($exception);
             return false;
         }
     }
@@ -183,6 +198,8 @@ class MojangClient
     /**
      * Account info from username.
      *
+     * @param string $username
+     * @return MojangAccount
      * @throws \Exception
      */
     public function sendUsernameInfoRequest(string $username): MojangAccount
@@ -201,6 +218,8 @@ class MojangClient
     /**
      * Account info from UUID.
      *
+     * @param string $uuid
+     * @return MojangAccount
      * @throws \Exception
      */
     public function getUuidInfo(string $uuid): MojangAccount
@@ -220,8 +239,8 @@ class MojangClient
     /**
      * Get Skin.
      *
+     * @param string $skin
      * @throws \Exception
-     * @throws GuzzleHttp\Exception\GuzzleException
      */
     public function getSkin(string $skin)
     {

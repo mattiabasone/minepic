@@ -58,6 +58,7 @@ abstract class BaseApiController extends BaseController
      * @param Account $account
      * @param $size
      * @param string $type
+     * @return array
      */
     public function generateHttpCacheHeaders(?Account $account, $size, $type = 'avatar'): array
     {
