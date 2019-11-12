@@ -45,28 +45,15 @@ class AccountStats extends Model
     public $timestamps = false;
 
     /**
-     * Increment request counter.
+     * @var array
      */
-    public function incrementRequestStats(string $uuid = ''): void
-    {
-        $this->where('uuid', $uuid)
-            ->update([
-                'count_request' => app('db')->raw('count_request + 1'),
-                'time_request' => \time(),
-            ]);
-    }
-
-    /**
-     * Increment search counter.
-     */
-    public function incrementSearchStats(string $uuid = ''): void
-    {
-        $this->where('uuid', $uuid)
-            ->update([
-                'count_search' => app('db')->raw('count_search + 1'),
-                'time_search' => \time(),
-            ]);
-    }
+    protected $fillable = [
+        'uuid',
+        'count_request',
+        'count_search',
+        'time_request',
+        'time_search'
+    ];
 
     /**
      * Get most wanted users.

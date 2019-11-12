@@ -13,6 +13,7 @@ class UserDataValidator
      * Checks if the given string is a valid username.
      *
      * @param $username
+     * @return bool
      */
     public static function isValidUsername(string $username): bool
     {
@@ -31,6 +32,7 @@ class UserDataValidator
      * Check if is an email address has invalid characters.
      *
      * @param string
+     * @return bool
      */
     public static function isValidEmail(string $email): bool
     {

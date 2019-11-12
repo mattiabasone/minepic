@@ -26,4 +26,15 @@ class Account extends Model
      * @var string
      */
     protected $table = 'accounts';
+
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'uuid',
+        'username',
+        'fail_count',
+        'skin',
+        'cape'
+    ];
 }

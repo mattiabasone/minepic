@@ -16,6 +16,7 @@ use App\Models\Account;
 use App\Models\AccountNotFound;
 use App\Models\AccountStats;
 use App\Repositories\AccountRepository;
+use App\Repositories\AccountStatsRepository;
 
 /**
  * Class Core.
@@ -92,18 +93,25 @@ class Core
      * @var MojangClient
      */
     private $mojangClient;
+    /**
+     * @var AccountStatsRepository
+     */
+    private $accountStatsRepository;
 
     /**
      * Core constructor.
      * @param AccountRepository $accountRepository Where user data is stored
+     * @param AccountStatsRepository $accountStatsRepository
      * @param MojangClient $mojangClient Client for Mojang API
      */
     public function __construct(
         AccountRepository $accountRepository,
+        AccountStatsRepository $accountStatsRepository,
         MojangClient $mojangClient
     ) {
         $this->accountRepository = $accountRepository;
         $this->mojangClient = $mojangClient;
+        $this->accountStatsRepository = $accountStatsRepository;
     }
 
     /**
@@ -132,7 +140,7 @@ class Core
     }
 
     /**
-     * Check if chache is still valid.
+     * Check if cache is still valid.
      *
      * @param int
      * @return bool
@@ -173,43 +181,29 @@ class Core
      *
      * @return Account
      */
-    public function getUserdata(): ?Account
+    public function getUserdata(): Account
     {
-        return $this->userdata;
-    }
-
-    /**
-     * Get loaded user data and stats (array).
-     */
-    public function getFullUserdata(): array
-    {
-        $userstats = AccountStats::find($this->userdata->uuid);
-
-        return [$this->userdata, $userstats];
+        return $this->userdata ?? new Account();
     }
 
     /**
      * Check if an UUID is in the database.
+     *
+     * @return bool Returns true/false
      */
-    private function uuidInDb(?string $uuid = null): bool
+    private function uuidInDb(): bool
     {
-        if ($uuid === null) {
-            $uuid = $this->request;
-        }
-
-        return $this->loadDbUserdata('uuid', $uuid);
+        return $this->loadDbUserdata('uuid', $this->request);
     }
 
     /**
      * Check if a username is in the database.
+     *
+     * @return bool Returns true/false
      */
-    private function nameInDb(?string $name = null): bool
+    private function nameInDb(): bool
     {
-        if ($name === null) {
-            $name = $this->request;
-        }
-
-        return $this->loadDbUserdata('username', $name);
+        return $this->loadDbUserdata('username', $this->request);
     }
 
     /**
@@ -231,13 +225,13 @@ class Core
             $this->saveRemoteSkin();
             $this->currentUserSkinImage = SkinsStorage::getPath($this->apiUserdata->uuid);
 
-            $accountStats = new AccountStats();
-            $accountStats->uuid = $this->userdata->uuid;
-            $accountStats->count_search = 0;
-            $accountStats->count_request = 0;
-            $accountStats->time_search = 0;
-            $accountStats->time_request = 0;
-            $accountStats->save();
+            $this->accountStatsRepository->create([
+                'uuid' => $this->userdata->uuid,
+                'count_search' => 0,
+                'count_request' => 0,
+                'time_search' => 0,
+                'time_request' => 0,
+            ]);
 
             return true;
         }
@@ -290,7 +284,7 @@ class Core
     public function isUnexistentAccount(): bool
     {
         $result = AccountNotFound::find($this->request);
-        if ($result != null) {
+        if ($result !== null) {
             if ((\time() - $result->updated_at->timestamp) > env('USERDATA_CACHE_TIME')) {
                 $this->retryUnexistentCheck = true;
             } else {
@@ -330,49 +324,17 @@ class Core
         if (!empty($this->request) && \mb_strlen($this->request) <= 32) {
             // TODO these checks needs optimizations
             // Valid UUID format? Then check if UUID is in my database
-            if ($this->isCurrentRequestValidUuid() && $this->uuidInDb()) {
-                // Check if UUID is in my database
-                // Data cache still valid?
-                if (!$this->checkDbCache() || $this->forceUpdatePossible()) {
-                    // Nope, updating data
-                    $this->updateDbUser();
-                } else {
-                    // Check if local image exists
-                    if (!SkinsStorage::exists($this->request)) {
-                        $this->saveRemoteSkin();
-                    }
+            if ($this->isCurrentRequestValidUuid()) {
+
+                if ($this->initializeUuidRequest()) {
+                    return true;
                 }
 
-                return true;
             } elseif ($this->nameInDb()) {
-                // Check DB datacache
-                if (!$this->checkDbCache() || $this->forceUpdatePossible()) {
-                    // Check UUID (username change/other)
-                    if ($this->convertRequestToUuid()) {
-                        if ($this->request === $this->userdata->uuid) {
-                            // Nope, updating data
-                            $this->request = $this->userdata->uuid;
-                            $this->updateDbUser();
-                        } else {
-                            // re-initialize process with the UUID if the name has been changed
-                            return $this->initialize($this->request);
-                        }
-                    } else {
-                        $this->request = $this->userdata->uuid;
-                        $this->updateUserFailUpdate();
-                        SkinsStorage::copyAsSteve($this->request);
-                    }
-                } else {
-                    // Check if local image exists
-                    if (!SkinsStorage::exists($this->request)) {
-                        SkinsStorage::copyAsSteve($this->request);
-                    }
-                }
-
-                return true;
+                return $this->initializeUsernameRequest();
             } else {
                 // Account not found? time to retry to get information from Mojang?
-                if ($this->retryUnexistentCheck || !$this->isUnexistentAccount()) {
+                if (!$this->isUnexistentAccount() || $this->retryUnexistentCheck) {
                     if (!$this->isCurrentRequestValidUuid() && !$this->convertRequestToUuid()) {
                         $this->saveUnexistentAccount();
                         $this->userdata = null;
@@ -553,10 +515,8 @@ class Core
     public function saveRemoteSkin(): bool
     {
         if (!empty($this->userdata->skin) && \mb_strlen($this->userdata->skin) > 0) {
-            $mojangClient = new MojangClient();
             try {
-                $skinData = $mojangClient->getSkin($this->userdata->skin);
-
+                $skinData = $this->mojangClient->getSkin($this->userdata->skin);
                 return SkinsStorage::save($this->userdata->uuid, $skinData);
             } catch (\Exception $e) {
                 \Log::error($e);
@@ -594,6 +554,7 @@ class Core
 
     /**
      * Set force update.
+     * @param bool $forceUpdate
      */
     public function setForceUpdate(bool $forceUpdate): void
     {
@@ -617,12 +578,67 @@ class Core
     public function updateStats($type = 'request'): void
     {
         if (!empty($this->userdata->uuid) && env('STATS_ENABLED') && $this->userdata->uuid !== env('DEFAULT_UUID')) {
-            $AccStats = new AccountStats();
             if ($type === 'request') {
-                $AccStats->incrementRequestStats($this->userdata->uuid);
+                $this->accountStatsRepository->incrementRequestCounter($this->userdata->uuid);
             } elseif ($type === 'search') {
-                $AccStats->incrementSearchStats($this->userdata->uuid);
+                $this->accountStatsRepository->incrementSearchCounter($this->userdata->uuid);
             }
         }
+    }
+
+    /**
+     * @return bool
+     */
+    private function initializeUuidRequest(): bool
+    {
+        if ($this->uuidInDb()) {
+            // Check if UUID is in my database
+            // Data cache still valid?
+            if (!$this->checkDbCache() || $this->forceUpdatePossible()) {
+                // Nope, updating data
+                $this->updateDbUser();
+            }
+
+            if (!SkinsStorage::exists($this->request)) {
+                $this->saveRemoteSkin();
+            }
+
+            return true;
+        }
+
+        if ($this->insertNewUuid()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    private function initializeUsernameRequest(): bool
+    {
+        // Check DB datacache
+        if (!$this->checkDbCache() || $this->forceUpdatePossible()) {
+            // Check UUID (username change/other)
+            if ($this->convertRequestToUuid()) {
+                if ($this->request === $this->userdata->uuid) {
+                    // Nope, updating data
+                    $this->request = $this->userdata->uuid;
+                    $this->updateDbUser();
+                } else {
+                    // re-initialize process with the UUID if the name has been changed
+                    return $this->initialize($this->request);
+                }
+            } else {
+                $this->request = $this->userdata->uuid;
+                $this->updateUserFailUpdate();
+                SkinsStorage::copyAsSteve($this->request);
+            }
+        } else if (!SkinsStorage::exists($this->request)) {
+            SkinsStorage::copyAsSteve($this->request);
+        }
+
+        return true;
     }
 }

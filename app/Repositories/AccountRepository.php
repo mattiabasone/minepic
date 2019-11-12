@@ -24,7 +24,7 @@ class AccountRepository extends BaseRepository
      * @param array $columns
      * @return Account
      */
-    public function findByUuid(string $uuid, $columns = ['*']): Account
+    public function findByUuid(string $uuid, $columns = ['*']): ?Account
     {
         return $this->findBy('uuid', $uuid, $columns);
     }
@@ -34,7 +34,7 @@ class AccountRepository extends BaseRepository
      * @param array $columns
      * @return Account
      */
-    public function findByUsername(string $uuid, $columns = ['*']): Account
+    public function findByUsername(string $uuid, $columns = ['*']): ?Account
     {
         return $this->findBy('username', $uuid, $columns);
     }

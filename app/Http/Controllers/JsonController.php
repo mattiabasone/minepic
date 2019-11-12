@@ -8,9 +8,12 @@ use App\Core as MinepicCore;
 use App\Helpers\Date as DateHelper;
 use App\Models\Account;
 use App\Models\AccountStats;
+use App\Repositories\AccountRepository;
+use App\Repositories\AccountStatsRepository;
 use Illuminate\Http\JsonResponse;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class JsonController extends BaseController
 {
@@ -22,48 +25,73 @@ class JsonController extends BaseController
      * @var MinepicCore
      */
     private $minepicCore;
+    /**
+     * @var AccountRepository
+     */
+    private $accountRepository;
+    /**
+     * @var AccountStatsRepository
+     */
+    private $accountStatsRepository;
 
-    public function __construct(MinepicCore $minepicCore, ResponseFactory $responseFactory)
-    {
+    public function __construct(
+        AccountRepository $accountRepository,
+        AccountStatsRepository $accountStatsRepository,
+        MinepicCore $minepicCore,
+        ResponseFactory $responseFactory
+    ) {
         $this->minepicCore = $minepicCore;
         $this->responseFactory = $responseFactory;
+        $this->accountRepository = $accountRepository;
+        $this->accountStatsRepository = $accountStatsRepository;
     }
 
     /**
      * User info.
      *
      * @param string $uuidOrName
+     * @return JsonResponse
      */
     public function user($uuidOrName = ''): JsonResponse
     {
-        if ($this->minepicCore->initialize($uuidOrName)) {
-            $httpStatus = 200;
-            [$userdata, $userstats] = $this->minepicCore->getFullUserdata();
-
-            $response = [
-                'ok' => true,
-                'userdata' => [
-                    'uuid' => $userdata->uuid,
-                    'username' => $userdata->username,
-                    'count_request' => $userstats->count_request,
-                    'count_search' => $userstats->count_search,
-                    'last_request' => DateHelper::humanizeTimestamp($userstats->time_request),
-                    'last_search' => DateHelper::humanizeTimestamp($userstats->time_search),
-                ],
-            ];
-        } else {
+        if (!$this->minepicCore->initialize($uuidOrName)) {
             $httpStatus = 404;
             $response = [
                 'ok' => false,
                 'message' => 'User not found',
             ];
+
+            return $this->responseFactory->json($response, $httpStatus);
         }
+
+        $httpStatus = 200;
+        $account = $this->minepicCore->getUserdata();
+
+        if ($account === null) {
+            throw new NotFoundHttpException();
+        }
+
+        $accountStats = $this->accountStatsRepository->findByUuid($account->uuid);
+
+        $response = [
+            'ok' => true,
+            'userdata' => [
+                'uuid' => $account->uuid,
+                'username' => $account->username,
+                'count_request' => $accountStats->count_request,
+                'count_search' => $accountStats->count_search,
+                'last_request' => DateHelper::humanizeTimestamp($accountStats->time_request),
+                'last_search' => DateHelper::humanizeTimestamp($accountStats->time_search),
+            ],
+        ];
 
         return $this->responseFactory->json($response, $httpStatus);
     }
 
     /**
      * Update User data.
+     * @param string $uuidOrName
+     * @return JsonResponse
      */
     public function updateUser(string $uuidOrName): JsonResponse
     {
@@ -100,6 +128,7 @@ class JsonController extends BaseController
      * Username Typeahead.
      *
      * @param $term
+     * @return JsonResponse
      */
     public function userTypeahead($term): JsonResponse
     {

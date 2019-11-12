@@ -8,6 +8,7 @@ use App\Core as MinepicCore;
 use App\Helpers\Date as DateHelper;
 use App\Misc\SplashMessage;
 use App\Models\AccountStats;
+use App\Repositories\AccountStatsRepository;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
@@ -45,15 +46,21 @@ class WebsiteController extends BaseController
      * @var ResponseFactory
      */
     private $responseFactory;
+    /**
+     * @var AccountStatsRepository
+     */
+    private $accountStatsRepository;
 
     /**
      * WebsiteController constructor.
      * @param ResponseFactory $responseFactory
      */
     public function __construct(
+        AccountStatsRepository $accountStatsRepository,
         ResponseFactory $responseFactory
     ) {
         $this->responseFactory = $responseFactory;
+        $this->accountStatsRepository = $accountStatsRepository;
     }
 
     /**
@@ -122,7 +129,8 @@ class WebsiteController extends BaseController
         $minepicCore = new MinepicCore();
 
         if ($minepicCore->initialize($uuidOrName)) {
-            [$userdata, $userstats] = $minepicCore->getFullUserdata();
+            $userdata = $minepicCore->getUserdata();
+            $userstats = $this->accountStatsRepository->findByUuid($userdata->uuid);
 
             $headerData = [
                 'title' => $userdata->username.' usage statistics - Minepic',
