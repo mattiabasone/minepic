@@ -32,21 +32,21 @@ test:php73:
   script:
     - vendor/bin/phpunit --configuration phpunit-ci.xml
 
-test:php74:
-  stage: test
-  image: mattiabasone/php:7.4-rc-cli
-  allow_failure: true
-  services:
-    - name: mysql:5.7
-      alias: db
-  variables:
-    MYSQL_DATABASE: "app"
-    MYSQL_ROOT_PASSWORD: "root"
-  before_script:
-    - cp .env.ci_testing .env
-    - php artisan migrate
-  script:
-    - vendor/bin/phpunit --configuration phpunit-ci.xml
+#test:php74:
+#  stage: test
+#  image: mattiabasone/php:7.4-rc-cli
+#  allow_failure: true
+#  services:
+#    - name: mysql:5.7
+#      alias: db
+#  variables:
+#    MYSQL_DATABASE: "app"
+#    MYSQL_ROOT_PASSWORD: "root"
+#  before_script:
+#    - cp .env.ci_testing .env
+#    - php artisan migrate
+#  script:
+#    - vendor/bin/phpunit --configuration phpunit-ci.xml
 
 deploy:staging:
   stage: deploy
