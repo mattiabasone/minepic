@@ -72,7 +72,7 @@ abstract class BaseApiController extends BaseController
      */
     public function generateHttpCacheHeaders(?Account $account, $size, $type = 'avatar'): array
     {
-        if ($account !== null) {
+        if ($account !== null && $account->uuid !== null) {
             return [
                 'Cache-Control' => 'private, max-age='.env('USERDATA_CACHE_TIME'),
                 'Last-Modified' => \gmdate('D, d M Y H:i:s \G\M\T', $account->updated_at->timestamp),
