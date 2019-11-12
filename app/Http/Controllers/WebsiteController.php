@@ -50,17 +50,24 @@ class WebsiteController extends BaseController
      * @var AccountStatsRepository
      */
     private $accountStatsRepository;
+    /**
+     * @var MinepicCore
+     */
+    private $minepicCore;
 
     /**
      * WebsiteController constructor.
+     * @param AccountStatsRepository $accountStatsRepository
      * @param ResponseFactory $responseFactory
      */
     public function __construct(
         AccountStatsRepository $accountStatsRepository,
+        MinepicCore $minepicCore,
         ResponseFactory $responseFactory
     ) {
         $this->responseFactory = $responseFactory;
         $this->accountStatsRepository = $accountStatsRepository;
+        $this->minepicCore = $minepicCore;
     }
 
     /**
@@ -126,10 +133,8 @@ class WebsiteController extends BaseController
      */
     public function user(string $uuidOrName): Response
     {
-        $minepicCore = new MinepicCore();
-
-        if ($minepicCore->initialize($uuidOrName)) {
-            $userdata = $minepicCore->getUserdata();
+        if ($this->minepicCore->initialize($uuidOrName)) {
+            $userdata = $this->minepicCore->getUserdata();
             $userstats = $this->accountStatsRepository->findByUuid($userdata->uuid);
 
             $headerData = [
