@@ -135,20 +135,15 @@ class MojangClient
         }
     }
 
-    /**
-     * @param \Throwable $exception
-     */
     private function handleThrowable(\Throwable $exception): void
     {
         $this->lastContentType = '';
         $this->lastErrorCode = 0;
-        $this->lastError = $exception->getFile() . ':' . $exception->getLine() . ' - ' . $exception->getMessage();
+        $this->lastError = $exception->getFile().':'.$exception->getLine().' - '.$exception->getMessage();
     }
 
     /**
      * Send new request.
-     *
-     * @return bool
      */
     private function sendRequestApi(): bool
     {
@@ -163,17 +158,17 @@ class MojangClient
         } catch (GuzzleHttp\Exception\BadResponseException $exception) {
             $this->lastResponse = GuzzleHttp\json_decode($exception->getResponse()->getBody()->getContents(), true);
             $this->handleGuzzleBadResponseException($exception);
+
             return false;
         } catch (\Throwable $exception) {
             $this->handleThrowable($exception);
+
             return false;
         }
     }
 
     /**
      * Generic request.
-     *
-     * @return bool
      */
     private function sendRequest(): bool
     {
@@ -188,9 +183,11 @@ class MojangClient
         } catch (GuzzleHttp\Exception\BadResponseException $exception) {
             $this->lastResponse = $exception->getResponse()->getBody()->getContents();
             $this->handleGuzzleBadResponseException($exception);
+
             return false;
         } catch (\Throwable $exception) {
             $this->handleThrowable($exception);
+
             return false;
         }
     }
@@ -198,8 +195,6 @@ class MojangClient
     /**
      * Account info from username.
      *
-     * @param string $username
-     * @return MojangAccount
      * @throws \Exception
      */
     public function sendUsernameInfoRequest(string $username): MojangAccount
@@ -218,8 +213,6 @@ class MojangClient
     /**
      * Account info from UUID.
      *
-     * @param string $uuid
-     * @return MojangAccount
      * @throws \Exception
      */
     public function getUuidInfo(string $uuid): MojangAccount
@@ -239,7 +232,6 @@ class MojangClient
     /**
      * Get Skin.
      *
-     * @param string $skin
      * @throws \Exception
      */
     public function getSkin(string $skin)

@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Listeners\Account;
 
 use App\Events\Account\UsernameChangeEvent;
 use App\Models\AccountNameChange;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class UsernameChangeListener
 {
@@ -16,14 +16,10 @@ class UsernameChangeListener
      */
     public function __construct()
     {
-        //
     }
 
     /**
      * Handle the event.
-     *
-     * @param  \App\Events\Account\UsernameChangeEvent  $event
-     * @return void
      */
     public function handle(UsernameChangeEvent $event): void
     {

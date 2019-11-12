@@ -71,7 +71,7 @@ return [
 
         'isometrics' => [
             'driver' => 'local',
-            'root' => storage_path('skins'),
+            'root' => storage_path('isometrics'),
         ],
     ],
 

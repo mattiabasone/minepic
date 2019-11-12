@@ -26,6 +26,9 @@ abstract class BaseApiController extends BaseController
 
     /**
      * Api constructor.
+     *
+     * @param MinepicCore     $minepic         Minepic Core Instance
+     * @param ResponseFactory $responseFactory Response Factory
      */
     public function __construct(
         MinepicCore $minepic,
@@ -36,16 +39,22 @@ abstract class BaseApiController extends BaseController
     }
 
     /**
-     * @param string $uuidOrName
-     * @param int    $size
+     * @param Request $request    Injected Request
+     * @param string  $uuidOrName
+     * @param int     $size       Avatar size User UUID or name
+     *
+     * @return Response
      */
     abstract public function serve(Request $request, $uuidOrName = '', $size = 0): Response;
 
     /**
      * Isometric Avatar with Size.
      *
-     * @param int    $size
-     * @param string $uuidOrName
+     * @param Request $request    Injected Request
+     * @param int     $size       Avatar size
+     * @param string  $uuidOrName User UUID or name
+     *
+     * @return Response
      */
     public function serveWithSize(Request $request, $size = 0, $uuidOrName = ''): Response
     {
@@ -58,6 +67,7 @@ abstract class BaseApiController extends BaseController
      * @param Account $account
      * @param $size
      * @param string $type
+     *
      * @return array
      */
     public function generateHttpCacheHeaders(?Account $account, $size, $type = 'avatar'): array

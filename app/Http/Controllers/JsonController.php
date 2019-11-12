@@ -33,7 +33,6 @@ class JsonController extends BaseController
      * User info.
      *
      * @param string $uuidOrName
-     * @return \Illuminate\Http\JsonResponse
      */
     public function user($uuidOrName = ''): JsonResponse
     {
@@ -65,8 +64,6 @@ class JsonController extends BaseController
 
     /**
      * Update User data.
-     * @param string $uuidOrName
-     * @return \Illuminate\Http\JsonResponse
      */
     public function updateUser(string $uuidOrName): JsonResponse
     {
@@ -103,7 +100,6 @@ class JsonController extends BaseController
      * Username Typeahead.
      *
      * @param $term
-     * @return \Illuminate\Http\JsonResponse
      */
     public function userTypeahead($term): JsonResponse
     {
@@ -121,9 +117,7 @@ class JsonController extends BaseController
     }
 
     /**
-     * Get most wanted account list
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * Get most wanted account list.
      */
     public function getMostWantedUsers(): JsonResponse
     {

@@ -46,7 +46,6 @@ class AccountStats extends Model
 
     /**
      * Increment request counter.
-     * @param string $uuid
      */
     public function incrementRequestStats(string $uuid = ''): void
     {
@@ -59,7 +58,6 @@ class AccountStats extends Model
 
     /**
      * Increment search counter.
-     * @param string $uuid
      */
     public function incrementSearchStats(string $uuid = ''): void
     {

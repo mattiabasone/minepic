@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Events\Account;
 
 use App\Events\Event;
 
 /**
- * Class UsernameChangeEvent
- * @package App\Events\Account
+ * Class UsernameChangeEvent.
  */
 class UsernameChangeEvent extends Event
 {
@@ -30,25 +31,16 @@ class UsernameChangeEvent extends Event
         $this->newName = $newName;
     }
 
-    /**
-     * @return string
-     */
     public function getUuid(): string
     {
         return $this->uuid;
     }
 
-    /**
-     * @return string
-     */
     public function getPreviousName(): string
     {
         return $this->previousName;
     }
 
-    /**
-     * @return string
-     */
     public function getNewName(): string
     {
         return $this->newName;
