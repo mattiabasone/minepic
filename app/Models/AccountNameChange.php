@@ -23,9 +23,4 @@ class AccountNameChange extends Model
      * @var string
      */
     protected $table = 'accounts_name_change';
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
 }

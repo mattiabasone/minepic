@@ -28,7 +28,13 @@ class Account extends Model
     protected $table = 'accounts';
 
     /**
-     * @var bool
+     * @var array
      */
-    public $timestamps = true;
+    protected $fillable = [
+        'uuid',
+        'username',
+        'fail_count',
+        'skin',
+        'cape'
+    ];
 }

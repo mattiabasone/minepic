@@ -8,6 +8,7 @@ use App\Core as MinepicCore;
 use App\Helpers\Date as DateHelper;
 use App\Misc\SplashMessage;
 use App\Models\AccountStats;
+use App\Repositories\AccountStatsRepository;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
@@ -45,18 +46,36 @@ class WebsiteController extends BaseController
      * @var ResponseFactory
      */
     private $responseFactory;
+    /**
+     * @var AccountStatsRepository
+     */
+    private $accountStatsRepository;
+    /**
+     * @var MinepicCore
+     */
+    private $minepicCore;
 
     /**
      * WebsiteController constructor.
+     * @param AccountStatsRepository $accountStatsRepository
+     * @param ResponseFactory $responseFactory
      */
     public function __construct(
+        AccountStatsRepository $accountStatsRepository,
+        MinepicCore $minepicCore,
         ResponseFactory $responseFactory
     ) {
         $this->responseFactory = $responseFactory;
+        $this->accountStatsRepository = $accountStatsRepository;
+        $this->minepicCore = $minepicCore;
     }
 
     /**
      * Compose view with header and footer.
+     * @param string $page
+     * @param array $bodyData
+     * @param array $headerData
+     * @return string
      */
     private function composeView(
         string $page = '',
@@ -70,6 +89,10 @@ class WebsiteController extends BaseController
 
     /**
      * Render fullpage (headers, body, footer).
+     * @param string $page
+     * @param array $bodyData
+     * @param array $headerData
+     * @return Response
      */
     private function renderPage(
         string $page = '',
@@ -105,13 +128,14 @@ class WebsiteController extends BaseController
 
     /**
      * User stats page.
+     * @param string $uuidOrName
+     * @return Response
      */
     public function user(string $uuidOrName): Response
     {
-        $minepicCore = new MinepicCore();
-
-        if ($minepicCore->initialize($uuidOrName)) {
-            [$userdata, $userstats] = $minepicCore->getFullUserdata();
+        if ($this->minepicCore->initialize($uuidOrName)) {
+            $userdata = $this->minepicCore->getUserdata();
+            $userstats = $this->accountStatsRepository->findByUuid($userdata->uuid);
 
             $headerData = [
                 'title' => $userdata->username.' usage statistics - Minepic',

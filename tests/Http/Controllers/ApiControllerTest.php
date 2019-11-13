@@ -70,7 +70,6 @@ class ApiControllerTest extends TestCase
 
         $expectedStatusCode = 404;
         $expectedContentType = 'application/json';
-        dump($this->response->content());
         $this->assertEquals($expectedContentType, $this->response->headers->get('Content-Type'));
         $this->assertEquals($expectedStatusCode, $this->response->getStatusCode());
     }
