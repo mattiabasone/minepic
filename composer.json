@@ -22,7 +22,8 @@
         "mockery/mockery": "^1.0",
         "friendsofphp/php-cs-fixer": "^2.16",
         "barryvdh/laravel-debugbar": "^3.2",
-        "barryvdh/laravel-ide-helper": "^2.6"
+        "barryvdh/laravel-ide-helper": "^2.6",
+        "symplify/easy-coding-standard": "^6.1"
     },
     "autoload": {
         "classmap": [
@@ -43,7 +44,9 @@
             "php -r \"copy('.env.example', '.env');\""
         ],
         "fix": "@php vendor/bin/php-cs-fixer fix",
-        "ihg": "@php artisan ide-helper:generate"
+        "ihg": "@php artisan ide-helper:generate",
+        "ecs-check": "@php vendor/bin/ecs check app",
+        "ecs-fix": "@php vendor/bin/ecs check app --fix"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
