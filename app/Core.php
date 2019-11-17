@@ -14,7 +14,6 @@ use App\Minecraft\MojangAccount;
 use App\Minecraft\MojangClient;
 use App\Models\Account;
 use App\Models\AccountNotFound;
-use App\Models\AccountStats;
 use App\Repositories\AccountRepository;
 use App\Repositories\AccountStatsRepository;
 
@@ -85,14 +84,17 @@ class Core
      * @var string
      */
     public $currentUserSkinImage;
+
     /**
      * @var AccountRepository
      */
     private $accountRepository;
+
     /**
      * @var MojangClient
      */
     private $mojangClient;
+
     /**
      * @var AccountStatsRepository
      */
@@ -147,26 +149,20 @@ class Core
      */
     private function checkDbCache(): bool
     {
-        return (\time() - $this->userdata->updated_at->timestamp) < env('USERDATA_CACHE_TIME');
+        $accountUpdatedAtTimestamp = $this->userdata->updated_at->timestamp ?? 0;
+        return (\time() - $accountUpdatedAtTimestamp) < env('USERDATA_CACHE_TIME');
     }
 
     /**
-     * Load saved userdata.
+     * Load saved Account information.
      *
-     * @param string $type
-     * @param string $value
+     * @param Account|null $account
      * @return bool
      */
-    private function loadDbUserdata($type = 'uuid', $value = ''): bool
+    private function loadAccountData(?Account $account): bool
     {
-        if ($type !== 'username') {
-            $result = $this->accountRepository->findByUuid($value);
-        } else {
-            $result = $this->accountRepository->findLastUpdatedByUsername($value);
-        }
-
-        if ($result !== null) {
-            $this->userdata = $result;
+        if ($account !== null) {
+            $this->userdata = $account;
             $this->currentUserSkinImage = SkinsStorage::getPath($this->userdata->uuid);
 
             return true;
@@ -191,9 +187,10 @@ class Core
      *
      * @return bool Returns true/false
      */
-    private function uuidInDb(): bool
+    private function requestedUuidInDb(): bool
     {
-        return $this->loadDbUserdata('uuid', $this->request);
+        $account = $this->accountRepository->findByUuid($this->request);
+        return $this->loadAccountData($account);
     }
 
     /**
@@ -201,9 +198,10 @@ class Core
      *
      * @return bool Returns true/false
      */
-    private function nameInDb(): bool
+    private function requestedUsernameInDb(): bool
     {
-        return $this->loadDbUserdata('username', $this->request);
+        $account = $this->accountRepository->findLastUpdatedByUsername($this->request);
+        return $this->loadAccountData($account);
     }
 
     /**
@@ -283,9 +281,11 @@ class Core
      */
     public function isUnexistentAccount(): bool
     {
+        /** @var \App\Models\AccountNotFound $result */
         $result = AccountNotFound::find($this->request);
         if ($result !== null) {
             if ((\time() - $result->updated_at->timestamp) > env('USERDATA_CACHE_TIME')) {
+                $result->touch();
                 $this->retryUnexistentCheck = true;
             } else {
                 $this->retryUnexistentCheck = false;
@@ -314,6 +314,7 @@ class Core
      *
      * @param string
      * @return bool
+     * @throws \Exception
      */
     public function initialize(string $string): bool
     {
@@ -321,54 +322,44 @@ class Core
         $this->request = $string;
         $this->normalizeRequest();
 
-        if (!empty($this->request) && \mb_strlen($this->request) <= 32) {
-            // TODO these checks needs optimizations
-            // Valid UUID format? Then check if UUID is in my database
-            if ($this->isCurrentRequestValidUuid()) {
+        if ($this->request === '' || \mb_strlen($this->request) > 32) {
+            throw new \Exception('Invalid Username or UUID provided');
+        }
 
-                if ($this->initializeUuidRequest()) {
-                    return true;
+        if ($this->isCurrentRequestValidUuid()) {
+
+            if ($this->initializeUuidRequest()) {
+                return true;
+            }
+
+        } elseif ($this->requestedUsernameInDb()) {
+            return $this->initializeUsernameRequest();
+        } else if (!$this->isUnexistentAccount() || $this->retryUnexistentCheck) {
+            if (!$this->isCurrentRequestValidUuid() && !$this->convertRequestToUuid()) {
+                $this->saveUnexistentAccount();
+                $this->setFailedRequest('Invalid requested username');
+
+                return false;
+            }
+
+            // Check if the uuid is already in the database, maybe the user has changed username and the check
+            // nameInDb() has failed
+            if ($this->requestedUuidInDb()) {
+                $this->updateDbUser();
+
+                return true;
+            }
+
+            if ($this->insertNewUuid()) {
+                if ($this->accountNotFound) {
+                    $this->removeFailedRequest();
                 }
 
-            } elseif ($this->nameInDb()) {
-                return $this->initializeUsernameRequest();
-            } else {
-                // Account not found? time to retry to get information from Mojang?
-                if (!$this->isUnexistentAccount() || $this->retryUnexistentCheck) {
-                    if (!$this->isCurrentRequestValidUuid() && !$this->convertRequestToUuid()) {
-                        $this->saveUnexistentAccount();
-                        $this->userdata = null;
-                        $this->currentUserSkinImage = SkinsStorage::getPath(env('DEFAULT_USERNAME'));
-                        $this->error = 'Invalid request username';
-                        $this->request = '';
-
-                        return false;
-                    }
-
-                    // Check if the uuid is already in the database, maybe the user has changed username and the check
-                    // nameInDb() has failed
-                    if ($this->uuidInDb()) {
-                        $this->updateDbUser();
-
-                        return true;
-                    }
-
-                    if ($this->insertNewUuid()) {
-                        if ($this->accountNotFound) {
-                            $this->removeFailedRequest();
-                        }
-
-                        return true;
-                    }
-                }
+                return true;
             }
         }
 
-        $this->userdata = null;
-        $this->currentUserSkinImage = SkinsStorage::getPath(env('DEFAULT_USERNAME'));
-        $this->error = 'Account not found';
-        $this->request = '';
-
+        $this->setFailedRequest('Account not found');
         return false;
     }
 
@@ -391,7 +382,7 @@ class Core
      */
     private function updateDbUser(): bool
     {
-        if (isset($this->userdata->username) && $this->userdata->uuid != '') {
+        if (isset($this->userdata->username) && $this->userdata->uuid !== '') {
             // Get data from API
             if ($this->getFullUserdataApi()) {
                 $originalUsername = $this->userdata->username;
@@ -494,7 +485,6 @@ class Core
      */
     public function isometricAvatarCurrentUser(int $size = 0): IsometricAvatar
     {
-        // TODO: Needs refactoring
         $uuid = $this->userdata->uuid ?? env('DEFAULT_UUID');
         $timestamp = $this->userdata->updated_at->timestamp ?? \time();
         $isometricAvatar = new IsometricAvatar(
@@ -591,7 +581,7 @@ class Core
      */
     private function initializeUuidRequest(): bool
     {
-        if ($this->uuidInDb()) {
+        if ($this->requestedUuidInDb()) {
             // Check if UUID is in my database
             // Data cache still valid?
             if (!$this->checkDbCache() || $this->forceUpdatePossible()) {
@@ -615,6 +605,7 @@ class Core
 
     /**
      * @return bool
+     * @throws \Exception
      */
     private function initializeUsernameRequest(): bool
     {
@@ -640,5 +631,18 @@ class Core
         }
 
         return true;
+    }
+
+    /**
+     * Set failed request
+     *
+     * @param string $errorMessage
+     */
+    private function setFailedRequest(string $errorMessage = ''): void
+    {
+        $this->userdata = null;
+        $this->currentUserSkinImage = SkinsStorage::getPath(env('DEFAULT_USERNAME'));
+        $this->error = $errorMessage;
+        $this->request = '';
     }
 }

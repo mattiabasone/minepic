@@ -51,7 +51,7 @@ $router->group(['prefix' => 'json'], static function () use ($router) {
     $router->get('user/{uuidOrName}', 'JsonController@user');
     $router->get('user/{uuidOrName}/update', 'JsonController@updateUser');
 
-    $router->get('stats/user/get-most-wanted', 'JsonController@getMostWantedUsers');
+    $router->get('stats/user/most-wanted', 'JsonController@getMostWantedUsers');
 
     $router->get('uuid/{uuid}', 'JsonController@uuidToUsername');
 
