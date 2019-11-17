@@ -195,6 +195,8 @@ class MojangClient
     /**
      * Account info from username.
      *
+     * @param string $username
+     * @return MojangAccount
      * @throws \Exception
      */
     public function sendUsernameInfoRequest(string $username): MojangAccount

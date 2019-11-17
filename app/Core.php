@@ -283,9 +283,11 @@ class Core
      */
     public function isUnexistentAccount(): bool
     {
+        /** @var \App\Models\AccountNotFound $result */
         $result = AccountNotFound::find($this->request);
         if ($result !== null) {
             if ((\time() - $result->updated_at->timestamp) > env('USERDATA_CACHE_TIME')) {
+                $result->touch();
                 $this->retryUnexistentCheck = true;
             } else {
                 $this->retryUnexistentCheck = false;
