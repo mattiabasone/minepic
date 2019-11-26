@@ -6,13 +6,14 @@ namespace App\Http\Controllers;
 
 use App\Core as MinepicCore;
 use App\Helpers\Date as DateHelper;
-use App\Models\Account;
 use App\Models\AccountStats;
 use App\Repositories\AccountRepository;
 use App\Repositories\AccountStatsRepository;
 use Illuminate\Http\JsonResponse;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
+use League\Fractal\Manager;
+use League\Fractal\Serializer\ArraySerializer;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class JsonController extends BaseController
@@ -33,17 +34,25 @@ class JsonController extends BaseController
      * @var AccountStatsRepository
      */
     private $accountStatsRepository;
+    /**
+     * @var Manager
+     */
+    private $dataManger;
 
     public function __construct(
         AccountRepository $accountRepository,
         AccountStatsRepository $accountStatsRepository,
         MinepicCore $minepicCore,
+        Manager $dataManger,
         ResponseFactory $responseFactory
     ) {
-        $this->minepicCore = $minepicCore;
-        $this->responseFactory = $responseFactory;
         $this->accountRepository = $accountRepository;
         $this->accountStatsRepository = $accountStatsRepository;
+        $this->minepicCore = $minepicCore;
+        $this->dataManger = $dataManger;
+        $this->responseFactory = $responseFactory;
+
+        $this->dataManger->setSerializer(new ArraySerializer());
     }
 
     /**
@@ -51,6 +60,7 @@ class JsonController extends BaseController
      *
      * @param string $uuidOrName
      * @return JsonResponse
+     * @throws \Exception
      */
     public function user($uuidOrName = ''): JsonResponse
     {
@@ -92,6 +102,7 @@ class JsonController extends BaseController
      * Update User data.
      * @param string $uuidOrName
      * @return JsonResponse
+     * @throws \Exception
      */
     public function updateUser(string $uuidOrName): JsonResponse
     {
@@ -133,12 +144,9 @@ class JsonController extends BaseController
     public function userTypeahead($term): JsonResponse
     {
         $response = [];
-        $accounts = Account::query()
-            ->select(['username'])
-            ->where('username', 'LIKE', $term.'%')
-            ->take(15)
-            ->get();
-        foreach ($accounts as $account) {
+        $accounts = $this->accountRepository->filterPaginate(['term' => $term], 15);
+        // TODO: migrate to transformers
+        foreach ($accounts->items() as $account) {
             $response[]['value'] = $account->username;
         }
 

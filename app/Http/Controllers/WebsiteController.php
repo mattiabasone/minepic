@@ -58,6 +58,7 @@ class WebsiteController extends BaseController
     /**
      * WebsiteController constructor.
      * @param AccountStatsRepository $accountStatsRepository
+     * @param MinepicCore $minepicCore
      * @param ResponseFactory $responseFactory
      */
     public function __construct(
@@ -130,6 +131,7 @@ class WebsiteController extends BaseController
      * User stats page.
      * @param string $uuidOrName
      * @return Response
+     * @throws \Exception
      */
     public function user(string $uuidOrName): Response
     {

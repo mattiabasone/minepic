@@ -12,9 +12,25 @@ use Czim\Repository\BaseRepository;
  */
 class AccountRepository extends BaseRepository
 {
+    /**
+     * @return string
+     */
     public function model(): string
     {
         return Account::class;
+    }
+
+    /**
+     * @param array $filters
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function filterQuery(array $filters = []): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = $this->query();
+        if (array_key_exists('term', $filters)) {
+            $query->where('username', 'LIKE', $filters['term'].'%');
+        }
+        return $query;
     }
 
     /**
@@ -54,5 +70,24 @@ class AccountRepository extends BaseRepository
             ->where('username', '=', $uuid)
             ->orderBy('updated_at', 'desc')
             ->first();
+    }
+
+    /**
+     * @param array $filters
+     * @param null $perPage
+     * @param array $columns
+     * @param string $pageName
+     * @param null $page
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function filterPaginate(
+        array $filters,
+        $perPage = null,
+        $columns = ['*'],
+        $pageName = 'page',
+        $page = null
+    ): \Illuminate\Contracts\Pagination\LengthAwarePaginator {
+        return $this->filterQuery($filters)
+            ->paginate($perPage, $columns, $pageName, $page);
     }
 }

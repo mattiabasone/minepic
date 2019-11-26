@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Class AccountsStats.
@@ -58,9 +58,10 @@ class AccountStats extends Model
     /**
      * Get most wanted users.
      *
+     * @param int $limit
      * @return mixed
      */
-    public static function getMostWanted()
+    public static function getMostWanted(int $limit = 14)
     {
         $default_uuid = env('DEFAULT_UUID');
 
@@ -70,7 +71,7 @@ class AccountStats extends Model
               SELECT `uuid`, `count_request` FROM `accounts_stats`
               WHERE `uuid` != '{$default_uuid}'
               ORDER BY `count_request` DESC
-              LIMIT 14
+              LIMIT {$limit}
             ) s
             INNER JOIN `accounts` AS a USING(`uuid`)
             ORDER BY s.`count_request` DESC"
@@ -80,16 +81,17 @@ class AccountStats extends Model
     /**
      * Get last users.
      *
+     * @param int $limit
      * @return mixed
      */
-    public static function getLastUsers()
+    public static function getLastUsers(int $limit = 9)
     {
         return DB::select(
             'SELECT a.`uuid`, a.`username`, s.`count_request`
               FROM (
                 SELECT `uuid`, `count_request` FROM `accounts_stats`
                 ORDER BY `time_request` DESC
-                LIMIT 9
+                LIMIT '.$limit.'
               ) s
             INNER JOIN `accounts` a USING(`uuid`)
             ORDER BY s.`count_request` DESC'
