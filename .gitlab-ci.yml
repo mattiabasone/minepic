@@ -3,6 +3,16 @@ stages:
   - test
   - deploy
 
+.before_script_test: &before_script_test
+  - apt update
+  - apt-get install -y --no-install-recommends rsync
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - mkdir -p ~/.ssh
+  - eval $(ssh-agent -s)
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  - ssh-add <(echo "$CI_PRIVATE_KEY")
+  - composer install --no-interaction --no-suggest --no-ansi --no-progress --no-dev
+
 build:composer_install:
   stage: build
   image: mattiabasone/php:7.3-cli
@@ -55,14 +65,7 @@ deploy:staging:
     name: staging
     url: https://staging.minepic.org
   before_script:
-    - apt update
-    - apt-get install -y --no-install-recommends rsync
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - mkdir -p ~/.ssh
-    - eval $(ssh-agent -s)
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - ssh-add <(echo "$CI_PRIVATE_KEY")
-    - composer install --no-interaction --no-suggest --no-ansi --no-progress --no-dev
+    - *before_script_test
   script:
     - rsync -rav -e "ssh -p$SERVER_PORT" --exclude-from=$BASE_EXCLUDE --delete $CI_PROJECT_DIR/ $SERVER_USER@$SERVER_ADDRESS:$SERVER_APP_PATH_STAG
     - ssh -p $SERVER_PORT $SERVER_USER@$SERVER_ADDRESS "sudo chmod -R 770 $SERVER_APP_PATH_STAG"
@@ -77,14 +80,7 @@ deploy:production:
     name: production
     url: https://minepic.org
   before_script:
-    - apt update
-    - apt-get install -y --no-install-recommends rsync
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - mkdir -p ~/.ssh
-    - eval $(ssh-agent -s)
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - ssh-add <(echo "$CI_PRIVATE_KEY")
-    - composer install --no-interaction --no-suggest --no-ansi --no-progress --no-dev
+    - *before_script_test
   script:
     - rsync -rav -e "ssh -p$SERVER_PORT" --exclude-from=$BASE_EXCLUDE --delete $CI_PROJECT_DIR/ $SERVER_USER@$SERVER_ADDRESS:$SERVER_APP_PATH_PROD
     - ssh -p $SERVER_PORT $SERVER_USER@$SERVER_ADDRESS "sudo chmod -R 770 $SERVER_APP_PATH_PROD"
