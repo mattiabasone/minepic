@@ -5,10 +5,13 @@
     "license": "BSD-3-Clause",
     "type": "project",
     "require": {
-        "php": ">=7.1",
+        "php": "^7.3",
+        "ext-ctype":  "*",
         "ext-gd":  "*",
         "ext-imagick":  "*",
+        "ext-intl":  "*",
         "ext-json":  "*",
+        "ext-mbstring":  "*",
         "laravel/lumen-framework": "^6.0",
         "vlucas/phpdotenv": "^3.3",
         "guzzlehttp/guzzle": "^6.2",
@@ -25,6 +28,13 @@
         "barryvdh/laravel-debugbar": "^3.2",
         "barryvdh/laravel-ide-helper": "^2.6",
         "symplify/easy-coding-standard": "^6.1"
+    },
+    "replace": {
+        "symfony/polyfill-mbstring": "*",
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-intl-idn": "*",
+        "symfony/polyfill-php70": "*",
+        "symfony/polyfill-php72": "*"
     },
     "autoload": {
         "classmap": [
