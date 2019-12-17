@@ -15,7 +15,7 @@ stages:
 
 build:composer_install:
   stage: build
-  image: mattiabasone/php:7.3-cli
+  image: mattiabasone/php:7.4-cli
   cache:
     key: "${CI_COMMIT_REF_SLUG}"
     paths:
@@ -29,7 +29,7 @@ build:composer_install:
 
 test:php73:
   stage: test
-  image: mattiabasone/php:7.3-cli
+  image: mattiabasone/php:7.4-cli
   services:
     - name: mariadb:10.2.19
       alias: db
@@ -60,7 +60,7 @@ test:php73:
 
 deploy:staging:
   stage: deploy
-  image: mattiabasone/php:7.3-cli
+  image: mattiabasone/php:7.4-cli
   environment:
     name: staging
     url: https://staging.minepic.org
@@ -75,7 +75,7 @@ deploy:staging:
 
 deploy:production:
   stage: deploy
-  image: mattiabasone/php:7.3-cli
+  image: mattiabasone/php:7.4-cli
   environment:
     name: production
     url: https://minepic.org

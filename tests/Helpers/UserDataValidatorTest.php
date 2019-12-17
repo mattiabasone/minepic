@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Class UserDataValidatorTest.
- */
 class UserDataValidatorTest extends TestCase
 {
     public function shouldValidateUsernameDataProvider(): array
