@@ -27,7 +27,7 @@ build:composer_install:
       - vendor/
     expire_in: 7 days
 
-test:php73:
+test:php74:
   stage: test
   image: mattiabasone/php:7.4-cli
   services:

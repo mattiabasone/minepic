@@ -7,7 +7,7 @@ class DateTest extends TestCase
     public function unixTimeStampsDataProvider(): array
     {
         return [
-            [1576625018, '12/17/2019'],
+            [1576625018, '2019-12-17 23:23:38 GMT'],
             [0, 'Never'],
         ];
     }
@@ -16,7 +16,7 @@ class DateTest extends TestCase
      * @test
      * @dataProvider unixTimeStampsDataProvider
      */
-    public function shouldHumanizeTimestamp($timestamp, $expected): void
+    public function shouldHumanizeTimestamp(int $timestamp, string $expected): void
     {
         $this->assertEquals($expected, \App\Helpers\Date::humanizeTimestamp($timestamp));
     }

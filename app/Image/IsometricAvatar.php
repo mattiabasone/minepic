@@ -82,7 +82,9 @@ class IsometricAvatar
     /**
      * IsometricAvatar constructor.
      *
-     * @throws \Exception
+     * @param string $uuid User UUID
+     * @param int $lastUpdate
+     * @throws SkinNotFountException
      */
     public function __construct(string $uuid, int $lastUpdate)
     {
@@ -105,7 +107,7 @@ class IsometricAvatar
      */
     public function __toString(): string
     {
-        return $this->head->__toString();
+        return (string) $this->head;
     }
 
     /**
@@ -130,6 +132,7 @@ class IsometricAvatar
      * Point for face section.
      *
      * @param int $size
+     * @return array
      */
     private function getFrontPoints($size = self::HEAD_BASE_SIZE): array
     {
@@ -150,7 +153,7 @@ class IsometricAvatar
      *
      * @return array
      */
-    private function getTopPoints($size = self::HEAD_BASE_SIZE)
+    private function getTopPoints($size = self::HEAD_BASE_SIZE): array
     {
         $cosine_result = \round(self::COSINE_PI_6 * $size);
         $half_size = \round($size / 2);
@@ -169,7 +172,7 @@ class IsometricAvatar
      *
      * @return array
      */
-    private function getRightPoints($size = self::HEAD_BASE_SIZE)
+    private function getRightPoints($size = self::HEAD_BASE_SIZE): array
     {
         $cosine_result = \round(self::COSINE_PI_6 * $size);
         $half_size = \round($size / 2);
@@ -186,7 +189,7 @@ class IsometricAvatar
      *
      * @throws \Throwable
      */
-    protected function renderFullSize()
+    protected function renderFullSize(): void
     {
         // Create Avatar Object
         $avatar = new Avatar($this->skinPath);
@@ -212,7 +215,7 @@ class IsometricAvatar
         $avatar->renderAvatar(self::HEAD_BASE_SIZE, 'T');
 
         $top = new \Imagick();
-        $top->readImageBlob($avatar->__toString());
+        $top->readImageBlob((string) $avatar);
         $top->brightnessContrastImage(6, 6);
         $top->setImageVirtualPixelMethod(\Imagick::VIRTUALPIXELMETHOD_TRANSPARENT);
         $top->setBackgroundColor(
@@ -229,7 +232,7 @@ class IsometricAvatar
         $avatar->renderAvatar(self::HEAD_BASE_SIZE, 'R');
 
         $right = new \Imagick();
-        $right->readImageBlob($avatar->__toString());
+        $right->readImageBlob((string) $avatar);
         $right->brightnessContrastImage(4, 4);
 
         $right->setImageVirtualPixelMethod(\Imagick::VIRTUALPIXELMETHOD_TRANSPARENT);
