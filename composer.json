@@ -27,7 +27,8 @@
         "friendsofphp/php-cs-fixer": "^2.16",
         "barryvdh/laravel-debugbar": "^3.2",
         "barryvdh/laravel-ide-helper": "^2.6",
-        "symplify/easy-coding-standard": "^6.1"
+        "symplify/easy-coding-standard": "^6.1",
+        "php-coveralls/php-coveralls": "^2.2"
     },
     "replace": {
         "symfony/polyfill-mbstring": "*",

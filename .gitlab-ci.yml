@@ -36,11 +36,13 @@ test:php74:
   variables:
     MYSQL_DATABASE: "app"
     MYSQL_ROOT_PASSWORD: "root"
+    COVERALLS_REPO_TOKEN: $CI_COVERALLS_REPO_TOKEN
   before_script:
     - cp .env.ci_testing .env
     - php artisan migrate
   script:
-    - vendor/bin/phpunit --configuration phpunit-ci.xml
+    - vendor/bin/phpunit --configuration phpunit-ci.xml --coverage-clover clover.xml
+    - vendor/bin/php-coveralls -v -x clover.xml -o coveralls-upload.json
 
 #test:php74:
 #  stage: test
