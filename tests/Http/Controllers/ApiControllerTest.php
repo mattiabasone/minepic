@@ -25,6 +25,7 @@ class ApiControllerTest extends TestCase
         $this->assertEquals($expectedImage, $actualImage);
     }
 
+    /** @test */
     public function shouldReturnUserAvatarWithSize(): void
     {
         $this->get('/avatar/200/_Cyb3r');
@@ -39,6 +40,15 @@ class ApiControllerTest extends TestCase
         $this->get('/skin/Steve');
         $actualImage = $this->response->getContent();
         $expectedImage = \file_get_contents(base_path('tests/images/steve_skin.png'));
+        $this->assertEquals($expectedImage, $actualImage);
+    }
+
+    /** @test */
+    public function shouldReturnSteveSkinBack(): void
+    {
+        $this->get('/skin-back/Steve');
+        $actualImage = $this->response->getContent();
+        $expectedImage = \file_get_contents(base_path('tests/images/steve_skin_back.png'));
         $this->assertEquals($expectedImage, $actualImage);
     }
 

@@ -6,3 +6,4 @@ _ide_helper.php
 .phpstorm.meta.php
 phpunit.xml.dist
 .phpunit.result.cache
+clover.xml
