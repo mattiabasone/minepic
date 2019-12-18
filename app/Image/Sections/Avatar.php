@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Image\Sections;
 
 use App\Image\ImageSection;
+use App\Image\Exceptions\InvalidSectionSpecifiedException;
 
 /**
  * Class Avatar.
@@ -95,9 +96,11 @@ class Avatar extends ImageSection
     /**
      * Render avatar image.
      *
-     * @throws \Throwable
+     * @param int $size Avatar size
+     * @param string $type Section rendered
+     * @throws InvalidSectionSpecifiedException
      */
-    public function renderAvatar(int $size = 0, string $type = 'F'): void
+    public function renderAvatar(int $size = 0, string $type = self::FRONT): void
     {
         if ($size <= 0 || $size > env('MAX_AVATAR_SIZE')) {
             $size = (int) env('DEFAULT_AVATAR_SIZE');
@@ -118,7 +121,7 @@ class Avatar extends ImageSection
         \imagefilledrectangle($helm_check, 0, 0, 8, 8, $transparent);
 
         switch ($type) {
-            case 'F':
+            case self::FRONT:
                 // Avatar front
                 $sectionSrcX = 8;
                 $sectionSrcY = 8;
@@ -128,7 +131,7 @@ class Avatar extends ImageSection
                 $sectionHelmSrcY = 8;
 
                 break;
-            case 'B':
+            case self::BACK:
                 // Avatar back
                 $sectionSrcX = 24;
                 $sectionSrcY = 8;
@@ -138,7 +141,7 @@ class Avatar extends ImageSection
                 $sectionHelmSrcY = 8;
 
                 break;
-            case 'R':
+            case self::RIGHT:
                 // Avatar right
                 $sectionSrcX = 0;
                 $sectionSrcY = 8;
@@ -148,7 +151,7 @@ class Avatar extends ImageSection
                 $sectionHelmSrcY = 8;
 
                 break;
-            case 'L':
+            case self::LEFT:
                 // Avatar left
                 $sectionSrcX = 16;
                 $sectionSrcY = 8;
@@ -158,7 +161,7 @@ class Avatar extends ImageSection
                 $sectionHelmSrcY = 8;
 
                 break;
-            case 'T':
+            case self::TOP:
                 // Avatar right
                 $sectionSrcX = 8;
                 $sectionSrcY = 0;
@@ -168,8 +171,7 @@ class Avatar extends ImageSection
                 $sectionHelmSrcY = 0;
                 break;
             default:
-                // TODO: Custom exception
-                throw new \Exception('Invalid avatar section specified');
+                throw new InvalidSectionSpecifiedException();
                 break;
         }
 

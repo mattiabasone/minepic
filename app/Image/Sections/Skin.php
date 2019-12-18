@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Image\Sections;
 
-use App\Image\Exceptions\ImageResourceCreationFailedException;
 use App\Image\ImageSection;
+use App\Image\Exceptions\ImageResourceCreationFailedException;
 
 /**
  * Class Skin.
@@ -35,10 +35,10 @@ class Skin extends ImageSection
      *
      * @throws \Throwable
      */
-    public function renderSkin(int $skin_height = 256, $type = 'F'): void
+    public function renderSkin(int $skin_height = 256, $type = self::FRONT): void
     {
-        if ($type !== 'B') {
-            $type = 'F';
+        if ($type !== self::BACK) {
+            $type = self::FRONT;
         }
         if ($skin_height === 0 || $skin_height < 0 || $skin_height > env('MAX_SKINS_SIZE')) {
             $skin_height = (int) env('DEFAULT_SKIN_SIZE');
@@ -61,7 +61,7 @@ class Skin extends ImageSection
         $tmpAvatar = new Avatar($this->skinPath);
         $tmpAvatar->renderAvatar(8, $type);
         // Front
-        if ($type === 'F') {
+        if ($type === self::FRONT) {
             // Head
             \imagecopyresized($this->imgResource, $tmpAvatar->getResource(), 4 * $scale, 0 * $scale, 0, 0, 8 * $scale, 8 * $scale, 8, 8);
             // Body Front

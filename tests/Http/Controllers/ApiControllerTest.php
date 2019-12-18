@@ -25,7 +25,6 @@ class ApiControllerTest extends TestCase
         $this->assertEquals($expectedImage, $actualImage);
     }
 
-    /** @test */
     public function shouldReturnUserAvatarWithSize(): void
     {
         $this->get('/avatar/200/_Cyb3r');

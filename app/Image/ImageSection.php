@@ -9,6 +9,12 @@ namespace App\Image;
  */
 abstract class ImageSection
 {
+    public const TOP = 'T';
+    public const FRONT = 'F';
+    public const BACK = 'B';
+    public const RIGHT = 'R';
+    public const LEFT = 'L';
+
     /**
      * Skin Path.
      *

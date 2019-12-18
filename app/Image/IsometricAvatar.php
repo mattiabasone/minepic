@@ -115,13 +115,14 @@ class IsometricAvatar
      *
      * @return \ImagickPixel
      */
-    final protected function getImagickPixelTransparent()
+    final protected function getImagickPixelTransparent(): \ImagickPixel
     {
         return new \ImagickPixel('transparent');
     }
 
     /**
      * Change checkCacheStatusFlag value.
+     * @param bool $flag
      */
     public function checkCacheStatus(bool $flag)
     {
@@ -195,10 +196,10 @@ class IsometricAvatar
         $avatar = new Avatar($this->skinPath);
 
         // Face
-        $avatar->renderAvatar(self::HEAD_BASE_SIZE, 'F');
+        $avatar->renderAvatar(self::HEAD_BASE_SIZE, ImageSection::FRONT);
 
         $face = new \Imagick();
-        $face->readImageBlob($avatar->__toString());
+        $face->readImageBlob((string) $avatar);
         $face->brightnessContrastImage(8, 8);
         $face->setImageVirtualPixelMethod(\Imagick::VIRTUALPIXELMETHOD_TRANSPARENT);
         $face->setBackgroundColor(
@@ -212,7 +213,7 @@ class IsometricAvatar
         );
 
         // Top
-        $avatar->renderAvatar(self::HEAD_BASE_SIZE, 'T');
+        $avatar->renderAvatar(self::HEAD_BASE_SIZE, ImageSection::TOP);
 
         $top = new \Imagick();
         $top->readImageBlob((string) $avatar);
@@ -229,7 +230,7 @@ class IsometricAvatar
         );
 
         // Right
-        $avatar->renderAvatar(self::HEAD_BASE_SIZE, 'R');
+        $avatar->renderAvatar(self::HEAD_BASE_SIZE, ImageSection::RIGHT);
 
         $right = new \Imagick();
         $right->readImageBlob((string) $avatar);

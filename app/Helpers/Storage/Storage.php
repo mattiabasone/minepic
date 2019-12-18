@@ -18,6 +18,8 @@ class Storage
 
     /**
      * Skin Path.
+     * @param string $uuid
+     * @return string
      */
     public static function getPath(string $uuid = ''): string
     {
@@ -40,6 +42,7 @@ class Storage
      * Save the skin to file.
      *
      * @param mixed $rawData
+     * @return bool
      */
     public static function save(string $uuid, $rawData): bool
     {
