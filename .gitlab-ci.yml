@@ -36,7 +36,8 @@ test:php74:
   variables:
     MYSQL_DATABASE: "app"
     MYSQL_ROOT_PASSWORD: "root"
-    COVERALLS_REPO_TOKEN: $CI_COVERALLS_REPO_TOKEN
+    COVERALLS_REPO_TOKEN: "${CI_COVERALLS_REPO_TOKEN}"
+    COVERALLS_RUN_LOCALLY: "COVERALLS_RUN_LOCALLY"
   before_script:
     - cp .env.ci_testing .env
     - php artisan migrate
