@@ -77,9 +77,9 @@ $app->singleton(
 
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
+$app->register(SwooleTW\Http\LumenServiceProvider::class);
+
 if (env('APP_DEBUG')) {
-    $app->configure('debugbar');
-    $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
     $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 }
 
