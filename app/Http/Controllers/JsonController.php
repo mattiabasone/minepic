@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Core as MinepicCore;
-use App\Helpers\Date as DateHelper;
 use App\Models\AccountStats;
 use App\Repositories\AccountRepository;
 use App\Repositories\AccountStatsRepository;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
@@ -90,8 +90,8 @@ class JsonController extends BaseController
                 'username' => $account->username,
                 'count_request' => $accountStats->count_request,
                 'count_search' => $accountStats->count_search,
-                'last_request' => DateHelper::humanizeTimestamp($accountStats->time_request),
-                'last_search' => DateHelper::humanizeTimestamp($accountStats->time_search),
+                'last_request' => Carbon::createFromTimestamp($accountStats->time_request)->format(Carbon::ATOM),
+                'last_search' => Carbon::createFromTimestamp($accountStats->time_search)->format(Carbon::ATOM),
             ],
         ];
 

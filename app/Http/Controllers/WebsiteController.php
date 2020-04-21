@@ -9,6 +9,7 @@ use App\Helpers\Date as DateHelper;
 use App\Misc\SplashMessage;
 use App\Models\AccountStats;
 use App\Repositories\AccountStatsRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
@@ -152,8 +153,8 @@ class WebsiteController extends BaseController
                     'username' => $userdata->username,
                     'count_request' => $userstats->count_request,
                     'count_search' => $userstats->count_search,
-                    'last_request' => DateHelper::humanizeTimestamp($userstats->time_request),
-                    'last_search' => DateHelper::humanizeTimestamp($userstats->time_search),
+                    'last_request' => Carbon::createFromTimestamp($userstats->time_request)->format(Carbon::ATOM),
+                    'last_search' => Carbon::createFromTimestamp($userstats->time_search)->format(Carbon::ATOM),
                 ],
             ];
 

@@ -107,14 +107,6 @@ class MojangClient
     }
 
     /**
-     * Set data.
-     */
-    private function setData(array $data)
-    {
-        $this->data = $data;
-    }
-
-    /**
      * Last response from API.
      *
      * @return mixed
