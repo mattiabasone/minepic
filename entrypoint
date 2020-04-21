@@ -1,0 +1,10 @@
+#!/usr/bin/env ash
+
+if [ ! -f "/app/.env" ]; then
+    echo ".env file does not exists, exiting..."
+    exit 1
+fi
+
+cd /app
+
+php artisan swoole:http start

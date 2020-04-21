@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  backend:
+    image: minepic-dev
+    build:
+      context: ./
+    ports:
+      - "1215:1215"
+    volumes:
+    - "./:/app"
+    depends_on:
+      - database
+
+  database:
+    image: library/mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=minepic_org
+    ports:
+      - "33306:3306"

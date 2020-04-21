@@ -26,18 +26,10 @@ class SkinBackController extends BaseApiController
     {
         $size = (int) $size;
         $this->minepic->initialize($uuidOrName);
-        $headers = $this->generateHttpCacheHeaders($this->minepic->getUserdata(), $size, 'avatar');
         $this->minepic->updateStats();
 
-        if ($request->server('HTTP_IF_MODIFIED_SINCE')) {
-            $avatarImage = '';
-            $httpCode = 304;
-        } else {
-            $avatarImage = $this->minepic->renderSkinCurrentUser($size, 'B');
-            $httpCode = 200;
-            $headers['Content-Type'] = 'image/png';
-        }
-
-        return $this->responseFactory->make($avatarImage, $httpCode, $headers);
+        return $this->pngResponse(
+            (string) $this->minepic->renderSkinCurrentUser($size, 'B')
+        );
     }
 }

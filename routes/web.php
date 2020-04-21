@@ -15,29 +15,32 @@ declare(strict_types=1);
 
 /* @var \Illuminate\Routing\Router $router */
 
-// Avatar
-$router->group(['prefix' => 'avatar'], static function () use ($router) {
-    $router->get('/{uuidOrName}', 'Api\AvatarController@serve');
-    $router->get('/{size}/{uuidOrName}', 'Api\AvatarController@serveWithSize');
+$router->group(['middleware' => 'headers.cache:etag'], static function () use ($router) {
+    // Avatar
+    $router->group(['prefix' => 'avatar'], static function () use ($router) {
+        $router->get('/{uuidOrName}', 'Api\AvatarController@serve');
+        $router->get('/{size}/{uuidOrName}', 'Api\AvatarController@serveWithSize');
+    });
+
+    // Avatar (Isometric)
+    $router->group(['prefix' => 'head'], static function () use ($router) {
+        $router->get('/{uuidOrName}', 'Api\IsometricAvatarController@serve');
+        $router->get('/{size}/{uuidOrName}', 'Api\IsometricAvatarController@serveWithSize');
+    });
+
+    // Skin Front
+    $router->group(['prefix' => 'skin'], static function () use ($router) {
+        $router->get('/{uuidOrName}', 'Api\SkinFrontController@serve');
+        $router->get('/{size}/{uuidOrName}', 'Api\SkinFrontController@serveWithSize');
+    });
+
+    // Skin Back
+    $router->group(['prefix' => 'skin-back'], static function () use ($router) {
+        $router->get('/{uuidOrName}', 'Api\SkinBackController@serve');
+        $router->get('/{size}/{uuidOrName}', 'Api\SkinBackController@serveWithSize');
+    });
 });
 
-// Avatar (Isometric)
-$router->group(['prefix' => 'head'], static function () use ($router) {
-    $router->get('/{uuidOrName}', 'Api\IsometricAvatarController@serve');
-    $router->get('/{size}/{uuidOrName}', 'Api\IsometricAvatarController@serveWithSize');
-});
-
-// Skin Front
-$router->group(['prefix' => 'skin'], static function () use ($router) {
-    $router->get('/{uuidOrName}', 'Api\SkinFrontController@serve');
-    $router->get('/{size}/{uuidOrName}', 'Api\SkinFrontController@serveWithSize');
-});
-
-// Skin Back
-$router->group(['prefix' => 'skin-back'], static function () use ($router) {
-    $router->get('/{uuidOrName}', 'Api\SkinBackController@serve');
-    $router->get('/{size}/{uuidOrName}', 'Api\SkinBackController@serveWithSize');
-});
 
 // Download
 $router->get('/download/{uuidOrName}', 'Api\DownloadTextureController@serve');

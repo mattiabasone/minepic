@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Minecraft;
 
+use Illuminate\Support\Facades\Log;
+
 /**
  * Class MojangAccount.
  */
@@ -14,36 +16,37 @@ class MojangAccount
      *
      * @var string
      */
-    public $uuid = '';
+    public string $uuid = '';
 
     /**
      * Username of the account.
      *
      * @var string
      */
-    public $username = '';
+    public string $username = '';
 
     /**
      * Skin.
      *
      * @var string
      */
-    public $skin = '';
+    public string $skin = '';
 
     /**
      * Cape.
      *
      * @var string
      */
-    public $cape = '';
+    public string $cape = '';
 
     /**
      * @var int
      */
-    public $updated = 0;
+    public int $updated = 0;
 
     /**
      * MinecraftAccount constructor.
+     * @param array $fields
      */
     public function __construct(array $fields = [])
     {
@@ -58,6 +61,9 @@ class MojangAccount
 
     /**
      * Load from API data response (JSON Decoded).
+     *
+     * @param array $response Decoded json response
+     * @return bool
      */
     public function loadFromApiResponse(array $response): bool
     {
@@ -65,24 +71,28 @@ class MojangAccount
             foreach ($response['properties'] as $property) {
                 if ($property['name'] == 'textures') {
                     $tmp = \json_decode(\base64_decode($property['value'], true), true);
+                    try {
+                        $this->username = $response['name'];
+                        $this->uuid = $response['id'];
+                        if (isset($tmp['skin']['url'])) {
+                            \preg_match('#' . \preg_quote(env('MINECRAFT_TEXTURE_URL')) . '(.*)$#', $tmp['skin']['url'], $matches);
+                            $this->skin = $matches[1];
+                        } else {
+                            $this->skin = '';
+                        }
+                        if (isset($tmp['cape']['url'])) {
+                            \preg_match('#' . \preg_quote(env('MINECRAFT_TEXTURE_URL')) . '(.*)$#', $tmp['cape']['url'], $matches);
+                            $this->cape = $matches[1];
+                        } else {
+                            $this->cape = '';
+                        }
+                        $this->updated = \time();
 
-                    $this->username = $tmp['profileName'];
-                    $this->uuid = $tmp['profileId'];
-                    if (isset($tmp['textures']['SKIN']['url'])) {
-                        \preg_match('#'.\preg_quote(env('MINECRAFT_TEXTURE_URL')).'(.*)$#', $tmp['textures']['SKIN']['url'], $matches);
-                        $this->skin = $matches[1];
-                    } else {
-                        $this->skin = false;
+                        return true;
+                    } catch (\Throwable $exception) {
+                        Log::error("Failed with api response: Full data: ".json_encode($response). " -  Temp Data: ".json_encode($tmp));
+                        Log::error($exception->getMessage()." ".$exception->getTraceAsString());
                     }
-                    if (isset($tmp['textures']['CAPE']['url'])) {
-                        \preg_match('#'.\preg_quote(env('MINECRAFT_TEXTURE_URL')).'(.*)$#', $tmp['textures']['CAPE']['url'], $matches);
-                        $this->cape = $matches[1];
-                    } else {
-                        $this->cape = false;
-                    }
-                    $this->updated = \time();
-
-                    return true;
                 }
             }
         }
