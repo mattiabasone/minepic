@@ -16,7 +16,7 @@
         "vlucas/phpdotenv": "^3.3",
         "guzzlehttp/guzzle": "^6.2",
         "league/flysystem": "^1.0",
-        "ramsey/uuid": "^3.8",
+        "ramsey/uuid": "^4.0",
         "czim/laravel-repository": "^2.0",
         "league/fractal": "^0.18.0",
         "swooletw/laravel-swoole": "^2.6"

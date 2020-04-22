@@ -41,8 +41,9 @@ class DownloadTextureController extends BaseController
      *
      * @param \Illuminate\Http\Request
      *
+     * @param string $uuidOrName User UUID or Username
      * @return \Illuminate\Http\Response
-     * @throws \Throwable
+     * @throws \App\Image\Exceptions\ImageResourceCreationFailedException
      */
     public function serve(Request $request, string $uuidOrName = ''): Response
     {

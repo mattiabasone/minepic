@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Minecraft;
 
-use GuzzleHttp;
+use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Exception\BadResponseException;
 
 /**
  * Class MojangClient.
@@ -14,35 +15,14 @@ class MojangClient
     /**
      * User Agent used for requests.
      */
-    private const USER_AGENT = 'Minepic 2.0 (minepic.org)';
+    private const USER_AGENT = 'Minepic/2.0 (minepic.org)';
 
     /**
      * HTTP Client for requests.
      *
-     * @var GuzzleHttp\Client
+     * @var \GuzzleHttp\Client
      */
-    private $httpClient;
-
-    /**
-     * Method for Guzzle.
-     *
-     * @var string
-     */
-    private $method = 'GET';
-
-    /**
-     * URL for Guzzle.
-     *
-     * @var string
-     */
-    private $url = '';
-
-    /**
-     * Data array for Guzzle.
-     *
-     * @var array
-     */
-    private $data = [];
+    private \GuzzleHttp\Client $httpClient;
 
     /**
      * Last API Response.
@@ -56,54 +36,34 @@ class MojangClient
      *
      * @var string
      */
-    private $lastError = '';
+    private string $lastError = '';
 
     /**
      * Last error code.
      *
      * @var int
      */
-    private $lastErrorCode = 0;
+    private int $lastErrorCode = 0;
 
     /**
      * Last content Type.
      *
      * @var string
      */
-    private $lastContentType = '';
+    private string $lastContentType = '';
 
     /**
      * MojangClient constructor.
      */
     public function __construct()
     {
-        $this->httpClient = new GuzzleHttp\Client(
+        $this->httpClient = new HttpClient(
             [
                 'headers' => [
                     'User-Agent' => self::USER_AGENT,
                 ],
             ]
         );
-    }
-
-    /**
-     * Set HTTP Method.
-     *
-     * @param string $method
-     */
-    private function setMethod($method = '')
-    {
-        $this->method = $method;
-    }
-
-    /**
-     * Set URL.
-     *
-     * @param string $url
-     */
-    private function setURL($url = '')
-    {
-        $this->url = $url;
     }
 
     /**
@@ -117,7 +77,7 @@ class MojangClient
     }
 
     private function handleGuzzleBadResponseException(
-        GuzzleHttp\Exception\BadResponseException $badResponseException
+        BadResponseException $badResponseException
     ): void {
         $this->lastContentType = $badResponseException->getResponse()->getHeader('content-type')[0] ?? '';
         $this->lastErrorCode = $badResponseException->getResponse()->getStatusCode();
@@ -136,19 +96,23 @@ class MojangClient
 
     /**
      * Send new request.
+     *
+     * @param string $method HTTP Verb
+     * @param string $url API Endpoint
+     * @return bool
      */
-    private function sendRequestApi(): bool
+    private function sendApiRequest(string $method, string $url): bool
     {
         try {
-            $response = $this->httpClient->request($this->method, $this->url, $this->data);
-            $this->lastResponse = GuzzleHttp\json_decode($response->getBody()->getContents(), true);
+            $response = $this->httpClient->request($method, $url);
+            $this->lastResponse = json_decode($response->getBody()->getContents(), true);
             $this->lastContentType = $response->getHeader('content-type')[0];
             $this->lastErrorCode = 0;
             $this->lastError = '';
 
             return true;
-        } catch (GuzzleHttp\Exception\BadResponseException $exception) {
-            $this->lastResponse = GuzzleHttp\json_decode($exception->getResponse()->getBody()->getContents(), true);
+        } catch (BadResponseException $exception) {
+            $this->lastResponse = json_decode($exception->getResponse()->getBody()->getContents(), true);
             $this->handleGuzzleBadResponseException($exception);
 
             return false;
@@ -161,18 +125,21 @@ class MojangClient
 
     /**
      * Generic request.
+     * @param string $method
+     * @param string $url
+     * @return bool
      */
-    private function sendRequest(): bool
+    private function sendRequest(string $method, string $url): bool
     {
         try {
-            $response = $this->httpClient->request($this->method, $this->url, $this->data);
+            $response = $this->httpClient->request($method, $url);
             $this->lastResponse = $response->getBody()->getContents();
             $this->lastContentType = $response->getHeader('content-type')[0];
             $this->lastErrorCode = 0;
             $this->lastError = '';
 
             return true;
-        } catch (GuzzleHttp\Exception\BadResponseException $exception) {
+        } catch (BadResponseException $exception) {
             $this->lastResponse = $exception->getResponse()->getBody()->getContents();
             $this->handleGuzzleBadResponseException($exception);
 
@@ -193,9 +160,7 @@ class MojangClient
      */
     public function sendUsernameInfoRequest(string $username): MojangAccount
     {
-        $this->setMethod('GET');
-        $this->setURL(env('MINECRAFT_PROFILE_URL').$username);
-        if ($this->sendRequestApi()) {
+        if ($this->sendApiRequest('GET', env('MINECRAFT_PROFILE_URL').$username)) {
             return new MojangAccount([
                 'username' => $this->lastResponse['name'],
                 'uuid' => $this->lastResponse['id'],
@@ -207,13 +172,13 @@ class MojangClient
     /**
      * Account info from UUID.
      *
+     * @param string $uuid User UUID
+     * @return MojangAccount
      * @throws \Exception
      */
     public function getUuidInfo(string $uuid): MojangAccount
     {
-        $this->setMethod('GET');
-        $this->setURL(env('MINECRAFT_SESSION_URL').$uuid);
-        if ($this->sendRequestApi()) {
+        if ($this->sendApiRequest('GET', env('MINECRAFT_SESSION_URL').$uuid)) {
             $account = new MojangAccount();
             if ($account->loadFromApiResponse($this->lastResponse)) {
                 return $account;
@@ -226,14 +191,12 @@ class MojangClient
     /**
      * Get Skin.
      *
-     * @param string $skin
+     * @param string $skin Skin uuid
      * @throws \Exception
      */
     public function getSkin(string $skin)
     {
-        $this->setMethod('GET');
-        $this->setURL(env('MINECRAFT_TEXTURE_URL').$skin);
-        if ($this->sendRequest()) {
+        if ($this->sendRequest('GET', env('MINECRAFT_TEXTURE_URL').$skin)) {
             if ($this->lastContentType === 'image/png') {
                 return $this->lastResponse;
             }

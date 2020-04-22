@@ -16,7 +16,7 @@ class IsometricAvatarController extends BaseApiController
      * Serve isometric avatar.
      *
      * @param \Illuminate\Http\Request
-     * @param string $uuidOrName
+     * @param string $uuidOrName User UUID or Username
      * @param int $size
      *
      * @return \Illuminate\Http\Response
