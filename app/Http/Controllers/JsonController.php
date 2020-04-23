@@ -59,8 +59,10 @@ class JsonController extends BaseController
      * User info.
      *
      * @param string $uuidOrName
-     * @return JsonResponse
+     *
      * @throws \Exception
+     *
+     * @return JsonResponse
      */
     public function user($uuidOrName = ''): JsonResponse
     {
@@ -100,9 +102,12 @@ class JsonController extends BaseController
 
     /**
      * Update User data.
+     *
      * @param string $uuidOrName
-     * @return JsonResponse
+     *
      * @throws \Exception
+     *
+     * @return JsonResponse
      */
     public function updateUser(string $uuidOrName): JsonResponse
     {
@@ -139,6 +144,7 @@ class JsonController extends BaseController
      * Username Typeahead.
      *
      * @param $term
+     *
      * @return JsonResponse
      */
     public function userTypeahead($term): JsonResponse

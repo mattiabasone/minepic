@@ -35,6 +35,6 @@ class Account extends Model
         'username',
         'fail_count',
         'skin',
-        'cape'
+        'cape',
     ];
 }

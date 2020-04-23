@@ -98,21 +98,22 @@ class MojangClient
      * Send new request.
      *
      * @param string $method HTTP Verb
-     * @param string $url API Endpoint
+     * @param string $url    API Endpoint
+     *
      * @return bool
      */
     private function sendApiRequest(string $method, string $url): bool
     {
         try {
             $response = $this->httpClient->request($method, $url);
-            $this->lastResponse = json_decode($response->getBody()->getContents(), true);
+            $this->lastResponse = \json_decode($response->getBody()->getContents(), true);
             $this->lastContentType = $response->getHeader('content-type')[0];
             $this->lastErrorCode = 0;
             $this->lastError = '';
 
             return true;
         } catch (BadResponseException $exception) {
-            $this->lastResponse = json_decode($exception->getResponse()->getBody()->getContents(), true);
+            $this->lastResponse = \json_decode($exception->getResponse()->getBody()->getContents(), true);
             $this->handleGuzzleBadResponseException($exception);
 
             return false;
@@ -125,8 +126,10 @@ class MojangClient
 
     /**
      * Generic request.
+     *
      * @param string $method
      * @param string $url
+     *
      * @return bool
      */
     private function sendRequest(string $method, string $url): bool
@@ -155,8 +158,10 @@ class MojangClient
      * Account info from username.
      *
      * @param string $username
-     * @return MojangAccount
+     *
      * @throws \Exception
+     *
+     * @return MojangAccount
      */
     public function sendUsernameInfoRequest(string $username): MojangAccount
     {
@@ -173,8 +178,10 @@ class MojangClient
      * Account info from UUID.
      *
      * @param string $uuid User UUID
-     * @return MojangAccount
+     *
      * @throws \Exception
+     *
+     * @return MojangAccount
      */
     public function getUuidInfo(string $uuid): MojangAccount
     {
@@ -192,6 +199,7 @@ class MojangClient
      * Get Skin.
      *
      * @param string $skin Skin uuid
+     *
      * @throws \Exception
      */
     public function getSkin(string $skin)

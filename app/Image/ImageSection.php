@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace App\Image;
 
+use App\Image\Exceptions\ImageTrueColorCreationFailedException;
+
 /**
  * Class ImageSection.
  */
 abstract class ImageSection
 {
-    public const TOP = 'T';
-    public const FRONT = 'F';
-    public const BACK = 'B';
-    public const RIGHT = 'R';
-    public const LEFT = 'L';
+    public const TOP = 'TOP';
+    public const BOTTOM = 'BOTTOM';
+    public const FRONT = 'FRONT';
+    public const BACK = 'BACK';
+    public const RIGHT = 'RIGHT';
+    public const LEFT = 'LEFT';
 
     /**
      * Skin Path.
@@ -67,5 +70,38 @@ abstract class ImageSection
     public function getResource()
     {
         return $this->imgResource;
+    }
+
+    /**
+     * Create imagecreatetruecolor square empty image.
+     *
+     * @param $size
+     *
+     * @throws ImageTrueColorCreationFailedException
+     *
+     * @return resource
+     */
+    protected function createTrueColorSquare($size)
+    {
+        $helm = \imagecreatetruecolor($size, $size);
+        if ($helm === false) {
+            throw new ImageTrueColorCreationFailedException();
+        }
+
+        return $helm;
+    }
+
+    /**
+     * @param $image
+     * @return int
+     * @throws \Exception
+     */
+    protected function colorAllocateAlpha($image): int
+    {
+        $colorIdentifier = \imagecolorallocatealpha($image, 255, 255, 255, 127);
+        if (!$colorIdentifier) {
+            throw new \Exception();
+        }
+        return $colorIdentifier;
     }
 }

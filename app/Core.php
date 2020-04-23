@@ -102,9 +102,10 @@ class Core
 
     /**
      * Core constructor.
-     * @param AccountRepository $accountRepository Where user data is stored
+     *
+     * @param AccountRepository      $accountRepository      Where user data is stored
      * @param AccountStatsRepository $accountStatsRepository
-     * @param MojangClient $mojangClient Client for Mojang API
+     * @param MojangClient           $mojangClient           Client for Mojang API
      */
     public function __construct(
         AccountRepository $accountRepository,
@@ -145,11 +146,13 @@ class Core
      * Check if cache is still valid.
      *
      * @param int
+     *
      * @return bool
      */
     private function checkDbCache(): bool
     {
         $accountUpdatedAtTimestamp = $this->userdata->updated_at->timestamp ?? 0;
+
         return (\time() - $accountUpdatedAtTimestamp) < env('USERDATA_CACHE_TIME');
     }
 
@@ -157,6 +160,7 @@ class Core
      * Load saved Account information.
      *
      * @param Account|null $account
+     *
      * @return bool
      */
     private function loadAccountData(?Account $account): bool
@@ -190,6 +194,7 @@ class Core
     private function requestedUuidInDb(): bool
     {
         $account = $this->accountRepository->findByUuid($this->request);
+
         return $this->loadAccountData($account);
     }
 
@@ -201,6 +206,7 @@ class Core
     private function requestedUsernameInDb(): bool
     {
         $account = $this->accountRepository->findLastUpdatedByUsername($this->request);
+
         return $this->loadAccountData($account);
     }
 
@@ -208,6 +214,7 @@ class Core
      * Insert user data in database.
      *
      * @param void
+     *
      * @return bool
      */
     public function insertNewUuid(): bool
@@ -241,6 +248,7 @@ class Core
      * Get UUID from username.
      *
      * @param string
+     *
      * @return bool
      */
     private function convertRequestToUuid(): bool
@@ -313,8 +321,10 @@ class Core
      * Check requested string and initialize objects.
      *
      * @param string
-     * @return bool
+     *
      * @throws \Exception
+     *
+     * @return bool
      */
     public function initialize(string $string): bool
     {
@@ -327,14 +337,12 @@ class Core
         }
 
         if ($this->isCurrentRequestValidUuid()) {
-
             if ($this->initializeUuidRequest()) {
                 return true;
             }
-
         } elseif ($this->requestedUsernameInDb()) {
             return $this->initializeUsernameRequest();
-        } else if (!$this->isUnexistentAccount() || $this->retryUnexistentCheck) {
+        } elseif (!$this->isUnexistentAccount() || $this->retryUnexistentCheck) {
             if (!$this->isCurrentRequestValidUuid() && !$this->convertRequestToUuid()) {
                 $this->saveUnexistentAccount();
                 $this->setFailedRequest('Invalid requested username');
@@ -360,6 +368,7 @@ class Core
         }
 
         $this->setFailedRequest('Account not found');
+
         return false;
     }
 
@@ -443,6 +452,7 @@ class Core
      * Get userdata from Mojang API.
      *
      * @param mixed
+     *
      * @return bool
      */
     private function getFullUserdataApi(): bool
@@ -465,8 +475,9 @@ class Core
      * @param int
      * @param mixed
      *
-     * @return Avatar
      * @throws \Throwable
+     *
+     * @return Avatar
      */
     public function avatarCurrentUser(int $size = 0): Avatar
     {
@@ -480,8 +491,10 @@ class Core
      * Default Avatar Isometric.
      *
      * @param int $size
-     * @return IsometricAvatar
+     *
      * @throws \Throwable
+     *
+     * @return IsometricAvatar
      */
     public function isometricAvatarCurrentUser(int $size = 0): IsometricAvatar
     {
@@ -500,6 +513,7 @@ class Core
      * Save skin image.
      *
      * @param mixed
+     *
      * @return bool
      */
     public function saveRemoteSkin(): bool
@@ -507,6 +521,7 @@ class Core
         if (!empty($this->userdata->skin) && \mb_strlen($this->userdata->skin) > 0) {
             try {
                 $skinData = $this->mojangClient->getSkin($this->userdata->skin);
+
                 return SkinsStorage::save($this->userdata->uuid, $skinData);
             } catch (\Exception $e) {
                 \Log::error($e);
@@ -523,8 +538,9 @@ class Core
      * @param int
      * @param string
      *
-     * @return Skin
      * @throws \Throwable
+     *
+     * @return Skin
      */
     public function renderSkinCurrentUser(int $size = 0, string $type = 'F'): Skin
     {
@@ -544,6 +560,7 @@ class Core
 
     /**
      * Set force update.
+     *
      * @param bool $forceUpdate
      */
     public function setForceUpdate(bool $forceUpdate): void
@@ -604,8 +621,9 @@ class Core
     }
 
     /**
-     * @return bool
      * @throws \Exception
+     *
+     * @return bool
      */
     private function initializeUsernameRequest(): bool
     {
@@ -626,7 +644,7 @@ class Core
                 $this->updateUserFailUpdate();
                 SkinsStorage::copyAsSteve($this->request);
             }
-        } else if (!SkinsStorage::exists($this->request)) {
+        } elseif (!SkinsStorage::exists($this->request)) {
             SkinsStorage::copyAsSteve($this->request);
         }
 
@@ -634,7 +652,7 @@ class Core
     }
 
     /**
-     * Set failed request
+     * Set failed request.
      *
      * @param string $errorMessage
      */

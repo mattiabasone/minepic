@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Image\Sections;
 
-use App\Image\ImageSection;
 use App\Image\Exceptions\ImageResourceCreationFailedException;
+use App\Image\ImageSection;
 
 /**
  * Class Skin.

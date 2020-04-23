@@ -22,22 +22,25 @@ class AccountRepository extends BaseRepository
 
     /**
      * @param array $filters
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function filterQuery(array $filters = []): \Illuminate\Database\Eloquent\Builder
     {
         $query = $this->query();
-        if (array_key_exists('term', $filters)) {
+        if (\array_key_exists('term', $filters)) {
             $query->where('username', 'LIKE', $filters['term'].'%');
         }
+
         return $query;
     }
 
     /**
-     * Find account using UUID
+     * Find account using UUID.
      *
      * @param string $uuid
-     * @param array $columns
+     * @param array  $columns
+     *
      * @return Account
      */
     public function findByUuid(string $uuid, $columns = ['*']): ?Account
@@ -47,7 +50,8 @@ class AccountRepository extends BaseRepository
 
     /**
      * @param string $uuid
-     * @param array $columns
+     * @param array  $columns
+     *
      * @return Account
      */
     public function findByUsername(string $uuid, $columns = ['*']): ?Account
@@ -59,7 +63,7 @@ class AccountRepository extends BaseRepository
      * Last updated username.
      *
      * @param string $uuid
-     * @param array $columns
+     * @param array  $columns
      *
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
@@ -73,11 +77,12 @@ class AccountRepository extends BaseRepository
     }
 
     /**
-     * @param array $filters
-     * @param null $perPage
-     * @param array $columns
+     * @param array  $filters
+     * @param null   $perPage
+     * @param array  $columns
      * @param string $pageName
-     * @param null $page
+     * @param null   $page
+     *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function filterPaginate(

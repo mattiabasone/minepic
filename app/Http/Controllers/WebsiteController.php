@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Core as MinepicCore;
-use App\Helpers\Date as DateHelper;
 use App\Misc\SplashMessage;
 use App\Models\AccountStats;
 use App\Repositories\AccountStatsRepository;
@@ -58,9 +57,10 @@ class WebsiteController extends BaseController
 
     /**
      * WebsiteController constructor.
+     *
      * @param AccountStatsRepository $accountStatsRepository
-     * @param MinepicCore $minepicCore
-     * @param ResponseFactory $responseFactory
+     * @param MinepicCore            $minepicCore
+     * @param ResponseFactory        $responseFactory
      */
     public function __construct(
         AccountStatsRepository $accountStatsRepository,
@@ -74,9 +74,11 @@ class WebsiteController extends BaseController
 
     /**
      * Compose view with header and footer.
+     *
      * @param string $page
-     * @param array $bodyData
-     * @param array $headerData
+     * @param array  $bodyData
+     * @param array  $headerData
+     *
      * @return string
      */
     private function composeView(
@@ -91,9 +93,11 @@ class WebsiteController extends BaseController
 
     /**
      * Render fullpage (headers, body, footer).
+     *
      * @param string $page
-     * @param array $bodyData
-     * @param array $headerData
+     * @param array  $bodyData
+     * @param array  $headerData
+     *
      * @return Response
      */
     private function renderPage(
@@ -130,9 +134,12 @@ class WebsiteController extends BaseController
 
     /**
      * User stats page.
+     *
      * @param string $uuidOrName
-     * @return Response
+     *
      * @throws \Exception
+     *
+     * @return Response
      */
     public function user(string $uuidOrName): Response
     {

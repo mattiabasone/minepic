@@ -25,7 +25,8 @@ class DownloadTextureController extends BaseController
 
     /**
      * Api constructor.
-     * @param MinepicCore $minepic
+     *
+     * @param MinepicCore     $minepic
      * @param ResponseFactory $responseFactory
      */
     public function __construct(
@@ -40,10 +41,11 @@ class DownloadTextureController extends BaseController
      * Serve Avatar.
      *
      * @param \Illuminate\Http\Request
-     *
      * @param string $uuidOrName User UUID or Username
-     * @return \Illuminate\Http\Response
+     *
      * @throws \App\Image\Exceptions\ImageResourceCreationFailedException
+     *
+     * @return \Illuminate\Http\Response
      */
     public function serve(Request $request, string $uuidOrName = ''): Response
     {

@@ -18,10 +18,11 @@ class AccountStatsRepository extends BaseRepository
     }
 
     /**
-     * Find account using UUID
+     * Find account using UUID.
      *
-     * @param string $uuid User UUID
-     * @param array $columns Which columns should be loaded
+     * @param string $uuid    User UUID
+     * @param array  $columns Which columns should be loaded
+     *
      * @return \App\Models\AccountStats Statistics related to given UUID
      */
     public function findByUuid(string $uuid, $columns = ['*']): AccountStats
@@ -31,6 +32,7 @@ class AccountStatsRepository extends BaseRepository
 
     /**
      * Increment request counter.
+     *
      * @param string $uuid User UUID
      */
     public function incrementRequestCounter(string $uuid = ''): void
@@ -45,6 +47,7 @@ class AccountStatsRepository extends BaseRepository
 
     /**
      * Increment search counter.
+     *
      * @param string $uuid User UUID
      */
     public function incrementSearchCounter(string $uuid = ''): void

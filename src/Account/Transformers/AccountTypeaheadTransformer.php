@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Minepic\Account\Transformers;
 
-use League\Fractal;
 use App\Models\Account;
+use League\Fractal;
 
 /**
- * Class AccountTypeaheadTransformer
- * @package Minepic\Account\Transformers
+ * Class AccountTypeaheadTransformer.
  */
 class AccountTypeaheadTransformer extends Fractal\TransformerAbstract
 {

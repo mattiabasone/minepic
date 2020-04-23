@@ -46,6 +46,7 @@ class MojangAccount
 
     /**
      * MinecraftAccount constructor.
+     *
      * @param array $fields
      */
     public function __construct(array $fields = [])
@@ -63,6 +64,7 @@ class MojangAccount
      * Load from API data response (JSON Decoded).
      *
      * @param array $response Decoded json response
+     *
      * @return bool
      */
     public function loadFromApiResponse(array $response): bool
@@ -75,13 +77,13 @@ class MojangAccount
                         $this->username = $response['name'];
                         $this->uuid = $response['id'];
                         if (isset($tmp['skin']['url'])) {
-                            \preg_match('#' . \preg_quote(env('MINECRAFT_TEXTURE_URL')) . '(.*)$#', $tmp['skin']['url'], $matches);
+                            \preg_match('#'.\preg_quote(env('MINECRAFT_TEXTURE_URL')).'(.*)$#', $tmp['skin']['url'], $matches);
                             $this->skin = $matches[1];
                         } else {
                             $this->skin = '';
                         }
                         if (isset($tmp['cape']['url'])) {
-                            \preg_match('#' . \preg_quote(env('MINECRAFT_TEXTURE_URL')) . '(.*)$#', $tmp['cape']['url'], $matches);
+                            \preg_match('#'.\preg_quote(env('MINECRAFT_TEXTURE_URL')).'(.*)$#', $tmp['cape']['url'], $matches);
                             $this->cape = $matches[1];
                         } else {
                             $this->cape = '';
@@ -90,8 +92,8 @@ class MojangAccount
 
                         return true;
                     } catch (\Throwable $exception) {
-                        Log::error("Failed with api response: Full data: ".json_encode($response). " -  Temp Data: ".json_encode($tmp));
-                        Log::error($exception->getMessage()." ".$exception->getTraceAsString());
+                        Log::error('Failed with api response: Full data: '.\json_encode($response).' -  Temp Data: '.\json_encode($tmp));
+                        Log::error($exception->getMessage().' '.$exception->getTraceAsString());
                     }
                 }
             }

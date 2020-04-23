@@ -19,8 +19,9 @@ class SkinFrontController extends BaseApiController
      * @param string $uuidOrName User UUID or Username
      * @param int    $size
      *
-     * @return \Illuminate\Http\Response
      * @throws \Throwable
+     *
+     * @return \Illuminate\Http\Response
      */
     public function serve(Request $request, $uuidOrName = '', $size = 0): Response
     {

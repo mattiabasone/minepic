@@ -52,13 +52,14 @@ class AccountStats extends Model
         'count_request',
         'count_search',
         'time_request',
-        'time_search'
+        'time_search',
     ];
 
     /**
      * Get most wanted users.
      *
      * @param int $limit
+     *
      * @return mixed
      */
     public static function getMostWanted(int $limit = 14)
@@ -82,6 +83,7 @@ class AccountStats extends Model
      * Get last users.
      *
      * @param int $limit
+     *
      * @return mixed
      */
     public static function getLastUsers(int $limit = 9)

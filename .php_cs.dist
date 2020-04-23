@@ -3,6 +3,7 @@
 $finder = PhpCsFixer\Finder::create()
     ->in([
         __DIR__.'/app',
+        __DIR__.'/src',
         __DIR__.'/tests'
     ]);
 
@@ -12,8 +13,9 @@ return PhpCsFixer\Config::create()
         '@PSR2' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        '@PHPUnit48Migration:risky' => true,
-        'array_syntax' => ['syntax' => 'short'],
+        'array_syntax' => [
+            'syntax' => 'short'
+        ],
         'date_time_immutable' => true,
         'declare_strict_types' => true,
         'fully_qualified_strict_types' => true,

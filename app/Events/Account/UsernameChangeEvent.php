@@ -14,15 +14,15 @@ class UsernameChangeEvent extends Event
     /**
      * @var string
      */
-    private $uuid;
+    private string $uuid;
     /**
      * @var string
      */
-    private $previousName;
+    private string $previousName;
     /**
      * @var string
      */
-    private $newName;
+    private string $newName;
 
     public function __construct(string $uuid, string $previousName, string $newName)
     {
