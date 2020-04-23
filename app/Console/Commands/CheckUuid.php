@@ -64,9 +64,9 @@ class CheckUuid extends Command
 
                     // Update database
                     $account->update([
-                        'username' => $accountApiData->username,
-                        'skin' => $accountApiData->skin,
-                        'cape' => $accountApiData->cape,
+                        'username' => $accountApiData->getUsername(),
+                        'skin' => $accountApiData->getSkin(),
+                        'cape' => $accountApiData->getCape(),
                         'fail_count' => 0,
                     ]);
                     $this->info("\tData updated");

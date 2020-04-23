@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 /* @var \Illuminate\Routing\Router $router */
 
-$router->group(['middleware' => 'headers.cache:etag'], static function () use ($router) {
+$router->group(['middleware' => ['headers.cache', 'image.clean_params']], static function () use ($router) {
     // Avatar
     $router->group(['prefix' => 'avatar'], static function () use ($router) {
         $router->get('/{uuidOrName}', 'Api\AvatarController@serve');

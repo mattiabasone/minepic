@@ -58,7 +58,7 @@ class Core
      *
      * @var bool
      */
-    private bool $forceUpdate;
+    private bool $forceUpdate = false;
 
     /**
      * Account not found?
@@ -119,15 +119,6 @@ class Core
     public function isCurrentRequestValidUuid(): bool
     {
         return UserDataValidator::isValidUuid($this->request);
-    }
-
-    /**
-     * Normalize request.
-     */
-    private function normalizeRequest(): void
-    {
-        $this->request = \preg_replace("#\.png.*#", '', $this->request);
-        $this->request = \preg_replace('#[^a-zA-Z0-9_]#', '', $this->request);
     }
 
     /**
@@ -319,7 +310,6 @@ class Core
     {
         $this->dataUpdated = false;
         $this->request = $string;
-        $this->normalizeRequest();
 
         if ($this->request === '' || \mb_strlen($this->request) > 32) {
             throw new \Exception('Invalid Username or UUID provided');

@@ -62,6 +62,7 @@ $app->singleton(
 
  $app->routeMiddleware([
      'headers.cache' => App\Http\Middleware\SetCacheHeaders::class,
+     'image.clean_params' => App\Http\Middleware\CleanupUuidOrName::class,
 ]);
 
 /*
