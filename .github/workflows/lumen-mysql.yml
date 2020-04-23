@@ -1,5 +1,5 @@
 # GitHub Action for Lumen with MySQL and Redis
-name: Testing Contabilita (Lumen with MySQL)
+name: Testing App (Lumen with MySQL)
 on: [push, pull_request]
 jobs:
   lumen:
@@ -19,7 +19,7 @@ jobs:
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: false
           MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: lumen
+          MYSQL_DATABASE: app
         ports:
           - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -60,7 +60,7 @@ jobs:
           composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
           composer require predis/predis
       - name: Prepare the application
-        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+        run: php -r "file_exists('.env') || copy('.env.ci_testing', '.env');"
       - name: Register Redis as service provider
         run: sed -i '$i\$app->register(Illuminate\\Redis\\RedisServiceProvider::class);' bootstrap/app.php
       - name: Run Migration and Seeders
@@ -71,7 +71,18 @@ jobs:
           DB_PORT: ${{ job.services.mysql.ports['3306'] }}
           REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
       - name: Test with phpunit
-        run: vendor/bin/phpunit --coverage-text --configuration phpunit-github.xml
+        run: vendor/bin/phpunit --configuration phpunit-ci.xml --coverage-text --coverage-clover clover.xml
         env:
           DB_PORT: ${{ job.services.mysql.ports['3306'] }}
           REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+      - name: "[Coveralls] Extract branch name"
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+      - name: "[Coveralls] - Checkout branch"
+        shell: bash
+        run: git fetch && git checkout ${{ steps.extract_branch.outputs.branch }}
+      - name: "[Coveralls] Send report"
+        run: vendor/bin/php-coveralls -v -x clover.xml -o coveralls-upload.json
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
