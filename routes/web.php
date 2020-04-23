@@ -50,13 +50,13 @@ $router->get('/', 'WebsiteController@index');
 $router->get('/user/{uuidOrName}', 'WebsiteController@user');
 
 // JSON
-$router->group(['prefix' => 'json'], static function () use ($router) {
+$router->group(['prefix' => 'api/v1'], static function () use ($router) {
     $router->get('user/{uuidOrName}', 'JsonController@user');
     $router->get('user/{uuidOrName}/update', 'JsonController@updateUser');
-
-    $router->get('stats/user/most-wanted', 'JsonController@getMostWantedUsers');
 
     $router->get('uuid/{uuid}', 'JsonController@uuidToUsername');
 
     $router->get('typeahead/{username}', 'JsonController@userTypeahead');
+
+    $router->get('stats/user/most-wanted', 'JsonController@getMostWantedUsers');
 });

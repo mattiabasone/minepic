@@ -1,6 +1,6 @@
 $(document).ready(function() {
     var SITE_URL = window.location.origin+'/';
-    var JSON = SITE_URL+"json/";
+    var JSON = SITE_URL+"api/v1/";
 
     $('body').tooltip({
         selector: '[rel=tooltip]'

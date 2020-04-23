@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Image\ImageSection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -30,7 +31,7 @@ class SkinBackController extends BaseApiController
         $this->minepic->updateStats();
 
         return $this->pngResponse(
-            (string) $this->minepic->renderSkinCurrentUser($size, 'B')
+            (string) $this->minepic->renderSkinCurrentUser($size, ImageSection::BACK)
         );
     }
 }

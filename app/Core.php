@@ -7,6 +7,7 @@ namespace App;
 use App\Events\Account\UsernameChangeEvent;
 use App\Helpers\Storage\Files\SkinsStorage;
 use App\Helpers\UserDataValidator;
+use App\Image\ImageSection;
 use App\Image\IsometricAvatar;
 use App\Image\Sections\Avatar;
 use App\Image\Sections\Skin;
@@ -16,6 +17,7 @@ use App\Models\Account;
 use App\Models\AccountNotFound;
 use App\Repositories\AccountRepository;
 use App\Repositories\AccountStatsRepository;
+use Illuminate\Support\Facades\Event;
 
 /**
  * Class Core.
@@ -445,7 +447,7 @@ class Core
      */
     private function logUsernameChange(string $uuid, string $prev, string $new): void
     {
-        \Event::dispatch(new UsernameChangeEvent($uuid, $prev, $new));
+        Event::dispatch(new UsernameChangeEvent($uuid, $prev, $new));
     }
 
     /**
@@ -542,7 +544,7 @@ class Core
      *
      * @return Skin
      */
-    public function renderSkinCurrentUser(int $size = 0, string $type = 'F'): Skin
+    public function renderSkinCurrentUser(int $size = 0, string $type = ImageSection::FRONT): Skin
     {
         $skin = new Skin($this->currentUserSkinImage);
         $skin->renderSkin($size, $type);

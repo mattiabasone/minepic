@@ -71,13 +71,13 @@
 <pre>
 &lt;img src="<?php echo url(); ?>/skin-back/<span class="pre-api-param">{uuid|username}</span>" />
 </pre>
-                    Can I force update of my avatar/skin on MinePic? Sure!
-<pre>
-<?php echo url(); ?>/user/<span class="pre-api-param">{uuid|username}</span>/update
-</pre>
                     Download the full skin image
 <pre>
 <?php echo url(); ?>/download/<span class="pre-api-param">{uuid|username}</span>
+</pre>
+                    Can I force update of my avatar/skin on MinePic? Sure!
+<pre>
+<?php echo url(); ?>/api/v1/user/<span class="pre-api-param">{uuid|username}</span>/update
 </pre>
                 </div>
             </div>
@@ -131,8 +131,6 @@
 
                         <h3>Who uses MinePic</h3>
                         <a target="_blank" href="https://www.minecraft-italia.it">Minecraft ITALIA</a><br />
-                        <a target="_blank" href="http://minecraftevi.com/">Minecraft Evi - Turkish Minecraft community</a><br />
-                        <a target="_blank" href="http://arenacraft.it">Arenacraft.it - Minecraft Server</a><br />
                         <br />Are you using MinePic? <a href="mailto:info@minepic.org">Tell us!</a>
                     </div>
                     <div class="block" style="margin-top: 20px;">

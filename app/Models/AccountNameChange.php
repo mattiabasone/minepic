@@ -13,7 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $uuid
  * @property string $prev_name
  * @property string $new_name
- * @property int    $time_change
+ * @property \Carbon\Carbon|null    $created_at
+ * @property \Carbon\Carbon|null     $updated_at
  */
 class AccountNameChange extends Model
 {
@@ -23,4 +24,10 @@ class AccountNameChange extends Model
      * @var string
      */
     protected $table = 'accounts_name_change';
+
+    protected $fillable = [
+        'uuid',
+        'prev_name',
+        'new_name',
+    ];
 }
