@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Image\Sections;
 
-use App\Image\Point;
 use App\Image\ImageSection;
+use App\Image\Point;
 use App\Image\Sections\Avatar\Coordinates as AvatarCoordinates;
 
 /**
@@ -95,12 +95,14 @@ class Avatar extends ImageSection
     }
 
     /**
-     * Checks if base image has helm for section
+     * Checks if base image has helm for section.
      *
      * @param resource $baseSkinImage
-     * @param Point $helmCoordinates
-     * @return bool
+     * @param Point    $helmCoordinates
+     *
      * @throws \App\Image\Exceptions\ImageTrueColorCreationFailedException
+     *
+     * @return bool
      */
     private function hasHelm($baseSkinImage, Point $helmCoordinates): bool
     {
@@ -161,16 +163,19 @@ class Avatar extends ImageSection
     /**
      * @param $image
      * @param \App\Image\Point $helmCoordinates
-     * @return resource
+     *
      * @throws \App\Image\Exceptions\ImageTrueColorCreationFailedException
+     *
+     * @return resource
      */
-    public function createHelmCheckImage($image, \App\Image\Point $helmCoordinates)
+    public function createHelmCheckImage($image, Point $helmCoordinates)
     {
         $helmCheckImage = $this->createTrueColorSquare(8);
         \imagealphablending($helmCheckImage, false);
         \imagesavealpha($helmCheckImage, true);
         \imagefilledrectangle($helmCheckImage, 0, 0, 8, 8, $this->colorAllocateAlpha($helmCheckImage));
         \imagecopyresampled($helmCheckImage, $image, 0, 0, $helmCoordinates->getX(), $helmCoordinates->getY(), 8, 8, 8, 8);
+
         return $helmCheckImage;
     }
 }

@@ -9,12 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class AccountsNameChange.
  *
- * @property int    $id
- * @property string $uuid
- * @property string $prev_name
- * @property string $new_name
- * @property \Carbon\Carbon|null    $created_at
- * @property \Carbon\Carbon|null     $updated_at
+ * @property int                 $id
+ * @property string              $uuid
+ * @property string              $prev_name
+ * @property string              $new_name
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  */
 class AccountNameChange extends Model
 {

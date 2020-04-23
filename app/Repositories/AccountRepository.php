@@ -77,11 +77,11 @@ class AccountRepository extends BaseRepository
     }
 
     /**
-     * @param array  $filters
-     * @param int|null   $perPage
-     * @param array  $columns
-     * @param string $pageName
-     * @param int|null   $page
+     * @param array    $filters
+     * @param int|null $perPage
+     * @param array    $columns
+     * @param string   $pageName
+     * @param int|null $page
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */

@@ -166,10 +166,7 @@ class MojangClient
     public function sendUsernameInfoRequest(string $username): MojangAccount
     {
         if ($this->sendApiRequest('GET', env('MINECRAFT_PROFILE_URL').$username)) {
-            return new MojangAccount([
-                'username' => $this->lastResponse['name'],
-                'uuid' => $this->lastResponse['id'],
-            ]);
+            return new MojangAccount($this->lastResponse['id'], $this->lastResponse['name']);
         }
         throw new \Exception($this->lastError, $this->lastErrorCode);
     }
@@ -186,8 +183,8 @@ class MojangClient
     public function getUuidInfo(string $uuid): MojangAccount
     {
         if ($this->sendApiRequest('GET', env('MINECRAFT_SESSION_URL').$uuid)) {
-            $account = new MojangAccount();
-            if ($account->loadFromApiResponse($this->lastResponse)) {
+            $account = MojangAccountFactory::makeFromApiResponse($this->lastResponse);
+            if ($account !== null) {
                 return $account;
             }
             throw new \Exception('Cannot create data account');

@@ -9,8 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class AccountsNotFound.
  *
- * @property string request
- * @property int time
+ * @property string              $request
+ * @property int                 $time
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  */
 class AccountNotFound extends Model
 {

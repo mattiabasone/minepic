@@ -18,6 +18,7 @@ use App\Models\AccountNotFound;
 use App\Repositories\AccountRepository;
 use App\Repositories\AccountStatsRepository;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Core.
@@ -43,64 +44,57 @@ class Core
      *
      * @var MojangAccount
      */
-    private $apiUserdata;
+    private ?MojangAccount $apiUserdata;
 
     /**
      * User data has been updated?
      *
      * @var bool
      */
-    private $dataUpdated = false;
+    private bool $dataUpdated = false;
 
     /**
      * Set force update.
      *
      * @var bool
      */
-    private $forceUpdate;
-
-    /**
-     * Minepic error string.
-     *
-     * @var string
-     */
-    private $error = false;
+    private bool $forceUpdate;
 
     /**
      * Account not found?
      *
      * @var bool
      */
-    private $accountNotFound = false;
+    private bool $accountNotFound = false;
 
     /**
      * Retry for nonexistent usernames.
      *
      * @var string
      */
-    private $retryUnexistentCheck = false;
+    private bool $retryUnexistentCheck = false;
 
     /**
      * Current image path.
      *
      * @var string
      */
-    public $currentUserSkinImage;
+    private string $currentUserSkinImage;
 
     /**
      * @var AccountRepository
      */
-    private $accountRepository;
-
-    /**
-     * @var MojangClient
-     */
-    private $mojangClient;
+    private AccountRepository $accountRepository;
 
     /**
      * @var AccountStatsRepository
      */
-    private $accountStatsRepository;
+    private AccountStatsRepository $accountStatsRepository;
+
+    /**
+     * @var MojangClient
+     */
+    private MojangClient $mojangClient;
 
     /**
      * Core constructor.
@@ -115,16 +109,8 @@ class Core
         MojangClient $mojangClient
     ) {
         $this->accountRepository = $accountRepository;
-        $this->mojangClient = $mojangClient;
         $this->accountStatsRepository = $accountStatsRepository;
-    }
-
-    /**
-     * Display error.
-     */
-    public function error(): string
-    {
-        return $this->error;
+        $this->mojangClient = $mojangClient;
     }
 
     /**
@@ -223,14 +209,14 @@ class Core
     {
         if ($this->getFullUserdataApi()) {
             $this->userdata = $this->accountRepository->create([
-                'username' => $this->apiUserdata->username,
-                'uuid' => $this->apiUserdata->uuid,
-                'skin' => $this->apiUserdata->skin && \mb_strlen($this->apiUserdata->skin) > 1 ? $this->apiUserdata->skin : '',
-                'cape' => $this->apiUserdata->cape && \mb_strlen($this->apiUserdata->cape) > 1 ? $this->apiUserdata->cape : '',
+                'username' => $this->apiUserdata->getUsername(),
+                'uuid' => $this->apiUserdata->getUuid(),
+                'skin' => $this->apiUserdata->getSkin(),
+                'cape' => $this->apiUserdata->getCape(),
             ]);
 
             $this->saveRemoteSkin();
-            $this->currentUserSkinImage = SkinsStorage::getPath($this->apiUserdata->uuid);
+            $this->currentUserSkinImage = SkinsStorage::getPath($this->apiUserdata->getUuid());
 
             $this->accountStatsRepository->create([
                 'uuid' => $this->userdata->uuid,
@@ -255,20 +241,21 @@ class Core
      */
     private function convertRequestToUuid(): bool
     {
-        if (UserDataValidator::isValidUsername($this->request) || UserDataValidator::isValidEmail($this->request)) {
-            try {
-                $account = $this->mojangClient->sendUsernameInfoRequest($this->request);
-                $this->request = $account->uuid;
-
-                return true;
-            } catch (\Exception $e) {
-                \Log::error($e);
-
-                return false;
-            }
+        if (!UserDataValidator::isValidUsername($this->request) && !UserDataValidator::isValidEmail($this->request)) {
+            return false;
         }
 
-        return false;
+        try {
+            $account = $this->mojangClient->sendUsernameInfoRequest($this->request);
+            $this->request = $account->getUuid();
+
+            return true;
+        } catch (\Exception $e) {
+            Log::error($e->getFile().':'.$e->getLine().' '.$e->getMessage());
+            Log::error($e->getTraceAsString());
+
+            return false;
+        }
     }
 
     /**
@@ -399,12 +386,13 @@ class Core
                 $originalUsername = $this->userdata->username;
                 // Update database
                 $this->accountRepository->update([
-                    'username' => $this->apiUserdata->username,
-                    'skin' => $this->apiUserdata->skin,
-                    'cape' => $this->apiUserdata->cape,
+                    'username' => $this->apiUserdata->getUsername(),
+                    'skin' => $this->apiUserdata->getSkin(),
+                    'cape' => $this->apiUserdata->getCape(),
                     'fail_count' => 0,
                 ], $this->userdata->id);
 
+                $this->userdata->touch();
                 $this->userdata->refresh();
 
                 // Update skin
@@ -464,7 +452,7 @@ class Core
 
             return true;
         } catch (\Exception $e) {
-            \Log::error($e);
+            Log::error($e->getTraceAsString(), ['request' => $this->request]);
             $this->apiUserdata = null;
 
             return false;
@@ -520,14 +508,13 @@ class Core
      */
     public function saveRemoteSkin(): bool
     {
-        if (!empty($this->userdata->skin) && \mb_strlen($this->userdata->skin) > 0) {
+        if (!empty($this->userdata->skin) && $this->userdata->skin !== '') {
             try {
                 $skinData = $this->mojangClient->getSkin($this->userdata->skin);
 
                 return SkinsStorage::save($this->userdata->uuid, $skinData);
             } catch (\Exception $e) {
                 \Log::error($e);
-                $this->error = $e->getMessage();
             }
         }
 
@@ -660,9 +647,9 @@ class Core
      */
     private function setFailedRequest(string $errorMessage = ''): void
     {
+        Log::notice($errorMessage, ['request' => $this->request]);
         $this->userdata = null;
         $this->currentUserSkinImage = SkinsStorage::getPath(env('DEFAULT_USERNAME'));
-        $this->error = $errorMessage;
         $this->request = '';
     }
 }

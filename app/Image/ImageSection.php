@@ -93,8 +93,10 @@ abstract class ImageSection
 
     /**
      * @param $image
-     * @return int
+     *
      * @throws \Exception
+     *
+     * @return int
      */
     protected function colorAllocateAlpha($image): int
     {
@@ -102,6 +104,7 @@ abstract class ImageSection
         if (!$colorIdentifier) {
             throw new \Exception();
         }
+
         return $colorIdentifier;
     }
 }
