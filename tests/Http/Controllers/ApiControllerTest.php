@@ -63,7 +63,7 @@ class ApiControllerTest extends TestCase
     /** @test */
     public function shouldDownloadSteveTexture(): void
     {
-        $this->get('/download/Steve');
+        $this->get('/download/8667ba71b85a4004af54457a9734eed7');
         $actualImage = $this->response->getContent();
         $expectedImage = \file_get_contents(base_path('tests/images/steve_raw.png'));
 

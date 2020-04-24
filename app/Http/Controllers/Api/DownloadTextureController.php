@@ -18,10 +18,10 @@ class DownloadTextureController extends BaseController
     /**
      * @var MinepicCore
      */
-    protected $minepic;
+    protected MinepicCore $minepic;
 
     /** @var ResponseFactory */
-    protected $responseFactory;
+    protected ResponseFactory $responseFactory;
 
     /**
      * Api constructor.
@@ -41,19 +41,19 @@ class DownloadTextureController extends BaseController
      * Serve Avatar.
      *
      * @param \Illuminate\Http\Request
-     * @param string $uuidOrName User UUID or Username
+     * @param string $uuid User UUID or Username
      *
      * @throws \App\Image\Exceptions\ImageResourceCreationFailedException
      *
      * @return \Illuminate\Http\Response
      */
-    public function serve(Request $request, string $uuidOrName = ''): Response
+    public function serve(Request $request, string $uuid = ''): Response
     {
         $headers = [
-            'Content-Disposition' => 'Attachment;filename='.$uuidOrName.'.png',
+            'Content-Disposition' => 'Attachment;filename='.$uuid.'.png',
             'Content-Type' => 'image/png',
         ];
-        $this->minepic->initialize($uuidOrName);
+        $this->minepic->initialize($uuid);
         $avatarImage = $this->minepic->skinCurrentUser();
         $avatarImage->prepareTextureDownload();
 
