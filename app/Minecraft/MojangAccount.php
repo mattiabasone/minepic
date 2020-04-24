@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Minecraft;
 
+use Illuminate\Contracts\Support\Arrayable;
+
 /**
  * Class MojangAccount.
  */
-class MojangAccount
+class MojangAccount implements Arrayable
 {
     /**
      * UUID of the account.
@@ -83,5 +85,18 @@ class MojangAccount
     public function getCape(): ?string
     {
         return $this->cape;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'uuid' => $this->uuid,
+            'username' => $this->username,
+            'skin' => $this->skin,
+            'cape' => $this->cape,
+        ];
     }
 }

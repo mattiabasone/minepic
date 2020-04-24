@@ -11,6 +11,7 @@ services:
     - "./:/app"
     depends_on:
       - database
+      - cache
 
   database:
     image: library/mysql:5.7
@@ -19,3 +20,7 @@ services:
       - MYSQL_DATABASE=minepic_org
     ports:
       - "33306:3306"
+
+  cache:
+    image: redis:5
+    command: ["redis-server"]

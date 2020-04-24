@@ -49,12 +49,12 @@ class MojangAccountFactory
             if (!empty($textures)) {
                 $textureData = \json_decode(\base64_decode($textures[0]['value'], true), true, 512, JSON_THROW_ON_ERROR);
 
-                if (isset($textureData['skin']['url'])) {
-                    $skin = self::extractTextureIdFromUrl($textureData['skin']['url']);
+                if (isset($textureData['textures']['SKIN']['url'])) {
+                    $skin = self::extractTextureIdFromUrl($textureData['textures']['SKIN']['url']);
                 }
 
-                if (isset($tmp['cape']['url'])) {
-                    $cape = self::extractTextureIdFromUrl($textureData['cape']['url']);
+                if (isset($tmp['textures']['CAPE']['url'])) {
+                    $cape = self::extractTextureIdFromUrl($textureData['textures']['CAPE']['url']);
                 }
             }
         }

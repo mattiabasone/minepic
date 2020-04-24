@@ -14,6 +14,7 @@ jobs:
       CACHE_DRIVER: redis
       QUEUE_CONNECTION: redis
       SESSION_DRIVER: redis
+      LOG_CHANNEL: null
     services:
       mysql:
         image: mysql:5.7
@@ -62,8 +63,6 @@ jobs:
           composer require predis/predis
       - name: Prepare the application
         run: php -r "file_exists('.env') || copy('.env.ci_testing', '.env');"
-      - name: Register Redis as service provider
-        run: sed -i '$i\$app->register(Illuminate\\Redis\\RedisServiceProvider::class);' bootstrap/app.php
       - name: Run Migration and Seeders
         run: |
           php artisan migrate -v

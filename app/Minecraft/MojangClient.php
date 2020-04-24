@@ -6,6 +6,8 @@ namespace App\Minecraft;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\BadResponseException;
+use Illuminate\Support\Facades\Log;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class MojangClient.
@@ -25,34 +27,6 @@ class MojangClient
     private \GuzzleHttp\Client $httpClient;
 
     /**
-     * Last API Response.
-     *
-     * @var
-     */
-    private $lastResponse;
-
-    /**
-     * Last Error.
-     *
-     * @var string
-     */
-    private string $lastError = '';
-
-    /**
-     * Last error code.
-     *
-     * @var int
-     */
-    private int $lastErrorCode = 0;
-
-    /**
-     * Last content Type.
-     *
-     * @var string
-     */
-    private string $lastContentType = '';
-
-    /**
      * MojangClient constructor.
      */
     public function __construct()
@@ -66,32 +40,23 @@ class MojangClient
         );
     }
 
-    /**
-     * Last response from API.
-     *
-     * @return mixed
-     */
-    public function getLastResponse()
-    {
-        return $this->lastResponse;
-    }
-
     private function handleGuzzleBadResponseException(
         BadResponseException $badResponseException
     ): void {
-        $this->lastContentType = $badResponseException->getResponse()->getHeader('content-type')[0] ?? '';
-        $this->lastErrorCode = $badResponseException->getResponse()->getStatusCode();
-        $this->lastError = 'Error';
-        if (isset($this->lastResponse['errorMessage'])) {
-            $this->lastError .= ': '.$this->lastResponse['errorMessage'];
-        }
+        Log::error(
+            'Error from Minecraft API',
+            [
+                'status_code' => $badResponseException->getResponse()->getStatusCode(),
+                'content_type' => $badResponseException->getResponse()->getHeader('content-type')[0] ?? '',
+                'content' => $badResponseException->getResponse()->getBody()->getContents(),
+            ]
+        );
     }
 
     private function handleThrowable(\Throwable $exception): void
     {
-        $this->lastContentType = '';
-        $this->lastErrorCode = 0;
-        $this->lastError = $exception->getFile().':'.$exception->getLine().' - '.$exception->getMessage();
+        Log::error($exception->getFile().':'.$exception->getLine().' - '.$exception->getMessage());
+        Log::error($exception->getTraceAsString());
     }
 
     /**
@@ -100,27 +65,26 @@ class MojangClient
      * @param string $method HTTP Verb
      * @param string $url    API Endpoint
      *
-     * @return bool
+     * @throws \Throwable
+     *
+     * @return array|null
      */
-    private function sendApiRequest(string $method, string $url): bool
+    private function sendApiRequest(string $method, string $url): ?array
     {
         try {
             $response = $this->httpClient->request($method, $url);
-            $this->lastResponse = \json_decode($response->getBody()->getContents(), true);
-            $this->lastContentType = $response->getHeader('content-type')[0];
-            $this->lastErrorCode = 0;
-            $this->lastError = '';
+            $responseContents = $response->getBody()->getContents();
+            Log::debug('Minecraft API Response: '.$responseContents, ['method' => $method, 'url' => $url]);
 
-            return true;
+            return \json_decode($responseContents, true, 512, JSON_THROW_ON_ERROR);
         } catch (BadResponseException $exception) {
-            $this->lastResponse = \json_decode($exception->getResponse()->getBody()->getContents(), true);
             $this->handleGuzzleBadResponseException($exception);
 
-            return false;
+            throw $exception;
         } catch (\Throwable $exception) {
             $this->handleThrowable($exception);
 
-            return false;
+            throw $exception;
         }
     }
 
@@ -130,27 +94,20 @@ class MojangClient
      * @param string $method
      * @param string $url
      *
-     * @return bool
+     * @return \Psr\Http\Message\ResponseInterface|null
      */
-    private function sendRequest(string $method, string $url): bool
+    private function sendRequest(string $method, string $url): ?ResponseInterface
     {
         try {
-            $response = $this->httpClient->request($method, $url);
-            $this->lastResponse = $response->getBody()->getContents();
-            $this->lastContentType = $response->getHeader('content-type')[0];
-            $this->lastErrorCode = 0;
-            $this->lastError = '';
-
-            return true;
+            return $this->httpClient->request($method, $url);
         } catch (BadResponseException $exception) {
-            $this->lastResponse = $exception->getResponse()->getBody()->getContents();
             $this->handleGuzzleBadResponseException($exception);
 
-            return false;
+            return null;
         } catch (\Throwable $exception) {
             $this->handleThrowable($exception);
 
-            return false;
+            return null;
         }
     }
 
@@ -159,16 +116,15 @@ class MojangClient
      *
      * @param string $username
      *
-     * @throws \Exception
+     * @throws \Throwable
      *
      * @return MojangAccount
      */
     public function sendUsernameInfoRequest(string $username): MojangAccount
     {
-        if ($this->sendApiRequest('GET', env('MINECRAFT_PROFILE_URL').$username)) {
-            return new MojangAccount($this->lastResponse['id'], $this->lastResponse['name']);
-        }
-        throw new \Exception($this->lastError, $this->lastErrorCode);
+        $response = $this->sendApiRequest('GET', env('MINECRAFT_PROFILE_URL').$username);
+
+        return new MojangAccount($response['id'], $response['name']);
     }
 
     /**
@@ -176,20 +132,20 @@ class MojangClient
      *
      * @param string $uuid User UUID
      *
-     * @throws \Exception
+     * @throws \Throwable
      *
      * @return MojangAccount
      */
     public function getUuidInfo(string $uuid): MojangAccount
     {
-        if ($this->sendApiRequest('GET', env('MINECRAFT_SESSION_URL').$uuid)) {
-            $account = MojangAccountFactory::makeFromApiResponse($this->lastResponse);
+        $response = $this->sendApiRequest('GET', env('MINECRAFT_SESSION_URL').$uuid);
+        if ($response !== null) {
+            $account = MojangAccountFactory::makeFromApiResponse($response);
             if ($account !== null) {
                 return $account;
             }
             throw new \Exception('Cannot create data account');
         }
-        throw new \Exception($this->lastError, $this->lastErrorCode);
     }
 
     /**
@@ -198,15 +154,17 @@ class MojangClient
      * @param string $skin Skin uuid
      *
      * @throws \Exception
+     *
+     * @return string
      */
     public function getSkin(string $skin)
     {
-        if ($this->sendRequest('GET', env('MINECRAFT_TEXTURE_URL').$skin)) {
-            if ($this->lastContentType === 'image/png') {
-                return $this->lastResponse;
-            }
-            throw new \Exception('Invalid format: ');
+        $response = $this->sendRequest('GET', env('MINECRAFT_TEXTURE_URL').$skin);
+
+        if ($response->getHeader('content-type')[0] === 'image/png') {
+            return $response->getBody()->getContents();
         }
-        throw new \Exception($this->lastError, $this->lastErrorCode);
+
+        throw new \Exception('Invalid Response content type: '.$response->getHeader('content-type')[0]);
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Cache\UserNotFoundCache;
 use App\Events\Account\UsernameChangeEvent;
 use App\Helpers\Storage\Files\SkinsStorage;
-use App\Helpers\UserDataValidator;
 use App\Image\ImageSection;
 use App\Image\IsometricAvatar;
 use App\Image\Sections\Avatar;
@@ -14,7 +14,6 @@ use App\Image\Sections\Skin;
 use App\Minecraft\MojangAccount;
 use App\Minecraft\MojangClient;
 use App\Models\Account;
-use App\Models\AccountNotFound;
 use App\Repositories\AccountRepository;
 use App\Repositories\AccountStatsRepository;
 use Illuminate\Support\Facades\Event;
@@ -30,8 +29,7 @@ class Core
      *
      * @var string
      */
-    private $request = '';
-
+    private string $request = '';
     /**
      * Userdata from/to DB.
      *
@@ -59,20 +57,6 @@ class Core
      * @var bool
      */
     private bool $forceUpdate = false;
-
-    /**
-     * Account not found?
-     *
-     * @var bool
-     */
-    private bool $accountNotFound = false;
-
-    /**
-     * Retry for nonexistent usernames.
-     *
-     * @var string
-     */
-    private bool $retryUnexistentCheck = false;
 
     /**
      * Current image path.
@@ -111,14 +95,6 @@ class Core
         $this->accountRepository = $accountRepository;
         $this->accountStatsRepository = $accountStatsRepository;
         $this->mojangClient = $mojangClient;
-    }
-
-    /**
-     * Check if is a valid UUID.
-     */
-    public function isCurrentRequestValidUuid(): bool
-    {
-        return UserDataValidator::isValidUuid($this->request);
     }
 
     /**
@@ -178,18 +154,6 @@ class Core
     }
 
     /**
-     * Check if a username is in the database.
-     *
-     * @return bool Returns true/false
-     */
-    private function requestedUsernameInDb(): bool
-    {
-        $account = $this->accountRepository->findLastUpdatedByUsername($this->request);
-
-        return $this->loadAccountData($account);
-    }
-
-    /**
      * Insert user data in database.
      *
      * @param void
@@ -198,6 +162,12 @@ class Core
      */
     public function insertNewUuid(): bool
     {
+        if (UserNotFoundCache::has($this->request)) {
+            Log::debug('Cache Hit Not Found', ['request' => $this->request]);
+
+            return false;
+        }
+
         if ($this->getFullUserdataApi()) {
             $this->userdata = $this->accountRepository->create([
                 'username' => $this->apiUserdata->getUsername(),
@@ -220,81 +190,9 @@ class Core
             return true;
         }
 
-        return false;
-    }
-
-    /**
-     * Get UUID from username.
-     *
-     * @param string
-     *
-     * @return bool
-     */
-    private function convertRequestToUuid(): bool
-    {
-        if (!UserDataValidator::isValidUsername($this->request) && !UserDataValidator::isValidEmail($this->request)) {
-            return false;
-        }
-
-        try {
-            $account = $this->mojangClient->sendUsernameInfoRequest($this->request);
-            $this->request = $account->getUuid();
-
-            return true;
-        } catch (\Exception $e) {
-            Log::error($e->getFile().':'.$e->getLine().' '.$e->getMessage());
-            Log::error($e->getTraceAsString());
-
-            return false;
-        }
-    }
-
-    /**
-     * Salva account inesistente.
-     *
-     * @return mixed
-     */
-    public function saveUnexistentAccount()
-    {
-        $notFound = AccountNotFound::firstOrNew(['request' => $this->request]);
-        $notFound->request = $this->request;
-
-        return $notFound->save();
-    }
-
-    /**
-     * Check if requested string is a failed request.
-     *
-     * @return bool
-     */
-    public function isUnexistentAccount(): bool
-    {
-        /** @var \App\Models\AccountNotFound $result */
-        $result = AccountNotFound::find($this->request);
-        if ($result !== null) {
-            if ((\time() - $result->updated_at->timestamp) > env('USERDATA_CACHE_TIME')) {
-                $result->touch();
-                $this->retryUnexistentCheck = true;
-            } else {
-                $this->retryUnexistentCheck = false;
-            }
-            $this->accountNotFound = true;
-
-            return true;
-        }
-        $this->accountNotFound = false;
+        UserNotFoundCache::add($this->request);
 
         return false;
-    }
-
-    /**
-     * Delete current request from failed cache.
-     */
-    public function removeFailedRequest(): bool
-    {
-        $result = AccountNotFound::where('request', $this->request)->delete();
-
-        return \count($result) > 0;
     }
 
     /**
@@ -311,39 +209,8 @@ class Core
         $this->dataUpdated = false;
         $this->request = $string;
 
-        if ($this->request === '' || \mb_strlen($this->request) > 32) {
-            throw new \Exception('Invalid Username or UUID provided');
-        }
-
-        if ($this->isCurrentRequestValidUuid()) {
-            if ($this->initializeUuidRequest()) {
-                return true;
-            }
-        } elseif ($this->requestedUsernameInDb()) {
-            return $this->initializeUsernameRequest();
-        } elseif (!$this->isUnexistentAccount() || $this->retryUnexistentCheck) {
-            if (!$this->isCurrentRequestValidUuid() && !$this->convertRequestToUuid()) {
-                $this->saveUnexistentAccount();
-                $this->setFailedRequest('Invalid requested username');
-
-                return false;
-            }
-
-            // Check if the uuid is already in the database, maybe the user has changed username and the check
-            // nameInDb() has failed
-            if ($this->requestedUuidInDb()) {
-                $this->updateDbUser();
-
-                return true;
-            }
-
-            if ($this->insertNewUuid()) {
-                if ($this->accountNotFound) {
-                    $this->removeFailedRequest();
-                }
-
-                return true;
-            }
+        if ($this->initializeUuidRequest()) {
+            return true;
         }
 
         $this->setFailedRequest('Account not found');
@@ -504,7 +371,7 @@ class Core
 
                 return SkinsStorage::save($this->userdata->uuid, $skinData);
             } catch (\Exception $e) {
-                \Log::error($e);
+                Log::error($e->getTraceAsString());
             }
         }
 
@@ -581,6 +448,7 @@ class Core
             // Check if UUID is in my database
             // Data cache still valid?
             if (!$this->checkDbCache() || $this->forceUpdatePossible()) {
+                Log::debug('Refreshing User DB Data');
                 // Nope, updating data
                 $this->updateDbUser();
             }
@@ -597,37 +465,6 @@ class Core
         }
 
         return false;
-    }
-
-    /**
-     * @throws \Exception
-     *
-     * @return bool
-     */
-    private function initializeUsernameRequest(): bool
-    {
-        // Check DB datacache
-        if (!$this->checkDbCache() || $this->forceUpdatePossible()) {
-            // Check UUID (username change/other)
-            if ($this->convertRequestToUuid()) {
-                if ($this->request === $this->userdata->uuid) {
-                    // Nope, updating data
-                    $this->request = $this->userdata->uuid;
-                    $this->updateDbUser();
-                } else {
-                    // re-initialize process with the UUID if the name has been changed
-                    return $this->initialize($this->request);
-                }
-            } else {
-                $this->request = $this->userdata->uuid;
-                $this->updateUserFailUpdate();
-                SkinsStorage::copyAsSteve($this->request);
-            }
-        } elseif (!SkinsStorage::exists($this->request)) {
-            SkinsStorage::copyAsSteve($this->request);
-        }
-
-        return true;
     }
 
     /**

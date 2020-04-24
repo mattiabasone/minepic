@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Core as MinepicCore;
+use App\Resolvers\UsernameResolver;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
@@ -19,22 +20,30 @@ abstract class BaseApiController extends BaseController
      * @var MinepicCore
      */
     protected $minepic;
-
-    /** @var ResponseFactory */
+    /**
+     * @var ResponseFactory
+     */
     protected $responseFactory;
+    /**
+     * @var UsernameResolver
+     */
+    protected UsernameResolver $usernameResolver;
 
     /**
      * Api constructor.
      *
-     * @param MinepicCore     $minepic         Minepic Core Instance
-     * @param ResponseFactory $responseFactory Response Factory
+     * @param MinepicCore      $minepic          Minepic Core Instance
+     * @param ResponseFactory  $responseFactory  Response Factory
+     * @param UsernameResolver $usernameResolver
      */
     public function __construct(
         MinepicCore $minepic,
-        ResponseFactory $responseFactory
+        ResponseFactory $responseFactory,
+        UsernameResolver $usernameResolver
     ) {
         $this->minepic = $minepic;
         $this->responseFactory = $responseFactory;
+        $this->usernameResolver = $usernameResolver;
     }
 
     /**
@@ -47,13 +56,20 @@ abstract class BaseApiController extends BaseController
     abstract public function serveUuid(Request $request, string $uuid, $size = 256): Response;
 
     /**
-     * @param Request $request  Injected Request
+     * @param Request $request
      * @param string  $username
-     * @param int     $size     Avatar size User UUID or name
+     * @param int     $size
+     *
+     * @throws \Throwable
      *
      * @return Response
      */
-    abstract public function serveUsername(Request $request, string $username, $size = 256): Response;
+    public function serveUsername(Request $request, string $username, $size = 0): Response
+    {
+        $uuid = $this->usernameResolver->resolve($username);
+
+        return $this->serveUuid($request, $uuid, $size);
+    }
 
     /**
      * @param string $image

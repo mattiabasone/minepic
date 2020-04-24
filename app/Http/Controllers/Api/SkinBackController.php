@@ -34,24 +34,4 @@ class SkinBackController extends BaseApiController
             (string) $this->minepic->renderSkinCurrentUser($size, ImageSection::BACK)
         );
     }
-
-    /**
-     * @param Request $request
-     * @param string  $username Username
-     * @param int     $size
-     *
-     * @throws \Throwable
-     *
-     * @return Response
-     */
-    public function serveUsername(Request $request, $username, $size = 0): Response
-    {
-        $size = (int) $size;
-        $this->minepic->initialize($username);
-        $this->minepic->updateStats();
-
-        return $this->pngResponse(
-            (string) $this->minepic->renderSkinCurrentUser($size, ImageSection::BACK)
-        );
-    }
 }
