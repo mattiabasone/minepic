@@ -74,10 +74,19 @@ $(document).ready(function() {
             }
         },
         limit: Infinity
-    }).on('typeahead:selected', function(e, datum) {
-        e.preventDefault();
-        DisplayUsersInfo(datum.value);
-        return false;
+    });
+
+    $('#user-search').bind('typeahead:close', function(obj) {
+        $(obj.currentTarget).val("");
+        // This is really bad
+        setTimeout(function () {
+            $(obj.currentTarget).val("");
+        }, 750);
+
+    });
+
+    $('#user-search').bind('typeahead:select', function(ev, suggestion) {
+        DisplayUsersInfo(suggestion.value);
     });
 
     $('#user-search-butt').click(function() {
