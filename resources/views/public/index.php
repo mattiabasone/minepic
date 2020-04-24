@@ -73,11 +73,11 @@
 </pre>
                     Download the full skin image
 <pre>
-<?php echo url(); ?>/download/<span class="pre-api-param">{uuid|username}</span>
+<?php echo url(); ?>/download/<span class="pre-api-param">{uuid}</span>
 </pre>
                     Can I force update of my avatar/skin on MinePic? Sure!
 <pre>
-<?php echo url(); ?>/api/v1/user/<span class="pre-api-param">{uuid|username}</span>/update
+<?php echo url(); ?>/update/<span class="pre-api-param">{uuid}</span>
 </pre>
                 </div>
             </div>

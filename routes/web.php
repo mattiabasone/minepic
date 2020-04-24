@@ -53,18 +53,20 @@ $router->group(['middleware' => ['headers.cache', 'image.clean_params']], static
     });
 });
 
+$router->get('update/{uuid:[0-9a-fA-F]{32}}', 'JsonController@updateUser');
 
 // Download
-$router->get('/download/{uuidOrName}', 'Api\DownloadTextureController@serve');
+$router->get('/download/{uuid:[0-9a-fA-F]{32}}', 'Api\DownloadTextureController@serve');
 
 // HTML
 $router->get('/', 'WebsiteController@index');
-$router->get('/user/{uuidOrName}', 'WebsiteController@user');
+$router->get('/user/{uuid:[0-9a-fA-F]{32}}', 'WebsiteController@user');
+$router->get('/user/{username:[a-zA-Z0-9_]+}', 'WebsiteController@userWithUsername');
 
 // JSON
 $router->group(['prefix' => 'api/v1'], static function () use ($router) {
-    $router->get('user/{uuidOrName}', 'JsonController@user');
-    $router->get('user/{uuidOrName}/update', 'JsonController@updateUser');
+    $router->get('user/{uuid:[0-9a-fA-F]{32}}', 'JsonController@user');
+    $router->get('user/{uuid:[0-9a-fA-F]{32}}/update', 'JsonController@updateUser');
 
     $router->get('uuid/{uuid}', 'JsonController@uuidToUsername');
 

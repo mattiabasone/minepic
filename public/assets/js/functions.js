@@ -14,7 +14,6 @@ $(document).ready(function() {
 
     function DisplayUsersInfo(username) {
         if (username !== '') {
-
             $.ajax({
                 type: 'GET',
                 url: JSON+'user/'+username,
@@ -57,19 +56,28 @@ $(document).ready(function() {
         }
     }
 
-    $('#user-search').typeahead({
-        name: 'usernames',
+    var usernames = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
         remote: {
-            url: JSON+'typeahead/%QUERY'
-        },
+            url: JSON+'typeahead/%QUERY',
+            wildcard: '%QUERY'
+        }
+    });
+
+    $('#user-search').typeahead(null, {
+        name: 'usernames',
+        source: usernames,
         templates: {
             suggestion: function (data) {
-                return '<p class="userinfo"><img src="'+SITE_URL+'avatar/32/'+data.value+'" alt="'+data.value+'" title="'+data.value+'" /> '+data.value+'</p>';
+                return '<p class="userinfo"><img src="'+SITE_URL+'avatar/32/'+data.value+'" alt="'+data.value+'" title="'+data.value+'" /> '+data.label+'</p>';
             }
         },
         limit: Infinity
-    }).on('typeahead:selected typeahead:autocompleted', function(e, datum) {
+    }).on('typeahead:selected', function(e, datum) {
+        e.preventDefault();
         DisplayUsersInfo(datum.value);
+        return false;
     });
 
     $('#user-search-butt').click(function() {

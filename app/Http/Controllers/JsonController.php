@@ -58,15 +58,15 @@ class JsonController extends BaseController
     /**
      * User info.
      *
-     * @param string $uuidOrName
+     * @param string $uuid
      *
      * @throws \Exception
      *
      * @return JsonResponse
      */
-    public function user($uuidOrName = ''): JsonResponse
+    public function user($uuid = ''): JsonResponse
     {
-        if (!$this->minepicCore->initialize($uuidOrName)) {
+        if (!$this->minepicCore->initialize($uuid)) {
             $httpStatus = 404;
             $response = [
                 'ok' => false,
@@ -153,7 +153,10 @@ class JsonController extends BaseController
         $accounts = $this->accountRepository->filterPaginate(['term' => $term], 15);
         // TODO: migrate to transformers
         foreach ($accounts->items() as $account) {
-            $response[]['value'] = $account->username;
+            $response[] = [
+                'value' => $account->uuid,
+                'label' => $account->username,
+            ];
         }
 
         return $this->responseFactory->json($response);

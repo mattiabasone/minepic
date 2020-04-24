@@ -33,13 +33,6 @@ $factory->define(App\Models\AccountNameChange::class, function (Faker\Generator 
     ];
 });
 
-$factory->define(App\Models\AccountNotFound::class, function (Faker\Generator $faker) {
-    return [
-        'request' => $faker->name,
-        'time' => $faker->unixTime,
-    ];
-});
-
 $factory->define(App\Models\AccountStats::class, function (Faker\Generator $faker) {
     return [
         'uuid' => $faker->uuid,

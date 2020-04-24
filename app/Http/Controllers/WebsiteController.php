@@ -8,6 +8,7 @@ use App\Core as MinepicCore;
 use App\Misc\SplashMessage;
 use App\Models\AccountStats;
 use App\Repositories\AccountStatsRepository;
+use App\Resolvers\UsernameResolver;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
@@ -45,15 +46,19 @@ class WebsiteController extends BaseController
     /**
      * @var ResponseFactory
      */
-    private $responseFactory;
+    private ResponseFactory $responseFactory;
     /**
      * @var AccountStatsRepository
      */
-    private $accountStatsRepository;
+    private AccountStatsRepository $accountStatsRepository;
     /**
      * @var MinepicCore
      */
-    private $minepicCore;
+    private MinepicCore $minepicCore;
+    /**
+     * @var UsernameResolver
+     */
+    private UsernameResolver $usernameResolver;
 
     /**
      * WebsiteController constructor.
@@ -65,11 +70,13 @@ class WebsiteController extends BaseController
     public function __construct(
         AccountStatsRepository $accountStatsRepository,
         MinepicCore $minepicCore,
-        ResponseFactory $responseFactory
+        ResponseFactory $responseFactory,
+        UsernameResolver $usernameResolver
     ) {
         $this->responseFactory = $responseFactory;
         $this->accountStatsRepository = $accountStatsRepository;
         $this->minepicCore = $minepicCore;
+        $this->usernameResolver = $usernameResolver;
     }
 
     /**
@@ -141,9 +148,9 @@ class WebsiteController extends BaseController
      *
      * @return Response
      */
-    public function user(string $uuidOrName): Response
+    public function user(string $uuid): Response
     {
-        if ($this->minepicCore->initialize($uuidOrName)) {
+        if ($this->minepicCore->initialize($uuid)) {
             $userdata = $this->minepicCore->getUserdata();
             $userstats = $this->accountStatsRepository->findByUuid($userdata->uuid);
 
@@ -169,5 +176,22 @@ class WebsiteController extends BaseController
         }
 
         throw new NotFoundHttpException();
+    }
+
+    /**
+     * @param string $username
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function userWithUsername(string $username)
+    {
+        $uuid = $this->usernameResolver->resolve($username);
+        if ($uuid === env('DEFAULT_UUID')) {
+            throw new NotFoundHttpException();
+        }
+
+        return $this->user($uuid);
     }
 }
