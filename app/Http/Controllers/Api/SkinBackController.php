@@ -24,7 +24,27 @@ class SkinBackController extends BaseApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function serve(Request $request, $uuidOrName = '', $size = 0): Response
+    public function serveUuid(Request $request, $uuidOrName, $size = 0): Response
+    {
+        $size = (int) $size;
+        $this->minepic->initialize($uuidOrName);
+        $this->minepic->updateStats();
+
+        return $this->pngResponse(
+            (string) $this->minepic->renderSkinCurrentUser($size, ImageSection::BACK)
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $uuidOrName
+     * @param int     $size
+     *
+     * @throws \Throwable
+     *
+     * @return Response
+     */
+    public function serveUsername(Request $request, $uuidOrName, $size = 0): Response
     {
         $size = (int) $size;
         $this->minepic->initialize($uuidOrName);

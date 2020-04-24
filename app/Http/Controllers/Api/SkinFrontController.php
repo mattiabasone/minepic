@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Image\ImageSection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -16,21 +17,41 @@ class SkinFrontController extends BaseApiController
      * Serve Avatar.
      *
      * @param \Illuminate\Http\Request
-     * @param string $uuidOrName User UUID or Username
+     * @param string $uuid User UUID or Username
      * @param int    $size
      *
      * @throws \Throwable
      *
      * @return \Illuminate\Http\Response
      */
-    public function serve(Request $request, $uuidOrName = '', $size = 0): Response
+    public function serveUuid(Request $request, $uuid, $size = 0): Response
     {
         $size = (int) $size;
-        $this->minepic->initialize($uuidOrName);
+        $this->minepic->initialize($uuid);
         $this->minepic->updateStats();
 
         return $this->pngResponse(
-            (string) $this->minepic->renderSkinCurrentUser($size, 'F')
+            (string) $this->minepic->renderSkinCurrentUser($size, ImageSection::FRONT)
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $username
+     * @param int     $size
+     *
+     * @throws \Throwable
+     *
+     * @return Response
+     */
+    public function serveUsername(Request $request, $username, $size = 0): Response
+    {
+        $size = (int) $size;
+        $this->minepic->initialize($username);
+        $this->minepic->updateStats();
+
+        return $this->pngResponse(
+            (string) $this->minepic->renderSkinCurrentUser($size, ImageSection::FRONT)
         );
     }
 }

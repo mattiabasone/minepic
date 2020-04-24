@@ -16,10 +16,11 @@ class CleanupUuidOrName
         if (isset($route[2]['uuidOrName'])) {
             $route[2]['uuidOrName'] = \preg_replace("#\.png.*#", '', $route[2]['uuidOrName']);
             $route[2]['uuidOrName'] = \preg_replace('#[^a-zA-Z0-9_]#', '', $route[2]['uuidOrName']);
-            $request->setRouteResolver(static function () use ($route) {
-                return $route;
-            });
         }
+
+        $request->setRouteResolver(static function () use ($route) {
+            return $route;
+        });
 
         return $next($request);
     }

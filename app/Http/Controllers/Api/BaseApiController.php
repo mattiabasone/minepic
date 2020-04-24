@@ -38,28 +38,28 @@ abstract class BaseApiController extends BaseController
     }
 
     /**
-     * @param Request $request    Injected Request
-     * @param string  $uuidOrName
-     * @param int     $size       Avatar size User UUID or name
+     * @param Request $request Injected Request
+     * @param string  $uuid
+     * @param int     $size    Avatar size User UUID or name
      *
      * @return Response
      */
-    abstract public function serve(Request $request, $uuidOrName = '', $size = 0): Response;
+    abstract public function serveUuid(Request $request, string $uuid, $size = 256): Response;
 
     /**
-     * Isometric Avatar with Size.
-     *
-     * @param Request $request    Injected Request
-     * @param int     $size       Avatar size
-     * @param string  $uuidOrName User UUID or name
+     * @param Request $request  Injected Request
+     * @param string  $username
+     * @param int     $size     Avatar size User UUID or name
      *
      * @return Response
      */
-    public function serveWithSize(Request $request, $size = 0, $uuidOrName = ''): Response
-    {
-        return $this->serve($request, $uuidOrName, $size);
-    }
+    abstract public function serveUsername(Request $request, string $username, $size = 256): Response;
 
+    /**
+     * @param string $image
+     *
+     * @return Response
+     */
     public function pngResponse(string $image)
     {
         return $this->responseFactory->make($image, Response::HTTP_OK, ['Content-Type' => 'image/png']);

@@ -7,9 +7,6 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-/**
- * Class BaseApiController.
- */
 class IsometricAvatarController extends BaseApiController
 {
     /**
@@ -23,11 +20,30 @@ class IsometricAvatarController extends BaseApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function serve(Request $request, $uuidOrName = '', $size = 0): Response
+    public function serveUuid(Request $request, $uuidOrName, $size = 0): Response
     {
         $size = (int) $size;
 
         $this->minepic->initialize($uuidOrName);
+        $this->minepic->updateStats();
+
+        return $this->pngResponse((string) $this->minepic->isometricAvatarCurrentUser($size));
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $username
+     * @param int     $size
+     *
+     * @throws \Throwable
+     *
+     * @return Response
+     */
+    public function serveUsername(Request $request, string $username, $size = 0): Response
+    {
+        $size = (int) $size;
+
+        $this->minepic->initialize($username);
         $this->minepic->updateStats();
 
         return $this->pngResponse((string) $this->minepic->isometricAvatarCurrentUser($size));
