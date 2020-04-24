@@ -1,8 +1,8 @@
 # Minepic API Website
 
-![Build](https://img.shields.io/github/workflow/status/mattiabasone/minepic.org/Testing%20App%20(Lumen%20with%20MySQL)/master)
-![Coverage](https://img.shields.io/coveralls/github/mattiabasone/minepic.org)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mattiabasone/minepic.org/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mattiabasone/minepic.org/?branch=master)
+![Build](https://img.shields.io/github/workflow/status/mattiabasone/minepic/Testing%20App%20(Lumen%20with%20MySQL)/master)
+[![Coverage Status](https://coveralls.io/repos/github/mattiabasone/minepic/badge.svg?branch=master)](https://coveralls.io/github/mattiabasone/minepic?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mattiabasone/minepic/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mattiabasone/minepic/?branch=master)
 
 Minepic is a simple API for displaying Minecraft avatars and skins, it's based on [Lumen](https://lumen.laravel.com/).
 

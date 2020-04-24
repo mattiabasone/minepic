@@ -35,7 +35,7 @@ class Core
      *
      * @var Account
      */
-    private $userdata;
+    private ?Account $userdata;
 
     /**
      * Full userdata.
