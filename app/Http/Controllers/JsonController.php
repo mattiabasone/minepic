@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Core as MinepicCore;
+use App\Exceptions\NotFoundHttpJsonException;
 use App\Models\AccountStats;
 use App\Repositories\AccountRepository;
 use App\Resolvers\UsernameResolver;
@@ -91,7 +92,7 @@ class JsonController extends BaseController
         $account = $this->minepicCore->getUserdata();
 
         if ($account === null) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpJsonException("User not found");
         }
         $resource = new Fractal\Resource\Item($account, new AccountBasicDataTransformer());
 
@@ -114,7 +115,7 @@ class JsonController extends BaseController
     {
         $uuid = $this->usernameResolver->resolve($username);
         if ($uuid === env('DEFAULT_UUID')) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpJsonException("User not found");
         }
 
         return $this->user($uuid);
@@ -123,19 +124,19 @@ class JsonController extends BaseController
     /**
      * Update User data.
      *
-     * @param string $uuidOrName
+     * @param string $uuid
      *
      * @throws \Exception
      *
      * @return JsonResponse
      */
-    public function updateUser(string $uuidOrName): JsonResponse
+    public function updateUser(string $uuid): JsonResponse
     {
         // Force user update
         $this->minepicCore->setForceUpdate(true);
 
         // Check if user exists
-        if ($this->minepicCore->initialize($uuidOrName)) {
+        if ($this->minepicCore->initialize($uuid)) {
             // Check if data has been updated
             if ($this->minepicCore->userDataUpdated()) {
                 $response = ['ok' => true, 'message' => 'Data updated'];

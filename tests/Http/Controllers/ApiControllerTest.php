@@ -71,11 +71,24 @@ class ApiControllerTest extends TestCase
     }
 
     /**
-     * NOT WORKING.
+     * @test
+     */
+    public function shouldGenerateIsometricAvatar(): void
+    {
+        $this->get('/head/d59dcabb30424b978f7201d1a076637f');
+        $this->assertResponseOk();
+        $this->assertEquals(
+            'image/png',
+            $this->response->headers->get('Content-Type')
+        );
+    }
+
+    /**
+     * @test
      */
     public function shouldFailUpdatingUnExistingUser(): void
     {
-        $this->get('/update/_Cyb3r_Mega_Fail');
+        $this->get('/update/d59dcabb30424b978f7201ffffffffff');
 
         $expectedStatusCode = 404;
         $expectedContentType = 'application/json';

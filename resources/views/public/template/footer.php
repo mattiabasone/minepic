@@ -4,7 +4,7 @@
             <div class="block">
                 <h3>GitHub</h3>
                 Follow the development at<br />
-                <a target="_blank" href="https://github.com/mattiabasone/minepic-api">https://github.com/mattiabasone/minepic-api</a>
+                <a target="_blank" href="https://github.com/mattiabasone/minepic">https://github.com/mattiabasone/minepic</a>
             </div>
         </div>
         <div class="col-md-4">
@@ -23,7 +23,8 @@
     <div class="row">
         <div class="col-md-12">
             MinePic &copy; 2013-<?php echo date("Y"); ?> - All rights reserved<br />
-            SSL by <a href="https://letsencrypt.org/">Let’s Encrypt</a> ❤️
+            SSL by <a href="https://letsencrypt.org/">Let’s Encrypt</a> ❤️<br />
+            Frontend designed by <a href="https://hacklover.net">hackLover</a>
         </div>
     </div>
 </div><!-- close copy -->

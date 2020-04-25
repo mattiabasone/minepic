@@ -13,18 +13,18 @@ class IsometricAvatarController extends BaseApiController
      * Serve isometric avatar.
      *
      * @param \Illuminate\Http\Request
-     * @param string $uuidOrName User UUID or Username
+     * @param string $uuid User UUID
      * @param int    $size
      *
      * @throws \Throwable
      *
      * @return \Illuminate\Http\Response
      */
-    public function serveUuid(Request $request, $uuidOrName, $size = 0): Response
+    public function serveUuid(Request $request, $uuid, $size = 0): Response
     {
         $size = (int) $size;
 
-        $this->minepic->initialize($uuidOrName);
+        $this->minepic->initialize($uuid);
         $this->minepic->updateStats();
 
         return $this->pngResponse((string) $this->minepic->isometricAvatarCurrentUser($size));
