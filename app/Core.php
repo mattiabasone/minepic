@@ -7,10 +7,7 @@ namespace App;
 use App\Cache\UserNotFoundCache;
 use App\Events\Account\UsernameChangeEvent;
 use App\Helpers\Storage\Files\SkinsStorage;
-use App\Image\ImageSection;
 use App\Image\IsometricAvatar;
-use App\Image\Sections\Avatar;
-use App\Image\Sections\Skin;
 use App\Minecraft\MojangAccount;
 use App\Minecraft\MojangClient;
 use App\Models\Account;
@@ -95,6 +92,14 @@ class Core
         $this->accountRepository = $accountRepository;
         $this->accountStatsRepository = $accountStatsRepository;
         $this->mojangClient = $mojangClient;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentUserSkinImage(): string
+    {
+        return $this->currentUserSkinImage;
     }
 
     /**
@@ -319,24 +324,6 @@ class Core
     }
 
     /**
-     * Show rendered avatar.
-     *
-     * @param int
-     * @param mixed
-     *
-     * @throws \Throwable
-     *
-     * @return Avatar
-     */
-    public function avatarCurrentUser(int $size = 0): Avatar
-    {
-        $avatar = new Avatar($this->currentUserSkinImage);
-        $avatar->renderAvatar($size);
-
-        return $avatar;
-    }
-
-    /**
      * Default Avatar Isometric.
      *
      * @param int $size
@@ -381,32 +368,6 @@ class Core
     }
 
     /**
-     * Return rendered skin.
-     *
-     * @param int
-     * @param string
-     *
-     * @throws \Throwable
-     *
-     * @return Skin
-     */
-    public function renderSkinCurrentUser(int $size = 0, string $type = ImageSection::FRONT): Skin
-    {
-        $skin = new Skin($this->currentUserSkinImage);
-        $skin->renderSkin($size, $type);
-
-        return $skin;
-    }
-
-    /**
-     * Return a Skin object of the current user.
-     */
-    public function skinCurrentUser(): Skin
-    {
-        return new Skin($this->currentUserSkinImage);
-    }
-
-    /**
      * Set force update.
      *
      * @param bool $forceUpdate
@@ -430,14 +391,10 @@ class Core
      *
      * @param string
      */
-    public function updateStats($type = 'request'): void
+    public function updateStats(): void
     {
         if (!empty($this->userdata->uuid) && env('STATS_ENABLED') && $this->userdata->uuid !== env('DEFAULT_UUID')) {
-            if ($type === 'request') {
-                $this->accountStatsRepository->incrementRequestCounter($this->userdata->uuid);
-            } elseif ($type === 'search') {
-                $this->accountStatsRepository->incrementSearchCounter($this->userdata->uuid);
-            }
+            $this->accountStatsRepository->incrementRequestCounter($this->userdata->uuid);
         }
     }
 

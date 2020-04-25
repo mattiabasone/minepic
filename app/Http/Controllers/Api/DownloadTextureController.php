@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Core as MinepicCore;
+use App\Image\Sections\Skin;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
@@ -37,12 +38,11 @@ class DownloadTextureController extends BaseController
     }
 
     /**
-     * Serve Avatar.
+     * Download user texture.
      *
-     * @param \Illuminate\Http\Request
      * @param string $uuid User UUID or Username
      *
-     * @throws \App\Image\Exceptions\ImageResourceCreationFailedException
+     * @throws \App\Image\Exceptions\ImageCreateFromPngFailedException
      *
      * @return \Illuminate\Http\Response
      */
@@ -53,9 +53,9 @@ class DownloadTextureController extends BaseController
             'Content-Type' => 'image/png',
         ];
         $this->minepic->initialize($uuid);
-        $avatarImage = $this->minepic->skinCurrentUser();
-        $avatarImage->prepareTextureDownload();
+        $userSkin = new Skin($this->minepic->getCurrentUserSkinImage());
+        $userSkin->prepareTextureDownload();
 
-        return $this->responseFactory->make($avatarImage, 200, $headers);
+        return $this->responseFactory->make($userSkin, 200, $headers);
     }
 }

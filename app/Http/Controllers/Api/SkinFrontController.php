@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 /**
- * Class BaseApiController.
+ * Class SkinFrontController.
  */
 class SkinFrontController extends BaseApiController
 {
@@ -30,8 +30,10 @@ class SkinFrontController extends BaseApiController
         $this->minepic->initialize($uuid);
         $this->minepic->updateStats();
 
+        $skinPath = $this->minepic->getCurrentUserSkinImage();
+
         return $this->pngResponse(
-            (string) $this->minepic->renderSkinCurrentUser($size, ImageSection::FRONT)
+            (string) $this->rendering->skin($skinPath, $size, ImageSection::FRONT)
         );
     }
 }

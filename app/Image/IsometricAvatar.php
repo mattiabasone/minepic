@@ -122,16 +122,6 @@ class IsometricAvatar
     }
 
     /**
-     * Change checkCacheStatusFlag value.
-     *
-     * @param bool $flag
-     */
-    public function checkCacheStatus(bool $flag)
-    {
-        $this->checkCacheStatusFlag = $flag;
-    }
-
-    /**
      * Point for face section.
      *
      * @param int $size
@@ -199,7 +189,7 @@ class IsometricAvatar
         $avatar = new Avatar($this->skinPath);
 
         // Face
-        $avatar->renderAvatar(self::HEAD_BASE_SIZE, ImageSection::FRONT);
+        $avatar->render(self::HEAD_BASE_SIZE, ImageSection::FRONT);
 
         $face = new \Imagick();
         $face->readImageBlob((string) $avatar);
@@ -216,7 +206,7 @@ class IsometricAvatar
         );
 
         // Top
-        $avatar->renderAvatar(self::HEAD_BASE_SIZE, ImageSection::TOP);
+        $avatar->render(self::HEAD_BASE_SIZE, ImageSection::TOP);
 
         $top = new \Imagick();
         $top->readImageBlob((string) $avatar);
@@ -233,7 +223,7 @@ class IsometricAvatar
         );
 
         // Right
-        $avatar->renderAvatar(self::HEAD_BASE_SIZE, ImageSection::RIGHT);
+        $avatar->render(self::HEAD_BASE_SIZE, ImageSection::RIGHT);
 
         $right = new \Imagick();
         $right->readImageBlob((string) $avatar);

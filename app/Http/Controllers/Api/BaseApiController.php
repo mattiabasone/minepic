@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Core as MinepicCore;
+use App\Image\Rendering;
 use App\Resolvers\UsernameResolver;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -19,15 +20,19 @@ abstract class BaseApiController extends BaseController
     /**
      * @var MinepicCore
      */
-    protected $minepic;
+    protected MinepicCore $minepic;
     /**
      * @var ResponseFactory
      */
-    protected $responseFactory;
+    protected ResponseFactory $responseFactory;
     /**
      * @var UsernameResolver
      */
     protected UsernameResolver $usernameResolver;
+    /**
+     * @var Rendering
+     */
+    protected Rendering $rendering;
 
     /**
      * Api constructor.
@@ -35,15 +40,18 @@ abstract class BaseApiController extends BaseController
      * @param MinepicCore      $minepic          Minepic Core Instance
      * @param ResponseFactory  $responseFactory  Response Factory
      * @param UsernameResolver $usernameResolver
+     * @param Rendering        $rendering
      */
     public function __construct(
         MinepicCore $minepic,
         ResponseFactory $responseFactory,
-        UsernameResolver $usernameResolver
+        UsernameResolver $usernameResolver,
+        Rendering $rendering
     ) {
         $this->minepic = $minepic;
         $this->responseFactory = $responseFactory;
         $this->usernameResolver = $usernameResolver;
+        $this->rendering = $rendering;
     }
 
     /**
@@ -76,7 +84,7 @@ abstract class BaseApiController extends BaseController
      *
      * @return Response
      */
-    public function pngResponse(string $image)
+    public function pngResponse(string $image): Response
     {
         return $this->responseFactory->make($image, Response::HTTP_OK, ['Content-Type' => 'image/png']);
     }

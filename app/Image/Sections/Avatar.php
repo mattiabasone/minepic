@@ -126,7 +126,7 @@ class Avatar extends ImageSection
      * @throws \App\Image\Exceptions\InvalidSectionSpecifiedException|\App\Image\Exceptions\ImageTrueColorCreationFailedException
      * @throws \App\Image\Exceptions\ImageCreateFromPngFailedException
      */
-    public function renderAvatar(int $size = 0, string $type = self::FRONT): void
+    public function render(int $size = 0, string $type = self::FRONT): void
     {
         if ($size <= 0 || $size > env('MAX_AVATAR_SIZE')) {
             $size = (int) env('DEFAULT_AVATAR_SIZE');

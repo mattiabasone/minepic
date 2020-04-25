@@ -29,7 +29,7 @@ class Skin extends ImageSection
      *
      * @throws \Throwable
      */
-    public function renderSkin(int $skin_height = 256, $type = self::FRONT): void
+    public function render(int $skin_height = 256, $type = self::FRONT): void
     {
         if ($type !== self::BACK) {
             $type = self::FRONT;
@@ -53,7 +53,7 @@ class Skin extends ImageSection
         \imagefilledrectangle($this->imgResource, 0, 0, 16 * $scale, 32 * $scale, $transparent);
 
         $tmpAvatar = new Avatar($this->skinPath);
-        $tmpAvatar->renderAvatar(8, $type);
+        $tmpAvatar->render(8, $type);
         // Front
         if ($type === self::FRONT) {
             // Head
