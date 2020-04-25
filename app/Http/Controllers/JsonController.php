@@ -7,11 +7,13 @@ namespace App\Http\Controllers;
 use App\Core as MinepicCore;
 use App\Models\AccountStats;
 use App\Repositories\AccountRepository;
-use App\Repositories\AccountStatsRepository;
-use Carbon\Carbon;
+use App\Resolvers\UsernameResolver;
+use App\Transformers\Account\AccountBasicDataTransformer;
+use App\Transformers\Account\AccountTypeaheadTransformer;
 use Illuminate\Http\JsonResponse;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
+use League\Fractal;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\ArraySerializer;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -21,36 +23,45 @@ class JsonController extends BaseController
     /**
      * @var ResponseFactory
      */
-    private $responseFactory;
+    private ResponseFactory $responseFactory;
     /**
      * @var MinepicCore
      */
-    private $minepicCore;
+    private MinepicCore $minepicCore;
     /**
      * @var AccountRepository
      */
-    private $accountRepository;
-    /**
-     * @var AccountStatsRepository
-     */
-    private $accountStatsRepository;
+    private AccountRepository $accountRepository;
     /**
      * @var Manager
      */
-    private $dataManger;
+    private Manager $dataManger;
+    /**
+     * @var UsernameResolver
+     */
+    private UsernameResolver $usernameResolver;
 
+    /**
+     * JsonController constructor.
+     *
+     * @param AccountRepository $accountRepository
+     * @param MinepicCore       $minepicCore
+     * @param Manager           $dataManger
+     * @param ResponseFactory   $responseFactory
+     * @param UsernameResolver  $usernameResolver
+     */
     public function __construct(
         AccountRepository $accountRepository,
-        AccountStatsRepository $accountStatsRepository,
         MinepicCore $minepicCore,
         Manager $dataManger,
-        ResponseFactory $responseFactory
+        ResponseFactory $responseFactory,
+        UsernameResolver $usernameResolver
     ) {
         $this->accountRepository = $accountRepository;
-        $this->accountStatsRepository = $accountStatsRepository;
         $this->minepicCore = $minepicCore;
         $this->dataManger = $dataManger;
         $this->responseFactory = $responseFactory;
+        $this->usernameResolver = $usernameResolver;
 
         $this->dataManger->setSerializer(new ArraySerializer());
     }
@@ -82,22 +93,31 @@ class JsonController extends BaseController
         if ($account === null) {
             throw new NotFoundHttpException();
         }
-
-        $accountStats = $this->accountStatsRepository->findByUuid($account->uuid);
+        $resource = new Fractal\Resource\Item($account, new AccountBasicDataTransformer());
 
         $response = [
             'ok' => true,
-            'userdata' => [
-                'uuid' => $account->uuid,
-                'username' => $account->username,
-                'count_request' => $accountStats->count_request,
-                'count_search' => $accountStats->count_search,
-                'last_request' => Carbon::createFromTimestamp($accountStats->time_request)->format(Carbon::ATOM),
-                'last_search' => Carbon::createFromTimestamp($accountStats->time_search)->format(Carbon::ATOM),
-            ],
+            'data' => $this->dataManger->createData($resource)->toArray(),
         ];
 
         return $this->responseFactory->json($response, $httpStatus);
+    }
+
+    /**
+     * @param string $username
+     *
+     * @throws \Exception
+     *
+     * @return JsonResponse
+     */
+    public function userWithUsername(string $username): JsonResponse
+    {
+        $uuid = $this->usernameResolver->resolve($username);
+        if ($uuid === env('DEFAULT_UUID')) {
+            throw new NotFoundHttpException();
+        }
+
+        return $this->user($uuid);
     }
 
     /**
@@ -149,17 +169,16 @@ class JsonController extends BaseController
      */
     public function userTypeahead($term): JsonResponse
     {
-        $response = [];
-        $accounts = $this->accountRepository->filterPaginate(['term' => $term], 15);
-        // TODO: migrate to transformers
-        foreach ($accounts->items() as $account) {
-            $response[] = [
-                'value' => $account->uuid,
-                'label' => $account->username,
-            ];
-        }
+        $accountsPagination = $this->accountRepository->filterPaginate(['term' => $term], 15);
 
-        return $this->responseFactory->json($response);
+        $resource = new Fractal\Resource\Collection(
+            $accountsPagination->items(),
+            new AccountTypeaheadTransformer()
+        );
+
+        return $this->responseFactory->json(
+            $this->dataManger->createData($resource)->toArray()
+        );
     }
 
     /**

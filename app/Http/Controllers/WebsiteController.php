@@ -7,12 +7,14 @@ namespace App\Http\Controllers;
 use App\Core as MinepicCore;
 use App\Misc\SplashMessage;
 use App\Models\AccountStats;
-use App\Repositories\AccountStatsRepository;
 use App\Resolvers\UsernameResolver;
-use Carbon\Carbon;
+use App\Transformers\Account\AccountBasicDataTransformer;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
+use League\Fractal;
+use League\Fractal\Manager;
+use League\Fractal\Serializer\ArraySerializer;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -48,10 +50,6 @@ class WebsiteController extends BaseController
      */
     private ResponseFactory $responseFactory;
     /**
-     * @var AccountStatsRepository
-     */
-    private AccountStatsRepository $accountStatsRepository;
-    /**
      * @var MinepicCore
      */
     private MinepicCore $minepicCore;
@@ -59,24 +57,30 @@ class WebsiteController extends BaseController
      * @var UsernameResolver
      */
     private UsernameResolver $usernameResolver;
+    /**
+     * @var Manager
+     */
+    private Manager $dataManager;
 
     /**
      * WebsiteController constructor.
      *
-     * @param AccountStatsRepository $accountStatsRepository
-     * @param MinepicCore            $minepicCore
-     * @param ResponseFactory        $responseFactory
+     * @param MinepicCore      $minepicCore
+     * @param ResponseFactory  $responseFactory
+     * @param UsernameResolver $usernameResolver
+     * @param Manager          $dataManager
      */
     public function __construct(
-        AccountStatsRepository $accountStatsRepository,
         MinepicCore $minepicCore,
         ResponseFactory $responseFactory,
-        UsernameResolver $usernameResolver
+        UsernameResolver $usernameResolver,
+        Manager $dataManager
     ) {
         $this->responseFactory = $responseFactory;
-        $this->accountStatsRepository = $accountStatsRepository;
         $this->minepicCore = $minepicCore;
         $this->usernameResolver = $usernameResolver;
+        $this->dataManager = $dataManager;
+        $this->dataManager->setSerializer(new ArraySerializer());
     }
 
     /**
@@ -142,7 +146,7 @@ class WebsiteController extends BaseController
     /**
      * User stats page.
      *
-     * @param string $uuidOrName
+     * @param string $uuid
      *
      * @throws \Exception
      *
@@ -151,25 +155,18 @@ class WebsiteController extends BaseController
     public function user(string $uuid): Response
     {
         if ($this->minepicCore->initialize($uuid)) {
-            $userdata = $this->minepicCore->getUserdata();
-            $userstats = $this->accountStatsRepository->findByUuid($userdata->uuid);
+            $account = $this->minepicCore->getUserdata();
 
             $headerData = [
-                'title' => $userdata->username.' usage statistics - Minepic',
-                'description' => 'MinePic usage statistics for the user '.$userdata->username,
+                'title' => $account->username.' usage statistics - Minepic',
+                'description' => 'MinePic usage statistics for the user '.$account->username,
                 'keywords' => 'Minecraft, Minecraft avatar viewer, pic, minepic avatar viewer, skin, '.
                     'minecraft skin, avatar, minecraft avatar, generator, skin generator, skin viewer',
             ];
 
+            $accountResource = new Fractal\Resource\Item($account, new AccountBasicDataTransformer());
             $bodyData = [
-                'user' => [
-                    'uuid' => $userdata->uuid,
-                    'username' => $userdata->username,
-                    'count_request' => $userstats->count_request,
-                    'count_search' => $userstats->count_search,
-                    'last_request' => Carbon::createFromTimestamp($userstats->time_request)->format(Carbon::ATOM),
-                    'last_search' => Carbon::createFromTimestamp($userstats->time_search)->format(Carbon::ATOM),
-                ],
+                'user' => $this->dataManager->createData($accountResource)->toArray(),
             ];
 
             return $this->renderPage('user', $bodyData, $headerData);
@@ -185,7 +182,7 @@ class WebsiteController extends BaseController
      *
      * @return Response
      */
-    public function userWithUsername(string $username)
+    public function userWithUsername(string $username): Response
     {
         $uuid = $this->usernameResolver->resolve($username);
         if ($uuid === env('DEFAULT_UUID')) {

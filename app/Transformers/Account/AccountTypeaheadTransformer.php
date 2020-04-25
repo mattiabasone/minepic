@@ -2,20 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Minepic\Account\Transformers;
+namespace App\Transformers\Account;
 
 use App\Models\Account;
 use League\Fractal;
 
-/**
- * Class AccountTypeaheadTransformer.
- */
 class AccountTypeaheadTransformer extends Fractal\TransformerAbstract
 {
     public function transform(Account $account): array
     {
         return [
-            'value' => $account->username,
+            'uuid' => $account->uuid,
+            'username' => $account->username,
         ];
     }
 }

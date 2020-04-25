@@ -29,7 +29,7 @@ class AccountRepository extends BaseRepository
     {
         $query = $this->query();
         if (\array_key_exists('term', $filters)) {
-            $query->where('username', 'LIKE', $filters['term'].'%');
+            $query->where('username', 'LIKE', '%'.$filters['term'].'%');
         }
 
         return $query;

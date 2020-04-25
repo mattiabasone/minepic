@@ -7,7 +7,6 @@ namespace App\Resolvers;
 use App\Cache\UserNotFoundCache;
 use App\Minecraft\MojangClient;
 use App\Repositories\AccountRepository;
-use Illuminate\Support\Facades\Log;
 
 class UsernameResolver
 {
@@ -35,7 +34,7 @@ class UsernameResolver
      *
      * @return string
      */
-    public function resolve(string $username): ?string
+    public function resolve(string $username): string
     {
         /** @var \App\Models\Account $account */
         $account = $this->accountRepository->findLastUpdatedByUsername($username);
@@ -43,20 +42,16 @@ class UsernameResolver
             return $account->uuid;
         }
 
-        if (UserNotFoundCache::has($username)) {
-            Log::debug('User not found cache hit');
+        if (!UserNotFoundCache::has($username)) {
+            try {
+                $mojangAccount = $this->mojangClient->sendUsernameInfoRequest($username);
 
-            return env('DEFAULT_UUID');
+                return $mojangAccount->getUuid();
+            } catch (\Throwable $exception) {
+                UserNotFoundCache::add($username);
+            }
         }
 
-        try {
-            $mojangAccount = $this->mojangClient->sendUsernameInfoRequest($username);
-
-            return $mojangAccount->getUuid();
-        } catch (\Throwable $exception) {
-            UserNotFoundCache::add($username);
-
-            return env('DEFAULT_UUID');
-        }
+        return (string) env('DEFAULT_UUID');
     }
 }

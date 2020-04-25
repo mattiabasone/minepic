@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Cache;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class UserNotFoundCache
 {
@@ -16,9 +17,15 @@ class UserNotFoundCache
      *
      * @return bool
      */
-    public static function has(string $usernameOrUuid)
+    public static function has(string $usernameOrUuid): bool
     {
-        return Cache::has(self::PREFIX.\md5($usernameOrUuid));
+        if (Cache::has(self::PREFIX.\md5($usernameOrUuid))) {
+            Log::debug('User not found cache hit');
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -26,7 +33,7 @@ class UserNotFoundCache
      *
      * @return bool
      */
-    public static function add($usernameOrUuid)
+    public static function add($usernameOrUuid): bool
     {
         return Cache::add(self::PREFIX.\md5($usernameOrUuid), 1, self::TTL);
     }

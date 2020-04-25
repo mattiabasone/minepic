@@ -66,6 +66,7 @@ $router->get('/user/{username:[a-zA-Z0-9_]+}', 'WebsiteController@userWithUserna
 // JSON
 $router->group(['prefix' => 'api/v1'], static function () use ($router) {
     $router->get('user/{uuid:[0-9a-fA-F]{32}}', 'JsonController@user');
+    $router->get('user/{username:[a-zA-Z0-9_]+}', 'JsonController@userWithUsername');
     $router->get('user/{uuid:[0-9a-fA-F]{32}}/update', 'JsonController@updateUser');
 
     $router->get('uuid/{uuid}', 'JsonController@uuidToUsername');

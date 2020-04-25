@@ -7,7 +7,7 @@
                     foreach ($lastRequests as $req) {
                         echo '<div class="my-wrap">'
                             . '<img class="show-user-info" onload="$(this).fadeIn(1200);" rel="tooltip" '
-                            .'data-user="'.$req->username.'" data-toggle="tooltip" data-placement="top" '
+                            .'data-user="'.$req->uuid.'" data-toggle="tooltip" data-placement="top" '
                             .'src="'.url('avatar/64/'.$req->uuid).'" alt="'.$req->username.'" '
                             .'title="'.$req->username.'" />'
                             . '</div>'."\n";
@@ -33,7 +33,7 @@
                 <div class="input-group">
                     <input id="user-search" class="form-control" placeholder="Minecraft username..." autocomplete="off" type="text" name="username">
                     <span class="input-group-btn">
-<button id="user-search-butt" class="btn btn-info">Find!</button>
+<button id="user-search-btn" class="btn btn-info">Find!</button>
 </span>
                 </div>
             </div>

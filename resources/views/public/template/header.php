@@ -8,13 +8,15 @@
     <meta name="robots" content="Index, Follow"/>
     <meta name="author" content="Mattia: info[AT]minepic.org" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="<?php echo url('/assets/img/favicon.ico'); ?>" />
+    <link rel="icon" href="<?php echo url('/favicon.ico'); ?>" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
           crossorigin="anonymous">
     <link rel="stylesheet" href="<?php echo url('/assets/css/typeahead.css'); ?>" />
     <link rel="stylesheet" href="<?php echo url('/assets/css/style.css'); ?>" />
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"
+            integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+            crossorigin="anonymous"></script>
 </head>
 <body>
 

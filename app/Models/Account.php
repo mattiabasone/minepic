@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string         $cape
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ * @property AccountStats   $stats
  */
 class Account extends Model
 {
@@ -37,4 +38,12 @@ class Account extends Model
         'skin',
         'cape',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function stats(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(AccountStats::class, 'uuid', 'uuid');
+    }
 }
