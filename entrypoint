@@ -5,6 +5,4 @@ if [ ! -f "/app/.env" ]; then
     exit 1
 fi
 
-cd /app
-
 php artisan swoole:http start

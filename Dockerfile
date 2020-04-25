@@ -52,6 +52,8 @@ RUN mkdir ${APP_PATH} && \
 
 WORKDIR ${APP_PATH}
 
+USER ${APP_USER}
+
 CMD ["/entrypoint"]
 
 EXPOSE 1215
