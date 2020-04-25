@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace App\Resolvers;
 
 use App\Cache\UserNotFoundCache;
 use App\Events\Account\UsernameChangeEvent;
@@ -16,10 +16,7 @@ use App\Repositories\AccountStatsRepository;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class Core.
- */
-class Core
+class UuidResolver
 {
     /**
      * Requested string.
@@ -36,14 +33,13 @@ class Core
      *
      * @var Account
      */
-    private ?Account $userdata;
-
+    private ?Account $account;
     /**
      * Full userdata.
      *
      * @var MojangAccount
      */
-    private ?MojangAccount $apiUserdata;
+    private ?MojangAccount $mojangAccount;
     /**
      * User data has been updated?
      *
@@ -104,7 +100,7 @@ class Core
      */
     private function checkDbCache(): bool
     {
-        $accountUpdatedAtTimestamp = $this->userdata->updated_at->timestamp ?? 0;
+        $accountUpdatedAtTimestamp = $this->account->updated_at->timestamp ?? 0;
 
         return (\time() - $accountUpdatedAtTimestamp) < env('USERDATA_CACHE_TIME');
     }
@@ -114,9 +110,9 @@ class Core
      *
      * @return Account
      */
-    public function getUserdata(): Account
+    public function getAccount(): Account
     {
-        return $this->userdata ?? new Account();
+        return $this->account ?? new Account();
     }
 
     /**
@@ -132,7 +128,7 @@ class Core
             return false;
         }
 
-        $this->userdata = $account;
+        $this->account = $account;
         $this->uuid = $account->uuid;
 
         return true;
@@ -154,17 +150,17 @@ class Core
         }
 
         if ($this->getFullUserdataApi()) {
-            $this->userdata = $this->accountRepository->create([
-                'username' => $this->apiUserdata->getUsername(),
-                'uuid' => $this->apiUserdata->getUuid(),
-                'skin' => $this->apiUserdata->getSkin(),
-                'cape' => $this->apiUserdata->getCape(),
+            $this->account = $this->accountRepository->create([
+                'username' => $this->mojangAccount->getUsername(),
+                'uuid' => $this->mojangAccount->getUuid(),
+                'skin' => $this->mojangAccount->getSkin(),
+                'cape' => $this->mojangAccount->getCape(),
             ]);
 
             $this->saveRemoteSkin();
 
             $this->accountStatsRepository->create([
-                'uuid' => $this->userdata->uuid,
+                'uuid' => $this->account->uuid,
                 'count_search' => 0,
                 'count_request' => 0,
                 'time_search' => 0,
@@ -188,7 +184,7 @@ class Core
      *
      * @return bool
      */
-    public function initialize(string $string): bool
+    public function resolve(string $string): bool
     {
         $this->dataUpdated = false;
         $this->request = $string;
@@ -207,10 +203,10 @@ class Core
      */
     private function updateUserFailUpdate(): bool
     {
-        if (isset($this->userdata->uuid)) {
-            ++$this->userdata->fail_count;
+        if (isset($this->account->uuid)) {
+            ++$this->account->fail_count;
 
-            return $this->userdata->save();
+            return $this->account->save();
         }
 
         return false;
@@ -221,27 +217,27 @@ class Core
      */
     private function updateDbUser(): bool
     {
-        if (isset($this->userdata->username) && $this->userdata->uuid !== '') {
+        if (isset($this->account->username) && $this->account->uuid !== '') {
             // Get data from API
             if ($this->getFullUserdataApi()) {
-                $originalUsername = $this->userdata->username;
+                $originalUsername = $this->account->username;
                 // Update database
                 $this->accountRepository->update([
-                    'username' => $this->apiUserdata->getUsername(),
-                    'skin' => $this->apiUserdata->getSkin(),
-                    'cape' => $this->apiUserdata->getCape(),
+                    'username' => $this->mojangAccount->getUsername(),
+                    'skin' => $this->mojangAccount->getSkin(),
+                    'cape' => $this->mojangAccount->getCape(),
                     'fail_count' => 0,
-                ], $this->userdata->id);
+                ], $this->account->id);
 
-                $this->userdata->touch();
-                $this->userdata->refresh();
+                $this->account->touch();
+                $this->account->refresh();
 
                 // Update skin
                 $this->saveRemoteSkin();
 
                 // Log username change
-                if ($this->userdata->username !== $originalUsername && $originalUsername !== '') {
-                    $this->logUsernameChange($this->userdata->uuid, $originalUsername, $this->userdata->username);
+                if ($this->account->username !== $originalUsername && $originalUsername !== '') {
+                    $this->logUsernameChange($this->account->uuid, $originalUsername, $this->account->username);
                 }
                 $this->dataUpdated = true;
 
@@ -250,8 +246,8 @@ class Core
 
             $this->updateUserFailUpdate();
 
-            if (!SkinsStorage::exists($this->userdata->uuid)) {
-                SkinsStorage::copyAsSteve($this->userdata->uuid);
+            if (!SkinsStorage::exists($this->account->uuid)) {
+                SkinsStorage::copyAsSteve($this->account->uuid);
             }
         }
         $this->dataUpdated = false;
@@ -291,12 +287,12 @@ class Core
     private function getFullUserdataApi(): bool
     {
         try {
-            $this->apiUserdata = $this->mojangClient->getUuidInfo($this->request);
+            $this->mojangAccount = $this->mojangClient->getUuidInfo($this->request);
 
             return true;
         } catch (\Exception $e) {
             Log::error($e->getTraceAsString(), ['request' => $this->request]);
-            $this->apiUserdata = null;
+            $this->mojangAccount = null;
 
             return false;
         }
@@ -311,17 +307,17 @@ class Core
      */
     public function saveRemoteSkin(): bool
     {
-        if (!empty($this->userdata->skin) && $this->userdata->skin !== '') {
+        if (!empty($this->account->skin) && $this->account->skin !== '') {
             try {
-                $skinData = $this->mojangClient->getSkin($this->userdata->skin);
+                $skinData = $this->mojangClient->getSkin($this->account->skin);
 
-                return SkinsStorage::save($this->userdata->uuid, $skinData);
+                return SkinsStorage::save($this->account->uuid, $skinData);
             } catch (\Exception $e) {
                 Log::error($e->getTraceAsString());
             }
         }
 
-        return SkinsStorage::copyAsSteve($this->userdata->uuid);
+        return SkinsStorage::copyAsSteve($this->account->uuid);
     }
 
     /**
@@ -340,7 +336,7 @@ class Core
     private function forceUpdatePossible(): bool
     {
         return ($this->forceUpdate) &&
-            ((\time() - $this->userdata->updated_at->timestamp) > env('MIN_USERDATA_UPDATE_INTERVAL'));
+            ((\time() - $this->account->updated_at->timestamp) > env('MIN_USERDATA_UPDATE_INTERVAL'));
     }
 
     /**
@@ -350,8 +346,8 @@ class Core
      */
     public function updateStats(): void
     {
-        if (!empty($this->userdata->uuid) && $this->userdata->uuid !== MinecraftDefaults::UUID && env('STATS_ENABLED')) {
-            $this->accountStatsRepository->incrementRequestCounter($this->userdata->uuid);
+        if (!empty($this->account->uuid) && $this->account->uuid !== MinecraftDefaults::UUID && env('STATS_ENABLED')) {
+            $this->accountStatsRepository->incrementRequestCounter($this->account->uuid);
         }
     }
 
@@ -391,7 +387,7 @@ class Core
     private function setFailedRequest(string $errorMessage = ''): void
     {
         Log::notice($errorMessage, ['request' => $this->request]);
-        $this->userdata = null;
+        $this->account = null;
         $this->request = '';
     }
 }

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Core as MinepicCore;
 use App\Exceptions\NotFoundHttpJsonException;
 use App\Minecraft\MinecraftDefaults;
 use App\Models\AccountStats;
 use App\Repositories\AccountRepository;
 use App\Resolvers\UsernameResolver;
+use App\Resolvers\UuidResolver;
 use App\Transformers\Account\AccountBasicDataTransformer;
 use App\Transformers\Account\AccountTypeaheadTransformer;
 use Illuminate\Http\JsonResponse;
@@ -26,9 +26,9 @@ class JsonController extends BaseController
      */
     private ResponseFactory $responseFactory;
     /**
-     * @var MinepicCore
+     * @var UuidResolver
      */
-    private MinepicCore $minepicCore;
+    private UuidResolver $uuidResolver;
     /**
      * @var AccountRepository
      */
@@ -46,20 +46,20 @@ class JsonController extends BaseController
      * JsonController constructor.
      *
      * @param AccountRepository $accountRepository
-     * @param MinepicCore       $minepicCore
+     * @param UuidResolver      $uuidResolver
      * @param Manager           $dataManger
      * @param ResponseFactory   $responseFactory
      * @param UsernameResolver  $usernameResolver
      */
     public function __construct(
         AccountRepository $accountRepository,
-        MinepicCore $minepicCore,
+        UuidResolver $uuidResolver,
         Manager $dataManger,
         ResponseFactory $responseFactory,
         UsernameResolver $usernameResolver
     ) {
         $this->accountRepository = $accountRepository;
-        $this->minepicCore = $minepicCore;
+        $this->uuidResolver = $uuidResolver;
         $this->dataManger = $dataManger;
         $this->responseFactory = $responseFactory;
         $this->usernameResolver = $usernameResolver;
@@ -78,7 +78,7 @@ class JsonController extends BaseController
      */
     public function user($uuid = ''): JsonResponse
     {
-        if (!$this->minepicCore->initialize($uuid)) {
+        if (!$this->uuidResolver->resolve($uuid)) {
             $httpStatus = 404;
             $response = [
                 'ok' => false,
@@ -89,7 +89,7 @@ class JsonController extends BaseController
         }
 
         $httpStatus = 200;
-        $account = $this->minepicCore->getUserdata();
+        $account = $this->uuidResolver->getAccount();
 
         if ($account === null) {
             throw new NotFoundHttpJsonException('User not found');
@@ -133,16 +133,16 @@ class JsonController extends BaseController
     public function updateUser(string $uuid): JsonResponse
     {
         // Force user update
-        $this->minepicCore->setForceUpdate(true);
+        $this->uuidResolver->setForceUpdate(true);
 
         // Check if user exists
-        if ($this->minepicCore->initialize($uuid)) {
+        if ($this->uuidResolver->resolve($uuid)) {
             // Check if data has been updated
-            if ($this->minepicCore->userDataUpdated()) {
+            if ($this->uuidResolver->userDataUpdated()) {
                 $response = ['ok' => true, 'message' => 'Data updated'];
                 $httpStatus = 200;
             } else {
-                $userdata = $this->minepicCore->getUserdata();
+                $userdata = $this->uuidResolver->getAccount();
                 $dateString = $userdata->updated_at->toW3cString();
 
                 $response = [

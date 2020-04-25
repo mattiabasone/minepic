@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/constants.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
@@ -81,10 +82,6 @@ $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(SwooleTW\Http\LumenServiceProvider::class);
 
-if (env('APP_DEBUG')) {
-    $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
-}
-
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
@@ -98,7 +95,7 @@ if (env('APP_DEBUG')) {
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
-], function ($router) {
+], static function ($router) {
     require __DIR__.'/../routes/web.php';
 });
 

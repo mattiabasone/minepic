@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Core as MinepicCore;
 use App\Minecraft\MinecraftDefaults;
 use App\Misc\SplashMessage;
 use App\Models\AccountStats;
 use App\Resolvers\UsernameResolver;
+use App\Resolvers\UuidResolver;
 use App\Transformers\Account\AccountBasicDataTransformer;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
@@ -51,9 +51,9 @@ class WebsiteController extends BaseController
      */
     private ResponseFactory $responseFactory;
     /**
-     * @var MinepicCore
+     * @var UuidResolver
      */
-    private MinepicCore $minepicCore;
+    private UuidResolver $uuidResolver;
     /**
      * @var UsernameResolver
      */
@@ -66,19 +66,19 @@ class WebsiteController extends BaseController
     /**
      * WebsiteController constructor.
      *
-     * @param MinepicCore      $minepicCore
+     * @param UuidResolver     $uuidResolver
      * @param ResponseFactory  $responseFactory
      * @param UsernameResolver $usernameResolver
      * @param Manager          $dataManager
      */
     public function __construct(
-        MinepicCore $minepicCore,
+        UuidResolver $uuidResolver,
         ResponseFactory $responseFactory,
         UsernameResolver $usernameResolver,
         Manager $dataManager
     ) {
         $this->responseFactory = $responseFactory;
-        $this->minepicCore = $minepicCore;
+        $this->uuidResolver = $uuidResolver;
         $this->usernameResolver = $usernameResolver;
         $this->dataManager = $dataManager;
         $this->dataManager->setSerializer(new ArraySerializer());
@@ -155,8 +155,8 @@ class WebsiteController extends BaseController
      */
     public function user(string $uuid): Response
     {
-        if ($this->minepicCore->initialize($uuid)) {
-            $account = $this->minepicCore->getUserdata();
+        if ($this->uuidResolver->resolve($uuid)) {
+            $account = $this->uuidResolver->getAccount();
 
             $headerData = [
                 'title' => $account->username.' usage statistics - Minepic',

@@ -27,11 +27,11 @@ class SkinFrontController extends BaseApiController
     public function serveUuid(Request $request, $uuid, $size = 0): Response
     {
         $size = (int) $size;
-        $this->minepic->initialize($uuid);
-        $this->minepic->updateStats();
+        $this->uuidResolver->resolve($uuid);
+        $this->uuidResolver->updateStats();
 
         return $this->pngResponse(
-            (string) $this->rendering->skin($this->minepic->getUuid(), $size, ImageSection::FRONT)
+            (string) $this->rendering->skin($this->uuidResolver->getUuid(), $size, ImageSection::FRONT)
         );
     }
 }

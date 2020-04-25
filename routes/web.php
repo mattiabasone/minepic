@@ -13,65 +13,65 @@ declare(strict_types=1);
 |
 */
 
-/* @var \Illuminate\Routing\Router $router */
+/* @var \Laravel\Lumen\Routing\Router $router */
 
 $router->group(['middleware' => ['headers.cache', 'image.clean_params']], static function () use ($router) {
     // Avatar
     $router->group(['prefix' => 'avatar'], static function () use ($router) {
-        $router->get('/{uuid:[0-9a-fA-F]{32}}', 'Api\AvatarController@serveUuid');
-        $router->get('/{username:[a-zA-Z0-9_]+}', 'Api\AvatarController@serveUsername');
+        $router->get(ROUTE_UUID_MATCH, 'Api\AvatarController@serveUuid');
+        $router->get(ROUTE_USERNAME_MATCH, 'Api\AvatarController@serveUsername');
 
-        $router->get('/{size:[\d]+}/{uuid:[0-9a-fA-F]{32}}', 'Api\AvatarController@serveUuid');
-        $router->get('/{size:[\d]+}/{username:[a-zA-Z0-9_]+}', 'Api\AvatarController@serveUsername');
+        $router->get(ROUTE_SIZE_MATCH.ROUTE_UUID_MATCH, 'Api\AvatarController@serveUuid');
+        $router->get(ROUTE_SIZE_MATCH.ROUTE_USERNAME_MATCH, 'Api\AvatarController@serveUsername');
     });
 
     // Avatar (Isometric)
     $router->group(['prefix' => 'head'], static function () use ($router) {
-        $router->get('/{uuid:[0-9a-fA-F]{32}}', 'Api\IsometricAvatarController@serveUuid');
-        $router->get('/{username:[a-zA-Z0-9_]+}', 'Api\IsometricAvatarController@serveUsername');
+        $router->get(ROUTE_UUID_MATCH, 'Api\IsometricAvatarController@serveUuid');
+        $router->get(ROUTE_USERNAME_MATCH, 'Api\IsometricAvatarController@serveUsername');
 
-        $router->get('/{size:[\d]}/{uuid:[0-9a-fA-F]{32}}', 'Api\IsometricAvatarController@serveUuid');
-        $router->get('/{size:[\d]+}/{username:[a-zA-Z0-9_]+}', 'Api\IsometricAvatarController@serveUsername');
+        $router->get(ROUTE_SIZE_MATCH.ROUTE_UUID_MATCH, 'Api\IsometricAvatarController@serveUuid');
+        $router->get(ROUTE_SIZE_MATCH.ROUTE_USERNAME_MATCH, 'Api\IsometricAvatarController@serveUsername');
     });
 
     // Skin Front
     $router->group(['prefix' => 'skin'], static function () use ($router) {
-        $router->get('/{uuid:[0-9a-fA-F]{32}}', 'Api\SkinFrontController@serveUuid');
-        $router->get('/{username:[a-zA-Z0-9_]+}', 'Api\SkinFrontController@serveUsername');
+        $router->get(ROUTE_UUID_MATCH, 'Api\SkinFrontController@serveUuid');
+        $router->get(ROUTE_USERNAME_MATCH, 'Api\SkinFrontController@serveUsername');
 
-        $router->get('/{size:[\d]+}/{uuid:[0-9a-fA-F]{32}}', 'Api\SkinFrontController@serveUuid');
-        $router->get('/{size:[\d]+}/{username:[a-zA-Z0-9_]+}', 'Api\SkinFrontController@serveUsername');
+        $router->get(ROUTE_SIZE_MATCH.ROUTE_UUID_MATCH, 'Api\SkinFrontController@serveUuid');
+        $router->get(ROUTE_SIZE_MATCH.ROUTE_USERNAME_MATCH, 'Api\SkinFrontController@serveUsername');
     });
 
     // Skin Back
     $router->group(['prefix' => 'skin-back'], static function () use ($router) {
-        $router->get('/{uuid:[0-9a-fA-F]{32}}', 'Api\SkinBackController@serveUuid');
-        $router->get('/{username:[a-zA-Z0-9_]+}', 'Api\SkinBackController@serveUsername');
+        $router->get(ROUTE_UUID_MATCH, 'Api\SkinBackController@serveUuid');
+        $router->get(ROUTE_USERNAME_MATCH, 'Api\SkinBackController@serveUsername');
 
-        $router->get('/{size:[\d]+}/{uuid:[0-9a-fA-F]{32}}', 'Api\SkinBackController@serveUuid');
-        $router->get('/{size:[\d]+}/{username:[a-zA-Z0-9_]+}', 'Api\SkinBackController@serveUsername');
+        $router->get(ROUTE_SIZE_MATCH.ROUTE_UUID_MATCH, 'Api\SkinBackController@serveUuid');
+        $router->get(ROUTE_SIZE_MATCH.ROUTE_USERNAME_MATCH, 'Api\SkinBackController@serveUsername');
     });
 });
 
-$router->get('update/{uuid:[0-9a-fA-F]{32}}', 'JsonController@updateUser');
+$router->get('update'.ROUTE_UUID_MATCH, 'JsonController@updateUser');
 
 // Download
-$router->get('/download/{uuid:[0-9a-fA-F]{32}}', 'Api\DownloadTextureController@serve');
+$router->get('/download'.ROUTE_UUID_MATCH, 'Api\DownloadTextureController@serve');
 
 // HTML
 $router->get('/', 'WebsiteController@index');
-$router->get('/user/{uuid:[0-9a-fA-F]{32}}', 'WebsiteController@user');
-$router->get('/user/{username:[a-zA-Z0-9_]+}', 'WebsiteController@userWithUsername');
+$router->get('/user'.ROUTE_UUID_MATCH, 'WebsiteController@user');
+$router->get('/user'.ROUTE_USERNAME_MATCH, 'WebsiteController@userWithUsername');
 
 // JSON
 $router->group(['prefix' => 'api/v1'], static function () use ($router) {
-    $router->get('user/{uuid:[0-9a-fA-F]{32}}', 'JsonController@user');
-    $router->get('user/{username:[a-zA-Z0-9_]+}', 'JsonController@userWithUsername');
-    $router->get('user/{uuid:[0-9a-fA-F]{32}}/update', 'JsonController@updateUser');
+    $router->get('user'.ROUTE_UUID_MATCH, 'JsonController@user');
+    $router->get('user'.ROUTE_USERNAME_MATCH, 'JsonController@userWithUsername');
+    $router->get('user'.ROUTE_UUID_MATCH.'/update', 'JsonController@updateUser');
 
-    $router->get('uuid/{uuid}', 'JsonController@uuidToUsername');
+    $router->get('uuid'.ROUTE_UUID_MATCH, 'JsonController@uuidToUsername');
 
-    $router->get('typeahead/{username}', 'JsonController@userTypeahead');
+    $router->get('typeahead'.ROUTE_USERNAME_MATCH, 'JsonController@userTypeahead');
 
     $router->get('stats/user/most-wanted', 'JsonController@getMostWantedUsers');
 });

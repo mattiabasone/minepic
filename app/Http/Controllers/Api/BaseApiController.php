@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Core as MinepicCore;
 use App\Image\Rendering;
 use App\Resolvers\UsernameResolver;
+use App\Resolvers\UuidResolver;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
@@ -18,9 +18,9 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 abstract class BaseApiController extends BaseController
 {
     /**
-     * @var MinepicCore
+     * @var UuidResolver
      */
-    protected MinepicCore $minepic;
+    protected UuidResolver $uuidResolver;
     /**
      * @var ResponseFactory
      */
@@ -37,18 +37,18 @@ abstract class BaseApiController extends BaseController
     /**
      * Api constructor.
      *
-     * @param MinepicCore      $minepic          Minepic Core Instance
+     * @param UuidResolver     $uuidResolver     Minepic Core Instance
      * @param ResponseFactory  $responseFactory  Response Factory
      * @param UsernameResolver $usernameResolver
      * @param Rendering        $rendering
      */
     public function __construct(
-        MinepicCore $minepic,
+        UuidResolver $uuidResolver,
         ResponseFactory $responseFactory,
         UsernameResolver $usernameResolver,
         Rendering $rendering
     ) {
-        $this->minepic = $minepic;
+        $this->uuidResolver = $uuidResolver;
         $this->responseFactory = $responseFactory;
         $this->usernameResolver = $usernameResolver;
         $this->rendering = $rendering;

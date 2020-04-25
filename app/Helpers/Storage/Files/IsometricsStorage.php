@@ -13,5 +13,5 @@ class IsometricsStorage extends Storage
      *
      * @var string
      */
-    protected static $folder = 'isometrics';
+    protected static string $folder = 'isometrics';
 }

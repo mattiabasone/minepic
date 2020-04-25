@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Core as MinepicCore;
 use App\Helpers\Storage\Files\SkinsStorage;
 use App\Image\Sections\Skin;
+use App\Resolvers\UuidResolver;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
@@ -17,9 +17,9 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 class DownloadTextureController extends BaseController
 {
     /**
-     * @var MinepicCore
+     * @var UuidResolver
      */
-    protected MinepicCore $minepic;
+    protected UuidResolver $uuidResolver;
 
     /** @var ResponseFactory */
     protected ResponseFactory $responseFactory;
@@ -27,14 +27,14 @@ class DownloadTextureController extends BaseController
     /**
      * Api constructor.
      *
-     * @param MinepicCore     $minepic
+     * @param UuidResolver    $uuidResolver
      * @param ResponseFactory $responseFactory
      */
     public function __construct(
-        MinepicCore $minepic,
+        UuidResolver $uuidResolver,
         ResponseFactory $responseFactory
     ) {
-        $this->minepic = $minepic;
+        $this->uuidResolver = $uuidResolver;
         $this->responseFactory = $responseFactory;
     }
 
@@ -53,9 +53,9 @@ class DownloadTextureController extends BaseController
             'Content-Disposition' => 'Attachment;filename='.$uuid.'.png',
             'Content-Type' => 'image/png',
         ];
-        $this->minepic->initialize($uuid);
+        $this->uuidResolver->resolve($uuid);
 
-        $skinPath = SkinsStorage::getPath($this->minepic->getUuid());
+        $skinPath = SkinsStorage::getPath($this->uuidResolver->getUuid());
 
         $userSkin = new Skin($skinPath);
         $userSkin->prepareTextureDownload();

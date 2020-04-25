@@ -16,7 +16,7 @@ class Storage
      *
      * @var string
      */
-    protected static $folder;
+    protected static string $folder;
 
     /**
      * Skin Path.
@@ -25,7 +25,7 @@ class Storage
      *
      * @return string
      */
-    public static function getPath(string $uuid = ''): string
+    public static function getPath(string $uuid): string
     {
         if ($uuid === '') {
             $uuid = MinecraftDefaults::UUID;
@@ -36,8 +36,12 @@ class Storage
 
     /**
      * Checks if file exists.
+     *
+     * @param string $uuid
+     *
+     * @return bool
      */
-    public static function exists(string $uuid = ''): bool
+    public static function exists(string $uuid): bool
     {
         return \file_exists(static::getPath($uuid));
     }
@@ -45,7 +49,8 @@ class Storage
     /**
      * Save the skin to file.
      *
-     * @param mixed $rawData
+     * @param string $uuid
+     * @param mixed  $rawData
      *
      * @return bool
      */
@@ -67,7 +72,7 @@ class Storage
      *
      * @param mixed
      */
-    public static function copyAsSteve(string $string = ''): bool
+    public static function copyAsSteve(string $string): bool
     {
         if ($string !== '') {
             return \copy(

@@ -18,7 +18,6 @@ class ApiControllerTest extends TestCase
 
     /**
      * @test
-     * @group pippo
      */
     public function shouldReturnSteveAvatar(): void
     {
@@ -28,6 +27,9 @@ class ApiControllerTest extends TestCase
         $this->assertEquals($expectedImage, $actualImage);
     }
 
+    /**
+     * @test
+     */
     public function shouldReturnUserAvatarWithSize(): void
     {
         $this->get('/avatar/200/_Cyb3r');
@@ -36,7 +38,9 @@ class ApiControllerTest extends TestCase
         $this->assertEquals($expectedImage, $actualImage);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function shouldReturnSteveSkin(): void
     {
         $this->get('/skin/Steve');
@@ -45,7 +49,9 @@ class ApiControllerTest extends TestCase
         $this->assertEquals($expectedImage, $actualImage);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function shouldReturnSteveSkinBack(): void
     {
         $this->get('/skin-back/Steve');
@@ -54,6 +60,9 @@ class ApiControllerTest extends TestCase
         $this->assertEquals($expectedImage, $actualImage);
     }
 
+    /**
+     * @test
+     */
     public function shouldReturnSteveHead(): void
     {
         $this->get('/head/Steve');
@@ -63,7 +72,9 @@ class ApiControllerTest extends TestCase
         $this->assertEquals($expectedImage, $actualImage);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function shouldDownloadSteveTexture(): void
     {
         $this->get('/download/8667ba71b85a4004af54457a9734eed7');
@@ -79,6 +90,19 @@ class ApiControllerTest extends TestCase
     public function shouldGenerateIsometricAvatar(): void
     {
         $this->get('/head/d59dcabb30424b978f7201d1a076637f');
+        $this->assertResponseOk();
+        $this->assertEquals(
+            'image/png',
+            $this->response->headers->get('Content-Type')
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function shouldGenerateAvatarUsingDifferentUuidFormat(): void
+    {
+        $this->get('/avatar/d59dcabb-3042-4b97-8f72-01d1a076637f');
         $this->assertResponseOk();
         $this->assertEquals(
             'image/png',

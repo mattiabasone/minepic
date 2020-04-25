@@ -27,12 +27,12 @@ class AvatarController extends BaseApiController
     {
         $size = (int) $size;
 
-        $this->minepic->initialize($uuid);
-        $this->minepic->updateStats();
+        $this->uuidResolver->resolve($uuid);
+        $this->uuidResolver->updateStats();
 
         return $this->pngResponse(
             (string) $this->rendering->avatar(
-                $this->minepic->getUuid(),
+                $this->uuidResolver->getUuid(),
                 $size
             )
         );

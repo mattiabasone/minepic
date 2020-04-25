@@ -24,11 +24,11 @@ class IsometricAvatarController extends BaseApiController
     {
         $size = (int) $size;
 
-        $this->minepic->initialize($uuid);
-        $this->minepic->updateStats();
+        $this->uuidResolver->resolve($uuid);
+        $this->uuidResolver->updateStats();
 
         return $this->pngResponse(
-            (string) $this->rendering->isometricAvatar($this->minepic->getUuid(), $size)
+            (string) $this->rendering->isometricAvatar($this->uuidResolver->getUuid(), $size)
         );
     }
 }
