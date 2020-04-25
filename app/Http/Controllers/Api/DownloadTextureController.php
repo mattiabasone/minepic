@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Core as MinepicCore;
+use App\Helpers\Storage\Files\SkinsStorage;
 use App\Image\Sections\Skin;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
@@ -53,7 +54,10 @@ class DownloadTextureController extends BaseController
             'Content-Type' => 'image/png',
         ];
         $this->minepic->initialize($uuid);
-        $userSkin = new Skin($this->minepic->getCurrentUserSkinImage());
+
+        $skinPath = SkinsStorage::getPath($this->minepic->getUuid());
+
+        $userSkin = new Skin($skinPath);
         $userSkin->prepareTextureDownload();
 
         return $this->responseFactory->make($userSkin, 200, $headers);

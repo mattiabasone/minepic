@@ -7,7 +7,6 @@ namespace App;
 use App\Cache\UserNotFoundCache;
 use App\Events\Account\UsernameChangeEvent;
 use App\Helpers\Storage\Files\SkinsStorage;
-use App\Image\IsometricAvatar;
 use App\Minecraft\MojangAccount;
 use App\Minecraft\MojangClient;
 use App\Models\Account;
@@ -28,6 +27,10 @@ class Core
      */
     private string $request = '';
     /**
+     * @var string
+     */
+    private string $uuid;
+    /**
      * Userdata from/to DB.
      *
      * @var Account
@@ -40,33 +43,22 @@ class Core
      * @var MojangAccount
      */
     private ?MojangAccount $apiUserdata;
-
     /**
      * User data has been updated?
      *
      * @var bool
      */
     private bool $dataUpdated = false;
-
     /**
      * Set force update.
      *
      * @var bool
      */
     private bool $forceUpdate = false;
-
-    /**
-     * Current image path.
-     *
-     * @var string
-     */
-    private string $currentUserSkinImage;
-
     /**
      * @var AccountRepository
      */
     private AccountRepository $accountRepository;
-
     /**
      * @var AccountStatsRepository
      */
@@ -97,9 +89,9 @@ class Core
     /**
      * @return string
      */
-    public function getCurrentUserSkinImage(): string
+    public function getUuid(): ?string
     {
-        return $this->currentUserSkinImage;
+        return $this->uuid;
     }
 
     /**
@@ -114,26 +106,6 @@ class Core
         $accountUpdatedAtTimestamp = $this->userdata->updated_at->timestamp ?? 0;
 
         return (\time() - $accountUpdatedAtTimestamp) < env('USERDATA_CACHE_TIME');
-    }
-
-    /**
-     * Load saved Account information.
-     *
-     * @param Account|null $account
-     *
-     * @return bool
-     */
-    private function loadAccountData(?Account $account): bool
-    {
-        if ($account !== null) {
-            $this->userdata = $account;
-            $this->currentUserSkinImage = SkinsStorage::getPath($this->userdata->uuid);
-
-            return true;
-        }
-        $this->currentUserSkinImage = SkinsStorage::getPath(env('DEFAULT_USERNAME'));
-
-        return false;
     }
 
     /**
@@ -155,7 +127,14 @@ class Core
     {
         $account = $this->accountRepository->findByUuid($this->request);
 
-        return $this->loadAccountData($account);
+        if ($account === null) {
+            return false;
+        }
+
+        $this->userdata = $account;
+        $this->uuid = $account->uuid;
+
+        return true;
     }
 
     /**
@@ -182,7 +161,6 @@ class Core
             ]);
 
             $this->saveRemoteSkin();
-            $this->currentUserSkinImage = SkinsStorage::getPath($this->apiUserdata->getUuid());
 
             $this->accountStatsRepository->create([
                 'uuid' => $this->userdata->uuid,
@@ -324,28 +302,6 @@ class Core
     }
 
     /**
-     * Default Avatar Isometric.
-     *
-     * @param int $size
-     *
-     * @throws \Throwable
-     *
-     * @return IsometricAvatar
-     */
-    public function isometricAvatarCurrentUser(int $size = 0): IsometricAvatar
-    {
-        $uuid = $this->userdata->uuid ?? env('DEFAULT_UUID');
-        $timestamp = $this->userdata->updated_at->timestamp ?? \time();
-        $isometricAvatar = new IsometricAvatar(
-            $uuid,
-            $timestamp
-        );
-        $isometricAvatar->render($size);
-
-        return $isometricAvatar;
-    }
-
-    /**
      * Save skin image.
      *
      * @param mixed
@@ -434,8 +390,8 @@ class Core
     private function setFailedRequest(string $errorMessage = ''): void
     {
         Log::notice($errorMessage, ['request' => $this->request]);
+        $this->uuid = env('DEFAULT_UUID');
         $this->userdata = null;
-        $this->currentUserSkinImage = SkinsStorage::getPath(env('DEFAULT_USERNAME'));
         $this->request = '';
     }
 }

@@ -27,6 +27,8 @@ class IsometricAvatarController extends BaseApiController
         $this->minepic->initialize($uuid);
         $this->minepic->updateStats();
 
-        return $this->pngResponse((string) $this->minepic->isometricAvatarCurrentUser($size));
+        return $this->pngResponse(
+            (string) $this->rendering->isometricAvatar($this->minepic->getUuid(), $size)
+        );
     }
 }

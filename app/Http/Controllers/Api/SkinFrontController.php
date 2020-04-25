@@ -30,10 +30,8 @@ class SkinFrontController extends BaseApiController
         $this->minepic->initialize($uuid);
         $this->minepic->updateStats();
 
-        $skinPath = $this->minepic->getCurrentUserSkinImage();
-
         return $this->pngResponse(
-            (string) $this->rendering->skin($skinPath, $size, ImageSection::FRONT)
+            (string) $this->rendering->skin($this->minepic->getUuid(), $size, ImageSection::FRONT)
         );
     }
 }

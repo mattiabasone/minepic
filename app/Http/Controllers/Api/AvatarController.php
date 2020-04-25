@@ -30,10 +30,11 @@ class AvatarController extends BaseApiController
         $this->minepic->initialize($uuid);
         $this->minepic->updateStats();
 
-        $skinPath = $this->minepic->getCurrentUserSkinImage();
-
         return $this->pngResponse(
-            (string) $this->rendering->avatar($skinPath, $size)
+            (string) $this->rendering->avatar(
+                $this->minepic->getUuid(),
+                $size
+            )
         );
     }
 }

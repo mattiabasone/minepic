@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Image;
 
+use App\Helpers\Storage\Files\SkinsStorage;
 use App\Image\Sections\Avatar;
 use App\Image\Sections\Skin;
 
 class Rendering
 {
     /**
-     * @param string $imagePath
+     * @param string $uuid
      * @param int    $size
      * @param string $type
      *
@@ -20,21 +21,34 @@ class Rendering
      *
      * @return Avatar
      */
-    public function avatar(string $imagePath, int $size, $type = ImageSection::FRONT): Avatar
+    public function avatar(string $uuid, int $size, $type = ImageSection::FRONT): Avatar
     {
-        $avatar = new Avatar($imagePath);
+        $avatar = new Avatar(
+            SkinsStorage::getPath($uuid)
+        );
         $avatar->render($size, $type);
 
         return $avatar;
     }
 
-    public function isometricAvatar(string $imagePath, int $size): IsometricAvatar
+    /**
+     * @param string   $uuid
+     * @param int      $size
+     * @param int|null $lastUpdateTimestamp
+     *
+     * @throws Exceptions\SkinNotFountException
+     * @throws \Throwable
+     *
+     * @return IsometricAvatar
+     */
+    public function isometricAvatar(string $uuid, int $size, int $lastUpdateTimestamp = null): IsometricAvatar
     {
-        $uuid = $this->userdata->uuid ?? env('DEFAULT_UUID');
-        $timestamp = $this->userdata->updated_at->timestamp ?? \time();
+        if ($lastUpdateTimestamp === null) {
+            $lastUpdateTimestamp = \time();
+        }
         $isometricAvatar = new IsometricAvatar(
             $uuid,
-            $timestamp
+            $lastUpdateTimestamp
         );
         $isometricAvatar->render($size);
 
@@ -42,7 +56,7 @@ class Rendering
     }
 
     /**
-     * @param string $imagePath
+     * @param string $uuid
      * @param int    $size
      * @param string $type
      *
@@ -50,9 +64,11 @@ class Rendering
      *
      * @return Skin
      */
-    public function skin(string $imagePath, int $size, $type = ImageSection::FRONT): Skin
+    public function skin(string $uuid, int $size, $type = ImageSection::FRONT): Skin
     {
-        $skin = new Skin($imagePath);
+        $skin = new Skin(
+            SkinsStorage::getPath($uuid)
+        );
         $skin->render($size, $type);
 
         return $skin;

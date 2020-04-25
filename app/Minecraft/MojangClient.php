@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Minecraft;
 
+use App\Minecraft\Exceptions\UserNotFoundException;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Support\Facades\Log;
@@ -73,6 +74,11 @@ class MojangClient
     {
         try {
             $response = $this->httpClient->request($method, $url);
+            // No Content
+            if ($response->getStatusCode() === 204) {
+                return null;
+            }
+
             $responseContents = $response->getBody()->getContents();
             Log::debug('Minecraft API Response: '.$responseContents, ['method' => $method, 'url' => $url]);
 
@@ -94,20 +100,22 @@ class MojangClient
      * @param string $method
      * @param string $url
      *
-     * @return \Psr\Http\Message\ResponseInterface|null
+     * @throws \Throwable
+     *
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    private function sendRequest(string $method, string $url): ?ResponseInterface
+    private function sendRequest(string $method, string $url): ResponseInterface
     {
         try {
             return $this->httpClient->request($method, $url);
         } catch (BadResponseException $exception) {
             $this->handleGuzzleBadResponseException($exception);
 
-            return null;
+            throw $exception;
         } catch (\Throwable $exception) {
             $this->handleThrowable($exception);
 
-            return null;
+            throw $exception;
         }
     }
 
@@ -124,7 +132,11 @@ class MojangClient
     {
         $response = $this->sendApiRequest('GET', env('MINECRAFT_PROFILE_URL').$username);
 
-        return new MojangAccount($response['id'], $response['name']);
+        if ($response !== null) {
+            return new MojangAccount($response['id'], $response['name']);
+        }
+
+        throw new UserNotFoundException("Unknown user {$username}");
     }
 
     /**
@@ -139,10 +151,9 @@ class MojangClient
     public function getUuidInfo(string $uuid): MojangAccount
     {
         $response = $this->sendApiRequest('GET', env('MINECRAFT_SESSION_URL').$uuid);
-        $account = MojangAccountFactory::makeFromApiResponse($response);
 
-        if ($account !== null) {
-            return $account;
+        if ($response !== null) {
+            return MojangAccountFactory::makeFromApiResponse($response);
         }
 
         throw new \Exception('Cannot create data account');
@@ -153,11 +164,11 @@ class MojangClient
      *
      * @param string $skin Skin uuid
      *
-     * @throws \Exception
+     * @throws \Exception|\Throwable
      *
      * @return string
      */
-    public function getSkin(string $skin)
+    public function getSkin(string $skin): string
     {
         $response = $this->sendRequest('GET', env('MINECRAFT_TEXTURE_URL').$skin);
 
