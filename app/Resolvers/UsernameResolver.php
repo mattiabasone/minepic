@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Resolvers;
 
 use App\Cache\UserNotFoundCache;
+use App\Minecraft\MinecraftDefaults;
 use App\Minecraft\MojangClient;
 use App\Repositories\AccountRepository;
 
@@ -52,6 +53,6 @@ class UsernameResolver
             }
         }
 
-        return (string) env('DEFAULT_UUID');
+        return MinecraftDefaults::UUID;
     }
 }

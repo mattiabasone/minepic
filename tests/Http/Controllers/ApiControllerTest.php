@@ -16,7 +16,10 @@ class ApiControllerTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group pippo
+     */
     public function shouldReturnSteveAvatar(): void
     {
         $this->get('/avatar/Steve');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Minecraft\MinecraftDefaults;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -64,13 +65,13 @@ class AccountStats extends Model
      */
     public static function getMostWanted(int $limit = 14)
     {
-        $default_uuid = env('DEFAULT_UUID');
+        $defaultUuid = MinecraftDefaults::UUID;
 
         return DB::select(
             "SELECT a.`uuid`, a.`username`, s.`count_request`
              FROM (
               SELECT `uuid`, `count_request` FROM `accounts_stats`
-              WHERE `uuid` != '{$default_uuid}'
+              WHERE `uuid` != '{$defaultUuid}'
               ORDER BY `count_request` DESC
               LIMIT {$limit}
             ) s

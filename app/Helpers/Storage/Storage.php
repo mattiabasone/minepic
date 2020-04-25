@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Helpers\Storage;
 
+use App\Minecraft\MinecraftDefaults;
+
 /**
  * Class Storage.
  */
@@ -26,7 +28,7 @@ class Storage
     public static function getPath(string $uuid = ''): string
     {
         if ($uuid === '') {
-            $uuid = env('DEFAULT_USERNAME');
+            $uuid = MinecraftDefaults::UUID;
         }
 
         return \sprintf(storage_path(static::$folder.'/%s.png'), $uuid);
@@ -69,7 +71,7 @@ class Storage
     {
         if ($string !== '') {
             return \copy(
-                static::getPath(env('DEFAULT_USERNAME')),
+                static::getPath(MinecraftDefaults::UUID),
                 static::getPath($string)
             );
         }

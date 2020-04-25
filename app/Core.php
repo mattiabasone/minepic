@@ -7,6 +7,7 @@ namespace App;
 use App\Cache\UserNotFoundCache;
 use App\Events\Account\UsernameChangeEvent;
 use App\Helpers\Storage\Files\SkinsStorage;
+use App\Minecraft\MinecraftDefaults;
 use App\Minecraft\MojangAccount;
 use App\Minecraft\MojangClient;
 use App\Models\Account;
@@ -29,7 +30,7 @@ class Core
     /**
      * @var string
      */
-    private string $uuid;
+    private string $uuid = MinecraftDefaults::UUID;
     /**
      * Userdata from/to DB.
      *
@@ -89,7 +90,7 @@ class Core
     /**
      * @return string
      */
-    public function getUuid(): ?string
+    public function getUuid(): string
     {
         return $this->uuid;
     }
@@ -349,7 +350,7 @@ class Core
      */
     public function updateStats(): void
     {
-        if (!empty($this->userdata->uuid) && env('STATS_ENABLED') && $this->userdata->uuid !== env('DEFAULT_UUID')) {
+        if (!empty($this->userdata->uuid) && $this->userdata->uuid !== MinecraftDefaults::UUID && env('STATS_ENABLED')) {
             $this->accountStatsRepository->incrementRequestCounter($this->userdata->uuid);
         }
     }
@@ -390,7 +391,6 @@ class Core
     private function setFailedRequest(string $errorMessage = ''): void
     {
         Log::notice($errorMessage, ['request' => $this->request]);
-        $this->uuid = env('DEFAULT_UUID');
         $this->userdata = null;
         $this->request = '';
     }
