@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Image;
 
+use App\Image\Exceptions\ImageCreateFromPngFailedException;
 use App\Image\Exceptions\ImageTrueColorCreationFailedException;
 
 /**
@@ -23,7 +24,7 @@ abstract class ImageSection
      *
      * @var string
      */
-    protected $skinPath = '';
+    protected string $skinPath = '';
 
     /**
      * Resource with the image.
@@ -34,6 +35,8 @@ abstract class ImageSection
 
     /**
      * Avatar constructor.
+     *
+     * @param string $skinPath
      */
     public function __construct(string $skinPath)
     {
@@ -73,6 +76,25 @@ abstract class ImageSection
     }
 
     /**
+     * Creates imagecreatefrompng resource, it fails throws an Exception.
+     *
+     * @param string $path
+     *
+     * @throws ImageCreateFromPngFailedException
+     *
+     * @return resource
+     */
+    protected function createImageFromPng(string $path)
+    {
+        $resource = \imagecreatefrompng($path);
+        if ($resource === false) {
+            throw new ImageCreateFromPngFailedException("Cannot create png image from file {$path}");
+        }
+
+        return $resource;
+    }
+
+    /**
      * Create imagecreatetruecolor square empty image.
      *
      * @param $size
@@ -83,12 +105,12 @@ abstract class ImageSection
      */
     protected function createTrueColorSquare($size)
     {
-        $helm = \imagecreatetruecolor($size, $size);
-        if ($helm === false) {
-            throw new ImageTrueColorCreationFailedException();
+        $square = \imagecreatetruecolor($size, $size);
+        if ($square === false) {
+            throw new ImageTrueColorCreationFailedException('imagecreatetruecolor failed');
         }
 
-        return $helm;
+        return $square;
     }
 
     /**

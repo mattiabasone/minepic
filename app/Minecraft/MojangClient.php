@@ -67,7 +67,7 @@ class MojangClient
      *
      * @throws \Throwable
      *
-     * @return array|null
+     * @return array
      */
     private function sendApiRequest(string $method, string $url): ?array
     {
@@ -139,13 +139,13 @@ class MojangClient
     public function getUuidInfo(string $uuid): MojangAccount
     {
         $response = $this->sendApiRequest('GET', env('MINECRAFT_SESSION_URL').$uuid);
-        if ($response !== null) {
-            $account = MojangAccountFactory::makeFromApiResponse($response);
-            if ($account !== null) {
-                return $account;
-            }
-            throw new \Exception('Cannot create data account');
+        $account = MojangAccountFactory::makeFromApiResponse($response);
+
+        if ($account !== null) {
+            return $account;
         }
+
+        throw new \Exception('Cannot create data account');
     }
 
     /**

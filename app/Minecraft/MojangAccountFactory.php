@@ -53,7 +53,7 @@ class MojangAccountFactory
                     $skin = self::extractTextureIdFromUrl($textureData['textures']['SKIN']['url']);
                 }
 
-                if (isset($tmp['textures']['CAPE']['url'])) {
+                if (isset($textureData['textures']['CAPE']['url'])) {
                     $cape = self::extractTextureIdFromUrl($textureData['textures']['CAPE']['url']);
                 }
             }

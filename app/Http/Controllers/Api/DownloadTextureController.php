@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Core as MinepicCore;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
@@ -47,7 +46,7 @@ class DownloadTextureController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function serve(Request $request, string $uuid = ''): Response
+    public function serve(string $uuid = ''): Response
     {
         $headers = [
             'Content-Disposition' => 'Attachment;filename='.$uuid.'.png',

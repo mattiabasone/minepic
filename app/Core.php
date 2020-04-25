@@ -300,6 +300,8 @@ class Core
      *
      * @param mixed
      *
+     * @throws \Throwable
+     *
      * @return bool
      */
     private function getFullUserdataApi(): bool

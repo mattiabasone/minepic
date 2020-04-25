@@ -17,7 +17,6 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 use League\Fractal;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\ArraySerializer;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class JsonController extends BaseController
 {
@@ -92,7 +91,7 @@ class JsonController extends BaseController
         $account = $this->minepicCore->getUserdata();
 
         if ($account === null) {
-            throw new NotFoundHttpJsonException("User not found");
+            throw new NotFoundHttpJsonException('User not found');
         }
         $resource = new Fractal\Resource\Item($account, new AccountBasicDataTransformer());
 
@@ -115,7 +114,7 @@ class JsonController extends BaseController
     {
         $uuid = $this->usernameResolver->resolve($username);
         if ($uuid === env('DEFAULT_UUID')) {
-            throw new NotFoundHttpJsonException("User not found");
+            throw new NotFoundHttpJsonException('User not found');
         }
 
         return $this->user($uuid);

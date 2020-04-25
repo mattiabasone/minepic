@@ -124,6 +124,7 @@ class Avatar extends ImageSection
      * @param string $type Section rendered
      *
      * @throws \App\Image\Exceptions\InvalidSectionSpecifiedException|\App\Image\Exceptions\ImageTrueColorCreationFailedException
+     * @throws \App\Image\Exceptions\ImageCreateFromPngFailedException
      */
     public function renderAvatar(int $size = 0, string $type = self::FRONT): void
     {
@@ -131,7 +132,7 @@ class Avatar extends ImageSection
             $size = (int) env('DEFAULT_AVATAR_SIZE');
         }
         // generate png from url/path
-        $baseSkinImage = \imagecreatefrompng($this->skinPath);
+        $baseSkinImage = $this->createImageFromPng($this->skinPath);
         \imagealphablending($baseSkinImage, false);
         \imagesavealpha($baseSkinImage, true);
 

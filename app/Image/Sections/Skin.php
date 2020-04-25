@@ -7,22 +7,16 @@ namespace App\Image\Sections;
 use App\Image\Exceptions\ImageResourceCreationFailedException;
 use App\Image\ImageSection;
 
-/**
- * Class Skin.
- */
 class Skin extends ImageSection
 {
     /**
      * Create a PNG with raw texture.
      *
-     * @throws \App\Image\Exceptions\ImageResourceCreationFailedException
+     * @throws \App\Image\Exceptions\ImageCreateFromPngFailedException
      */
     public function prepareTextureDownload(): void
     {
-        $this->imgResource = \imagecreatefrompng($this->skinPath);
-        if ($this->imgResource === false) {
-            throw new ImageResourceCreationFailedException($this->skinPath.' does not contain a valid PNG');
-        }
+        $this->imgResource = $this->createImageFromPng($this->skinPath);
         \imagealphablending($this->imgResource, true);
         \imagesavealpha($this->imgResource, true);
     }
@@ -40,11 +34,11 @@ class Skin extends ImageSection
         if ($type !== self::BACK) {
             $type = self::FRONT;
         }
-        if ($skin_height === 0 || $skin_height < 0 || $skin_height > env('MAX_SKINS_SIZE')) {
+        if ($skin_height === 0 || $skin_height < 0 || $skin_height > (int) env('MAX_SKINS_SIZE')) {
             $skin_height = (int) env('DEFAULT_SKIN_SIZE');
         }
 
-        $image = \imagecreatefrompng($this->skinPath);
+        $image = $this->createImageFromPng($this->skinPath);
         $scale = $skin_height / 32;
         if ($scale === 0) {
             $scale = 1;
