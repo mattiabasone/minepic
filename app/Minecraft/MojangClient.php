@@ -152,11 +152,11 @@ class MojangClient
     {
         $response = $this->sendApiRequest('GET', env('MINECRAFT_SESSION_URL').$uuid);
 
-        if ($response !== null) {
-            return MojangAccountFactory::makeFromApiResponse($response);
+        if ($response === null) {
+            throw new \Exception('Cannot create data account');
         }
 
-        throw new \Exception('Cannot create data account');
+        return MojangAccountFactory::makeFromApiResponse($response);
     }
 
     /**
