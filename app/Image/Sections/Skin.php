@@ -10,6 +10,34 @@ use App\Image\ImageSection;
 class Skin extends ImageSection
 {
     /**
+     * @param string $type
+     *
+     * @return string
+     */
+    private function checkType(string $type): string
+    {
+        if ($type !== self::BACK) {
+            $type = self::FRONT;
+        }
+
+        return $type;
+    }
+
+    /**
+     * @param $skinHeight
+     *
+     * @return int
+     */
+    private function checkHeight($skinHeight): int
+    {
+        if ($skinHeight === 0 || $skinHeight < 0 || $skinHeight > (int) env('MAX_SKINS_SIZE')) {
+            $skinHeight = (int) env('DEFAULT_SKIN_SIZE');
+        }
+
+        return $skinHeight;
+    }
+
+    /**
      * Create a PNG with raw texture.
      *
      * @throws \App\Image\Exceptions\ImageCreateFromPngFailedException
@@ -31,12 +59,8 @@ class Skin extends ImageSection
      */
     public function render(int $skin_height = 256, $type = self::FRONT): void
     {
-        if ($type !== self::BACK) {
-            $type = self::FRONT;
-        }
-        if ($skin_height === 0 || $skin_height < 0 || $skin_height > (int) env('MAX_SKINS_SIZE')) {
-            $skin_height = (int) env('DEFAULT_SKIN_SIZE');
-        }
+        $type = $this->checkType($type);
+        $skin_height = $this->checkHeight($skin_height);
 
         $image = $this->createImageFromPng($this->skinPath);
         $scale = $skin_height / 32;
