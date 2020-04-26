@@ -167,6 +167,8 @@ class UuidResolver
                 'time_request' => 0,
             ]);
 
+            $this->uuid = $this->mojangAccount->getUuid();
+
             return true;
         }
 

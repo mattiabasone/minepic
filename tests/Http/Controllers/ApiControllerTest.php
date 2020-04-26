@@ -28,7 +28,7 @@ class ApiControllerTest extends TestCase
     }
 
     /**
-     *
+     * @test
      */
     public function shouldReturnUserAvatarWithSize(): void
     {
@@ -61,6 +61,7 @@ class ApiControllerTest extends TestCase
     }
 
     /**
+     * @test
      */
     public function shouldReturnSteveHead(): void
     {
