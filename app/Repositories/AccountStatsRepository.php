@@ -19,6 +19,7 @@ class AccountStatsRepository extends BaseRepository
 
     /**
      * @param string $uuid
+     *
      * @return \Illuminate\Database\Eloquent\Model|AccountStats|null
      */
     public function createEmptyStatsForUuid(string $uuid): ?AccountStats

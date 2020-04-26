@@ -90,10 +90,6 @@ class JsonController extends BaseController
 
         $httpStatus = 200;
         $account = $this->uuidResolver->getAccount();
-
-        if ($account === null) {
-            throw new NotFoundHttpJsonException('User not found');
-        }
         $resource = new Fractal\Resource\Item($account, new AccountBasicDataTransformer());
 
         $response = [

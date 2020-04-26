@@ -13,8 +13,8 @@ use App\Minecraft\MojangClient;
 use App\Models\Account;
 use App\Repositories\AccountRepository;
 use App\Repositories\AccountStatsRepository;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Log;
+use Event;
+use Log;
 
 class UuidResolver
 {
@@ -35,7 +35,7 @@ class UuidResolver
      */
     private ?Account $account;
     /**
-     * Full userdata.
+     * Full Minecraft/Mojang Account Data.
      *
      * @var MojangAccount
      */
@@ -143,8 +143,6 @@ class UuidResolver
     public function insertNewUuid(): bool
     {
         if (UserNotFoundCache::has($this->request)) {
-            Log::debug('Cache Hit Not Found', ['request' => $this->request]);
-
             return false;
         }
 
@@ -214,7 +212,7 @@ class UuidResolver
         if (isset($this->account->username) && $this->account->uuid !== '') {
             // Get data from API
             if ($this->getFullUserdataApi()) {
-                $originalUsername = $this->account->username;
+                $previousUsername = $this->account->username;
                 // Update database
                 $this->accountRepository->update([
                     'username' => $this->mojangAccount->getUsername(),
@@ -228,11 +226,8 @@ class UuidResolver
 
                 // Update skin
                 $this->saveRemoteSkin();
+                $this->logUsernameChange($this->account, $previousUsername);
 
-                // Log username change
-                if ($this->account->username !== $originalUsername && $originalUsername !== '') {
-                    $this->logUsernameChange($this->account->uuid, $originalUsername, $this->account->username);
-                }
                 $this->dataUpdated = true;
 
                 return true;
@@ -260,13 +255,14 @@ class UuidResolver
     /**
      * Log the username change.
      *
-     * @param $uuid string User UUID
-     * @param $prev string Previous username
-     * @param $new string New username
+     * @param $account Account User Account
+     * @param $previousUsername string Previous username
      */
-    private function logUsernameChange(string $uuid, string $prev, string $new): void
+    private function logUsernameChange(Account $account, string $previousUsername): void
     {
-        Event::dispatch(new UsernameChangeEvent($uuid, $prev, $new));
+        if ($account->username !== $previousUsername && $previousUsername !== '') {
+            Event::dispatch(new UsernameChangeEvent($account->uuid, $previousUsername, $account->username));
+        }
     }
 
     /**
