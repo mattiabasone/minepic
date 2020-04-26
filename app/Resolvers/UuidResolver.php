@@ -122,14 +122,13 @@ class UuidResolver
      */
     private function requestedUuidInDb(): bool
     {
-        $account = $this->accountRepository->findByUuid($this->request);
+        $this->account = $this->accountRepository->findByUuid($this->request);
 
-        if ($account === null) {
+        if ($this->account === null) {
             return false;
         }
 
-        $this->account = $account;
-        $this->uuid = $account->uuid;
+        $this->uuid = $this->account->uuid;
 
         return true;
     }
@@ -158,14 +157,7 @@ class UuidResolver
             ]);
 
             $this->saveRemoteSkin();
-
-            $this->accountStatsRepository->create([
-                'uuid' => $this->account->uuid,
-                'count_search' => 0,
-                'count_request' => 0,
-                'time_search' => 0,
-                'time_request' => 0,
-            ]);
+            $this->accountStatsRepository->createEmptyStatsForUuid($this->account->uuid);
 
             $this->uuid = $this->mojangAccount->getUuid();
 
@@ -367,7 +359,7 @@ class UuidResolver
                 $this->updateDbUser();
             }
 
-            if (!SkinsStorage::exists($this->request)) {
+            if (!SkinsStorage::exists($this->account->uuid)) {
                 $this->saveRemoteSkin();
             }
 

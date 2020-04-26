@@ -82,6 +82,10 @@ $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(SwooleTW\Http\LumenServiceProvider::class);
 
+if (env('APP_DEBUG')) {
+    $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

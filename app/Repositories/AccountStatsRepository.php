@@ -18,6 +18,21 @@ class AccountStatsRepository extends BaseRepository
     }
 
     /**
+     * @param string $uuid
+     * @return \Illuminate\Database\Eloquent\Model|AccountStats|null
+     */
+    public function createEmptyStatsForUuid(string $uuid): ?AccountStats
+    {
+        return $this->create([
+            'uuid' => $uuid,
+            'count_search' => 0,
+            'count_request' => 0,
+            'time_search' => 0,
+            'time_request' => 0,
+        ]);
+    }
+
+    /**
      * Increment request counter.
      *
      * @param string $uuid User UUID
