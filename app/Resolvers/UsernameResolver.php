@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Resolvers;
 
 use App\Cache\UserNotFoundCache;
+use App\Helpers\UserDataValidator;
 use App\Minecraft\MinecraftDefaults;
 use App\Minecraft\MojangClient;
 use App\Repositories\AccountRepository;
@@ -37,6 +38,10 @@ class UsernameResolver
      */
     public function resolve(string $username): string
     {
+        if (!$this->isValidUsername($username)) {
+            return MinecraftDefaults::UUID;
+        }
+
         /** @var \App\Models\Account $account */
         $account = $this->accountRepository->findLastUpdatedByUsername($username);
         if ($account) {
@@ -54,5 +59,15 @@ class UsernameResolver
         }
 
         return MinecraftDefaults::UUID;
+    }
+
+    /**
+     * @param string $username
+     *
+     * @return bool
+     */
+    private function isValidUsername(string $username): bool
+    {
+        return UserDataValidator::isValidUsername($username) || UserDataValidator::isValidEmail($username);
     }
 }

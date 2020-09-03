@@ -23,6 +23,10 @@ class UserDataValidator
 
     /**
      * Checks if the given string is a valid UUID.
+     *
+     * @param string $uuid
+     *
+     * @return bool
      */
     public static function isValidUuid(string $uuid): bool
     {
