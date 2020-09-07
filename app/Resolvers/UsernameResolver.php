@@ -44,7 +44,7 @@ class UsernameResolver
 
         /** @var \App\Models\Account $account */
         $account = $this->accountRepository->findLastUpdatedByUsername($username);
-        if ($account) {
+        if ($account !== null) {
             return $account->uuid;
         }
 

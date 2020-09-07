@@ -10,16 +10,9 @@ use App\Models\AccountNameChange;
 class UsernameChangeListener
 {
     /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * Handle the event.
+     *
+     * @param UsernameChangeEvent $event
      */
     public function handle(UsernameChangeEvent $event): void
     {

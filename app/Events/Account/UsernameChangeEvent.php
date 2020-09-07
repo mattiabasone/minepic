@@ -6,9 +6,6 @@ namespace App\Events\Account;
 
 use App\Events\Event;
 
-/**
- * Class UsernameChangeEvent.
- */
 class UsernameChangeEvent extends Event
 {
     /**

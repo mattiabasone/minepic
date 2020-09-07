@@ -2,6 +2,7 @@
 
 use App\Models\Account;
 use App\Models\AccountStats;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,9 +24,7 @@ class DatabaseSeeder extends Seeder
         AccountStats::create([
             'uuid' => 'd59dcabb30424b978f7201d1a076637f',
             'count_request' => 1,
-            'count_search' => 1,
-            'time_request' => time(),
-            'time_search' => time(),
+            'request_at' => Carbon::now(),
         ]);
     }
 }

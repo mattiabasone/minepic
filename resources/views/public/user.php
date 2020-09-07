@@ -20,14 +20,6 @@
                         <td>Last request</td>
                         <td><?php echo $user['last_request']; ?></td>
                     </tr>
-                    <tr>
-                        <td>Total search</td>
-                        <td><?php echo $user['count_request']; ?></td>
-                    </tr>
-                    <tr>
-                        <td>Last search</td>
-                        <td><?php echo $user['last_search']; ?></td>
-                    </tr>
                 </table>
                 <hr />
                 <div class="row">

@@ -5,29 +5,19 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Models\Account;
-use Czim\Repository\BaseRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 
-/**
- * Class AccountRepository.
- */
-class AccountRepository extends BaseRepository
+class AccountRepository
 {
-    /**
-     * @return string
-     */
-    public function model(): string
-    {
-        return Account::class;
-    }
-
     /**
      * @param array $filters
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
-    public function filterQuery(array $filters = []): \Illuminate\Database\Eloquent\Builder
+    public function filterQuery(array $filters = []): Builder
     {
-        $query = $this->query();
+        $query = Account::query();
         if (\array_key_exists('term', $filters)) {
             $query->where('username', 'LIKE', '%'.$filters['term'].'%');
         }
@@ -45,18 +35,22 @@ class AccountRepository extends BaseRepository
      */
     public function findByUuid(string $uuid, $columns = ['*']): ?Account
     {
-        return $this->findBy('uuid', $uuid, $columns);
+        return Account::whereUuid($uuid)
+            ->select($columns)
+            ->first();
     }
 
     /**
-     * @param string $uuid
+     * @param string $username
      * @param array  $columns
      *
      * @return Account
      */
-    public function findByUsername(string $uuid, $columns = ['*']): ?Account
+    public function findByUsername(string $username, $columns = ['*']): ?Account
     {
-        return $this->findBy('username', $uuid, $columns);
+        return Account::whereUsername($username)
+            ->select($columns)
+            ->first();
     }
 
     /**
@@ -65,13 +59,13 @@ class AccountRepository extends BaseRepository
      * @param string $uuid
      * @param array  $columns
      *
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     * @return Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
     public function findLastUpdatedByUsername(string $uuid, $columns = ['*'])
     {
-        return $this->query()
+        return Account::query()
             ->select($columns)
-            ->where('username', '=', $uuid)
+            ->whereUsername($uuid)
             ->orderBy('updated_at', 'desc')
             ->first();
     }
@@ -83,7 +77,7 @@ class AccountRepository extends BaseRepository
      * @param string   $pageName
      * @param int|null $page
      *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     public function filterPaginate(
         array $filters,
@@ -91,7 +85,7 @@ class AccountRepository extends BaseRepository
         $columns = ['*'],
         $pageName = 'page',
         $page = null
-    ): \Illuminate\Contracts\Pagination\LengthAwarePaginator {
+    ): LengthAwarePaginator {
         return $this->filterQuery($filters)
             ->paginate($perPage, $columns, $pageName, $page);
     }

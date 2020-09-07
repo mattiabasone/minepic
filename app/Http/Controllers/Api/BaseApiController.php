@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\Account\AccountImageServedEvent;
 use App\Image\Rendering;
 use App\Resolvers\UsernameResolver;
 use App\Resolvers\UuidResolver;
@@ -87,5 +88,13 @@ abstract class BaseApiController extends BaseController
     public function pngResponse(string $image): Response
     {
         return $this->responseFactory->make($image, Response::HTTP_OK, ['Content-Type' => 'image/png']);
+    }
+
+    /**
+     * @return void
+     */
+    protected function dispatchAccountImageServedEvent(): void
+    {
+        \Event::dispatch(new AccountImageServedEvent($this->uuidResolver->getAccount()));
     }
 }

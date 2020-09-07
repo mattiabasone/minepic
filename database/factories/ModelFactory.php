@@ -37,8 +37,6 @@ $factory->define(App\Models\AccountStats::class, function (Faker\Generator $fake
     return [
         'uuid' => $faker->uuid,
         'count_request' => $faker->randomNumber(6),
-        'count_search' => $faker->randomNumber(6),
-        'time_request' => $faker->unixTime,
-        'time_search' => $faker->unixTime,
+        'request_at' => $faker->dateTime,
     ];
 });

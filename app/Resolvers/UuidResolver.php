@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Resolvers;
 
 use App\Cache\UserNotFoundCache;
+use App\Events\Account\AccountCreatedEvent;
 use App\Events\Account\UsernameChangeEvent;
 use App\Helpers\Storage\Files\SkinsStorage;
 use App\Minecraft\MinecraftDefaults;
 use App\Minecraft\MojangAccount;
 use App\Minecraft\MojangClient;
 use App\Models\Account;
-use App\Repositories\AccountRepository;
-use App\Repositories\AccountStatsRepository;
 use Event;
 use Log;
 
@@ -31,13 +30,13 @@ class UuidResolver
     /**
      * Userdata from/to DB.
      *
-     * @var Account
+     * @var Account|null
      */
     private ?Account $account;
     /**
      * Full Minecraft/Mojang Account Data.
      *
-     * @var MojangAccount
+     * @var MojangAccount|null
      */
     private ?MojangAccount $mojangAccount;
     /**
@@ -52,14 +51,6 @@ class UuidResolver
      * @var bool
      */
     private bool $forceUpdate = false;
-    /**
-     * @var AccountRepository
-     */
-    private AccountRepository $accountRepository;
-    /**
-     * @var AccountStatsRepository
-     */
-    private AccountStatsRepository $accountStatsRepository;
 
     /**
      * @var MojangClient
@@ -67,19 +58,11 @@ class UuidResolver
     private MojangClient $mojangClient;
 
     /**
-     * Core constructor.
-     *
-     * @param AccountRepository      $accountRepository      Where user data is stored
-     * @param AccountStatsRepository $accountStatsRepository
-     * @param MojangClient           $mojangClient           Client for Mojang API
+     * @param MojangClient $mojangClient Client for Mojang API
      */
     public function __construct(
-        AccountRepository $accountRepository,
-        AccountStatsRepository $accountStatsRepository,
         MojangClient $mojangClient
     ) {
-        $this->accountRepository = $accountRepository;
-        $this->accountStatsRepository = $accountStatsRepository;
         $this->mojangClient = $mojangClient;
     }
 
@@ -122,7 +105,9 @@ class UuidResolver
      */
     private function requestedUuidInDb(): bool
     {
-        $this->account = $this->accountRepository->findByUuid($this->request);
+        $this->account = Account::query()
+            ->whereUuid($this->request)
+            ->first();
 
         if ($this->account === null) {
             return false;
@@ -135,9 +120,7 @@ class UuidResolver
 
     /**
      * Insert user data in database.
-     *
-     * @param void
-     *
+     **
      * @return bool
      */
     public function insertNewUuid(): bool
@@ -147,7 +130,7 @@ class UuidResolver
         }
 
         if ($this->getFullUserdataApi()) {
-            $this->account = $this->accountRepository->create([
+            $this->account = Account::create([
                 'username' => $this->mojangAccount->getUsername(),
                 'uuid' => $this->mojangAccount->getUuid(),
                 'skin' => $this->mojangAccount->getSkin(),
@@ -155,9 +138,9 @@ class UuidResolver
             ]);
 
             $this->saveRemoteSkin();
-            $this->accountStatsRepository->createEmptyStatsForUuid($this->account->uuid);
 
-            $this->uuid = $this->mojangAccount->getUuid();
+            $this->uuid = $this->account->uuid;
+            Event::dispatch(new AccountCreatedEvent($this->account));
 
             return true;
         }
@@ -214,14 +197,12 @@ class UuidResolver
             if ($this->getFullUserdataApi()) {
                 $previousUsername = $this->account->username;
                 // Update database
-                $this->accountRepository->update([
-                    'username' => $this->mojangAccount->getUsername(),
-                    'skin' => $this->mojangAccount->getSkin(),
-                    'cape' => $this->mojangAccount->getCape(),
-                    'fail_count' => 0,
-                ], $this->account->id);
+                $this->account->username = $this->mojangAccount->getUsername();
+                $this->account->skin = $this->mojangAccount->getSkin();
+                $this->account->cape = $this->mojangAccount->getCape();
+                $this->account->fail_count = 0;
+                $this->account->save();
 
-                $this->account->touch();
                 $this->account->refresh();
 
                 // Update skin
@@ -327,18 +308,6 @@ class UuidResolver
     {
         return ($this->forceUpdate) &&
             ((\time() - $this->account->updated_at->timestamp) > env('MIN_USERDATA_UPDATE_INTERVAL'));
-    }
-
-    /**
-     * Use steve skin for given username.
-     *
-     * @param string
-     */
-    public function updateStats(): void
-    {
-        if (!empty($this->account->uuid) && $this->account->uuid !== MinecraftDefaults::UUID && env('STATS_ENABLED')) {
-            $this->accountStatsRepository->incrementRequestCounter($this->account->uuid);
-        }
     }
 
     /**

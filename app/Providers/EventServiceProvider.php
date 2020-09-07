@@ -6,9 +6,6 @@ namespace App\Providers;
 
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
-/**
- * Class EventServiceProvider.
- */
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -19,6 +16,12 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         'App\Events\Account\UsernameChangeEvent' => [
             'App\Listeners\Account\UsernameChangeListener',
+        ],
+        'App\Events\Account\AccountCreatedEvent' => [
+            'App\Listeners\Account\AccountCreatedListener',
+        ],
+        'App\Events\Account\AccountImageServedEvent' => [
+            'App\Listeners\Account\AccountImageServedListener',
         ],
     ];
 }

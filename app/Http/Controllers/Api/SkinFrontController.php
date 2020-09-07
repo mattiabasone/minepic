@@ -28,7 +28,7 @@ class SkinFrontController extends BaseApiController
     {
         $size = (int) $size;
         $this->uuidResolver->resolve($uuid);
-        $this->uuidResolver->updateStats();
+        $this->dispatchAccountImageServedEvent();
 
         return $this->pngResponse(
             (string) $this->rendering->skin($this->uuidResolver->getUuid(), $size, ImageSection::FRONT)

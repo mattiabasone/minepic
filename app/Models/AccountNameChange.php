@@ -15,6 +15,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string              $new_name
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|AccountNameChange newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AccountNameChange newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AccountNameChange query()
+ * @mixin \Eloquent
  */
 class AccountNameChange extends Model
 {
