@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Exceptions\NotFoundHttpJsonException;
-use App\Minecraft\MinecraftDefaults;
 use App\Models\AccountStats;
 use App\Repositories\AccountRepository;
 use App\Resolvers\UsernameResolver;
@@ -110,7 +109,7 @@ class JsonController extends BaseController
     public function userWithUsername(string $username): JsonResponse
     {
         $uuid = $this->usernameResolver->resolve($username);
-        if ($uuid === MinecraftDefaults::UUID) {
+        if ($uuid === null) {
             throw new NotFoundHttpJsonException('User not found');
         }
 

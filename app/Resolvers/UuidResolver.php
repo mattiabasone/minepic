@@ -8,7 +8,6 @@ use App\Cache\UserNotFoundCache;
 use App\Events\Account\AccountCreatedEvent;
 use App\Events\Account\UsernameChangeEvent;
 use App\Helpers\Storage\Files\SkinsStorage;
-use App\Minecraft\MinecraftDefaults;
 use App\Minecraft\MojangAccount;
 use App\Minecraft\MojangClient;
 use App\Models\Account;
@@ -24,9 +23,9 @@ class UuidResolver
      */
     private string $request = '';
     /**
-     * @var string
+     * @var string|null
      */
-    private string $uuid = MinecraftDefaults::UUID;
+    private ?string $uuid = null;
     /**
      * Userdata from/to DB.
      *
@@ -273,6 +272,8 @@ class UuidResolver
      * Save skin image.
      *
      * @param mixed
+     *
+     * @throws \Throwable
      *
      * @return bool
      */

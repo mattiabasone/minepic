@@ -7,13 +7,14 @@ namespace App\Image;
 use App\Helpers\Storage\Files\SkinsStorage;
 use App\Image\Sections\Avatar;
 use App\Image\Sections\Skin;
+use App\Minecraft\MinecraftDefaults;
 
 class Rendering
 {
     /**
-     * @param string $uuid
-     * @param int    $size
-     * @param string $type
+     * @param string|null $uuid
+     * @param int         $size
+     * @param string      $type
      *
      * @throws Exceptions\ImageCreateFromPngFailedException
      * @throws Exceptions\ImageTrueColorCreationFailedException
@@ -21,10 +22,10 @@ class Rendering
      *
      * @return Avatar
      */
-    public function avatar(string $uuid, int $size, $type = ImageSection::FRONT): Avatar
+    public function avatar(?string $uuid, int $size, $type = ImageSection::FRONT): Avatar
     {
         $avatar = new Avatar(
-            SkinsStorage::getPath($uuid)
+            $this->imagePath($uuid)
         );
         $avatar->render($size, $type);
 
@@ -32,22 +33,23 @@ class Rendering
     }
 
     /**
-     * @param string   $uuid
-     * @param int      $size
-     * @param int|null $lastUpdateTimestamp
+     * @param string|null $uuid
+     * @param int         $size
+     * @param int|null    $lastUpdateTimestamp
      *
      * @throws Exceptions\SkinNotFountException
      * @throws \Throwable
      *
      * @return IsometricAvatar
      */
-    public function isometricAvatar(string $uuid, int $size, int $lastUpdateTimestamp = null): IsometricAvatar
+    public function isometricAvatar(?string $uuid, int $size, int $lastUpdateTimestamp = null): IsometricAvatar
     {
         if ($lastUpdateTimestamp === null) {
             $lastUpdateTimestamp = \time();
         }
+
         $isometricAvatar = new IsometricAvatar(
-            $uuid,
+            $uuid ?? MinecraftDefaults::STEVE_DEFAULT_SKIN_NAME,
             $lastUpdateTimestamp
         );
         $isometricAvatar->render($size);
@@ -56,21 +58,33 @@ class Rendering
     }
 
     /**
-     * @param string $uuid
-     * @param int    $size
-     * @param string $type
+     * @param string|null $uuid
+     * @param int         $size
+     * @param string      $type
      *
      * @throws \Throwable
      *
      * @return Skin
      */
-    public function skin(string $uuid, int $size, $type = ImageSection::FRONT): Skin
+    public function skin(?string $uuid, int $size, $type = ImageSection::FRONT): Skin
     {
         $skin = new Skin(
-            SkinsStorage::getPath($uuid)
+            $this->imagePath($uuid)
         );
         $skin->render($size, $type);
 
         return $skin;
+    }
+
+    /**
+     * @param string|null $uuid
+     *
+     * @throws \Exception
+     *
+     * @return string
+     */
+    private function imagePath(?string $uuid): string
+    {
+        return $uuid !== null ? SkinsStorage::getPath($uuid) : SkinsStorage::getPath(MinecraftDefaults::STEVE_DEFAULT_SKIN_NAME);
     }
 }

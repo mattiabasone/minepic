@@ -44,40 +44,40 @@ class IsometricAvatar
      *
      * @var string
      */
-    protected $uuid = '';
+    protected string $uuid = '';
 
     /**
      * Last time user data has been updated.
      *
      * @var int
      */
-    protected $lastUpdate = 0;
+    protected int $lastUpdate = 0;
 
     /**
      * Flag for checking cache.
      *
      * @var bool
      */
-    protected $checkCacheStatusFlag = true;
+    protected bool $checkCacheStatusFlag = true;
 
     /**
      * Skin Path.
      *
      * @var string
      */
-    protected $skinPath = '';
+    protected string $skinPath = '';
 
     /**
      * Skin Path.
      *
      * @var string
      */
-    protected $isometricPath = '';
+    protected string $isometricPath = '';
 
     /**
      * @var \Imagick
      */
-    protected $head;
+    protected \Imagick $head;
 
     /**
      * IsometricAvatar constructor.

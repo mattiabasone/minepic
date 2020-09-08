@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Minecraft\MinecraftDefaults;
 use App\Misc\SplashMessage;
 use App\Models\AccountStats;
 use App\Resolvers\UsernameResolver;
@@ -186,7 +185,7 @@ class WebsiteController extends BaseController
     public function userWithUsername(string $username): Response
     {
         $uuid = $this->usernameResolver->resolve($username);
-        if ($uuid === MinecraftDefaults::UUID) {
+        if ($uuid === null) {
             throw new NotFoundHttpException();
         }
 

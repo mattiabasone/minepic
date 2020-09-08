@@ -6,9 +6,6 @@ namespace App\Helpers\Storage;
 
 use App\Minecraft\MinecraftDefaults;
 
-/**
- * Class Storage.
- */
 class Storage
 {
     /**
@@ -23,12 +20,14 @@ class Storage
      *
      * @param string $uuid
      *
+     * @throws \Exception
+     *
      * @return string
      */
     public static function getPath(string $uuid): string
     {
         if ($uuid === '') {
-            $uuid = MinecraftDefaults::UUID;
+            $uuid = MinecraftDefaults::getRandomDefaultSkin();
         }
 
         return \sprintf(storage_path(static::$folder.'/%s.png'), $uuid);
