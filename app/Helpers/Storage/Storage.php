@@ -76,7 +76,7 @@ class Storage
     {
         if ($string !== '') {
             return \copy(
-                static::getPath(MinecraftDefaults::UUID),
+                static::getPath(MinecraftDefaults::getRandomDefaultSkin()),
                 static::getPath($string)
             );
         }
