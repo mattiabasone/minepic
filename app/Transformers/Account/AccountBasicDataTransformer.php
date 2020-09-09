@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Transformers\Account;
+namespace Minepic\Transformers\Account;
 
-use App\Models\Account;
 use Carbon\Carbon;
 use League\Fractal;
+use Minepic\Models\Account;
 
 class AccountBasicDataTransformer extends Fractal\TransformerAbstract
 {

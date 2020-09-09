@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Image\Sections;
+namespace Minepic\Image\Sections;
 
-use App\Image\ImageSection;
-use App\Image\Point;
-use App\Image\Sections\Avatar\Coordinates as AvatarCoordinates;
+use Minepic\Image\ImageSection;
+use Minepic\Image\Point;
+use Minepic\Image\Sections\Avatar\Coordinates as AvatarCoordinates;
 
 /**
  * Class Avatar.
@@ -100,7 +100,7 @@ class Avatar extends ImageSection
      * @param resource $baseSkinImage
      * @param Point    $helmCoordinates
      *
-     * @throws \App\Image\Exceptions\ImageTrueColorCreationFailedException
+     * @throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
      *
      * @return bool
      */
@@ -123,8 +123,8 @@ class Avatar extends ImageSection
      * @param int    $size Avatar size
      * @param string $type Section rendered
      *
-     * @throws \App\Image\Exceptions\InvalidSectionSpecifiedException|\App\Image\Exceptions\ImageTrueColorCreationFailedException
-     * @throws \App\Image\Exceptions\ImageCreateFromPngFailedException
+     * @throws \Minepic\Image\Exceptions\InvalidSectionSpecifiedException|\Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
+     * @throws \Minepic\Image\Exceptions\ImageCreateFromPngFailedException
      */
     public function render(int $size = 0, string $type = self::FRONT): void
     {
@@ -163,9 +163,9 @@ class Avatar extends ImageSection
 
     /**
      * @param $image
-     * @param \App\Image\Point $helmCoordinates
+     * @param \Minepic\Image\Point $helmCoordinates
      *
-     * @throws \App\Image\Exceptions\ImageTrueColorCreationFailedException
+     * @throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
      *
      * @return resource
      */

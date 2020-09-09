@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace Minepic\Console\Commands;
 
-use App\Models\Account;
+use Minepic\Models\Account;
 use Illuminate\Console\Command;
 
 /**

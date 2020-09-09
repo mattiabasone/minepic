@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Exceptions;
+namespace Minepic\Exceptions;
 
-use App\Misc\SplashMessage;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
+use Minepic\Misc\SplashMessage;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 

@@ -10,7 +10,7 @@ class ApiControllerTest extends TestCase
     {
         parent::setUp();
         \DB::beginTransaction();
-        UserNotFoundCache::add("ThisIsAnInvalidAccountName");
+        UserNotFoundCache::add('ThisIsAnInvalidAccountName');
     }
 
     public function tearDown(): void

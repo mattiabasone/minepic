@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace Minepic\Http\Controllers;
 
-use App\Exceptions\NotFoundHttpJsonException;
-use App\Models\AccountStats;
-use App\Repositories\AccountRepository;
-use App\Resolvers\UsernameResolver;
-use App\Resolvers\UuidResolver;
-use App\Transformers\Account\AccountBasicDataTransformer;
-use App\Transformers\Account\AccountTypeaheadTransformer;
 use Illuminate\Http\JsonResponse;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use League\Fractal;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\ArraySerializer;
+use Minepic\Exceptions\NotFoundHttpJsonException;
+use Minepic\Models\AccountStats;
+use Minepic\Repositories\AccountRepository;
+use Minepic\Resolvers\UsernameResolver;
+use Minepic\Resolvers\UuidResolver;
+use Minepic\Transformers\Account\AccountBasicDataTransformer;
+use Minepic\Transformers\Account\AccountTypeaheadTransformer;
 
 class JsonController extends BaseController
 {

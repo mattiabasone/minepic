@@ -38,12 +38,12 @@ $app->withEloquent();
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
+    Minepic\Exceptions\Handler::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
-    App\Console\Kernel::class
+    Minepic\Console\Kernel::class
 );
 
 /*
@@ -62,8 +62,8 @@ $app->singleton(
 // ]);
 
  $app->routeMiddleware([
-     'headers.cache' => App\Http\Middleware\SetCacheHeaders::class,
-     'image.clean_params' => App\Http\Middleware\CleanupUuidOrName::class,
+     'headers.cache' => Minepic\Http\Middleware\SetCacheHeaders::class,
+     'image.clean_params' => Minepic\Http\Middleware\CleanupUuidOrName::class,
 ]);
 
 /*
@@ -78,8 +78,8 @@ $app->singleton(
 */
 
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
-$app->register(App\Providers\AppServiceProvider::class);
-$app->register(App\Providers\EventServiceProvider::class);
+$app->register(Minepic\Providers\AppServiceProvider::class);
+$app->register(Minepic\Providers\EventServiceProvider::class);
 $app->register(SwooleTW\Http\LumenServiceProvider::class);
 
 if (env('APP_DEBUG')) {
@@ -98,7 +98,7 @@ if (env('APP_DEBUG')) {
 */
 
 $app->router->group([
-    'namespace' => 'App\Http\Controllers',
+    'namespace' => 'Minepic\Http\Controllers',
 ], static function ($router) {
     require __DIR__.'/../routes/web.php';
 });

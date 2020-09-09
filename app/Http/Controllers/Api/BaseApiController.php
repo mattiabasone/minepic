@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api;
+namespace Minepic\Http\Controllers\Api;
 
-use App\Events\Account\AccountImageServedEvent;
-use App\Image\Rendering;
-use App\Resolvers\UsernameResolver;
-use App\Resolvers\UuidResolver;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
+use Minepic\Events\Account\AccountImageServedEvent;
+use Minepic\Image\Rendering;
+use Minepic\Resolvers\UsernameResolver;
+use Minepic\Resolvers\UuidResolver;
 
 /**
  * Class BaseApiController.

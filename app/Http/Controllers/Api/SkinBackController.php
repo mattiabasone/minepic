@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api;
+namespace Minepic\Http\Controllers\Api;
 
-use App\Image\ImageSection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Minepic\Image\ImageSection;
 
 /**
  * Class BaseApiController.

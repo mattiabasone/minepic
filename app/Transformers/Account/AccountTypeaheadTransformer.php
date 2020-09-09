@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Transformers\Account;
+namespace Minepic\Transformers\Account;
 
-use App\Models\Account;
 use League\Fractal;
+use Minepic\Models\Account;
 
 class AccountTypeaheadTransformer extends Fractal\TransformerAbstract
 {

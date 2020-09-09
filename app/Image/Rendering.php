@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Image;
+namespace Minepic\Image;
 
-use App\Helpers\Storage\Files\SkinsStorage;
-use App\Image\Sections\Avatar;
-use App\Image\Sections\Skin;
-use App\Minecraft\MinecraftDefaults;
+use Minepic\Helpers\Storage\Files\SkinsStorage;
+use Minepic\Image\Sections\Avatar;
+use Minepic\Image\Sections\Skin;
+use Minepic\Minecraft\MinecraftDefaults;
 
 class Rendering
 {

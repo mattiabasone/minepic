@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Resolvers;
+namespace Minepic\Resolvers;
 
-use App\Cache\UserNotFoundCache;
-use App\Helpers\UserDataValidator;
-use App\Minecraft\MinecraftDefaults;
-use App\Minecraft\MojangClient;
-use App\Repositories\AccountRepository;
+use Minepic\Cache\UserNotFoundCache;
+use Minepic\Helpers\UserDataValidator;
+use Minepic\Minecraft\MojangClient;
+use Minepic\Repositories\AccountRepository;
 
 class UsernameResolver
 {
@@ -42,7 +41,7 @@ class UsernameResolver
             return null;
         }
 
-        /** @var \App\Models\Account $account */
+        /** @var \Minepic\Models\Account $account */
         $account = $this->accountRepository->findLastUpdatedByUsername($username);
         if ($account !== null) {
             return $account->uuid;

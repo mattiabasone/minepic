@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Image;
+namespace Minepic\Image;
 
-use App\Helpers\Storage\Files\IsometricsStorage;
-use App\Helpers\Storage\Files\SkinsStorage;
-use App\Image\Exceptions\SkinNotFountException;
-use App\Image\Sections\Avatar;
+use Minepic\Helpers\Storage\Files\IsometricsStorage;
+use Minepic\Helpers\Storage\Files\SkinsStorage;
+use Minepic\Image\Exceptions\SkinNotFountException;
+use Minepic\Image\Sections\Avatar;
 
 /**
  * Class IsometricAvatar.

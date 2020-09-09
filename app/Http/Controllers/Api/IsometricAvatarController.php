@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api;
+namespace Minepic\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -33,7 +33,7 @@ class IsometricAvatarController extends BaseApiController
     /**
      * @param int $size
      *
-     * @throws \App\Image\Exceptions\SkinNotFountException
+     * @throws \Minepic\Image\Exceptions\SkinNotFountException
      * @throws \Throwable
      *
      * @return Response

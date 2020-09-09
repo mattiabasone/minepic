@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace Minepic\Http\Controllers;
 
-use App\Misc\SplashMessage;
-use App\Models\AccountStats;
-use App\Resolvers\UsernameResolver;
-use App\Resolvers\UuidResolver;
-use App\Transformers\Account\AccountBasicDataTransformer;
+use Minepic\Misc\SplashMessage;
+use Minepic\Models\AccountStats;
+use Minepic\Resolvers\UsernameResolver;
+use Minepic\Resolvers\UuidResolver;
+use Minepic\Transformers\Account\AccountBasicDataTransformer;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;

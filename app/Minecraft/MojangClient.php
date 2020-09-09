@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Minecraft;
+namespace Minepic\Minecraft;
 
-use App\Minecraft\Exceptions\UserNotFoundException;
+use Minepic\Minecraft\Exceptions\UserNotFoundException;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Support\Facades\Log;

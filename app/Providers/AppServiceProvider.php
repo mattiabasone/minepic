@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Providers;
+namespace Minepic\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

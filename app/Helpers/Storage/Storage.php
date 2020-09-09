@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Helpers\Storage;
+namespace Minepic\Helpers\Storage;
 
-use App\Minecraft\MinecraftDefaults;
+use Minepic\Minecraft\MinecraftDefaults;
 
 class Storage
 {

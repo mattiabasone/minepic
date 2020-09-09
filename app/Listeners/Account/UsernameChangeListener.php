@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Listeners\Account;
+namespace Minepic\Listeners\Account;
 
-use App\Events\Account\UsernameChangeEvent;
-use App\Models\AccountNameChange;
+use Minepic\Events\Account\UsernameChangeEvent;
+use Minepic\Models\AccountNameChange;
 
 class UsernameChangeListener
 {

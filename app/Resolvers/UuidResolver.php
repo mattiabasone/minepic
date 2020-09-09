@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Resolvers;
+namespace Minepic\Resolvers;
 
-use App\Cache\UserNotFoundCache;
-use App\Events\Account\AccountCreatedEvent;
-use App\Events\Account\UsernameChangeEvent;
-use App\Helpers\Storage\Files\SkinsStorage;
-use App\Minecraft\MojangAccount;
-use App\Minecraft\MojangClient;
-use App\Models\Account;
 use Event;
 use Log;
+use Minepic\Cache\UserNotFoundCache;
+use Minepic\Events\Account\AccountCreatedEvent;
+use Minepic\Events\Account\UsernameChangeEvent;
+use Minepic\Helpers\Storage\Files\SkinsStorage;
+use Minepic\Minecraft\MojangAccount;
+use Minepic\Minecraft\MojangClient;
+use Minepic\Models\Account;
 
 class UuidResolver
 {
@@ -120,8 +120,9 @@ class UuidResolver
     /**
      * Insert user data in database.
      **
-     * @return bool
      * @throws \Throwable
+     *
+     * @return bool
      */
     public function insertNewUuid(): bool
     {

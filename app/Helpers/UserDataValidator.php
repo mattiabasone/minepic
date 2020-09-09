@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Helpers;
+namespace Minepic\Helpers;
 
 /**
  * Class Date.

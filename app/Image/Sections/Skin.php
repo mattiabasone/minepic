@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Image\Sections;
+namespace Minepic\Image\Sections;
 
-use App\Image\Exceptions\ImageResourceCreationFailedException;
-use App\Image\ImageSection;
+use Minepic\Image\Exceptions\ImageResourceCreationFailedException;
+use Minepic\Image\ImageSection;
 
 class Skin extends ImageSection
 {
@@ -40,7 +40,7 @@ class Skin extends ImageSection
     /**
      * Create a PNG with raw texture.
      *
-     * @throws \App\Image\Exceptions\ImageCreateFromPngFailedException
+     * @throws \Minepic\Image\Exceptions\ImageCreateFromPngFailedException
      */
     public function prepareTextureDownload(): void
     {

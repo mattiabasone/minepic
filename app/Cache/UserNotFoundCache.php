@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Cache;
+namespace Minepic\Cache;
 
 use Cache;
 use Log;

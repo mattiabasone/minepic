@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace Minepic\Console\Commands;
 
-use App\Helpers\Storage\Files\SkinsStorage;
-use App\Minecraft\MojangClient;
-use App\Models\Account;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Minepic\Helpers\Storage\Files\SkinsStorage;
+use Minepic\Minecraft\MojangClient;
+use Minepic\Models\Account;
 
 /**
  * Class CleanAccountsTable.
@@ -54,7 +54,7 @@ class CheckUuid extends Command
         }
 
         foreach ($results as $result) {
-            /** @var \App\Models\Account $account */
+            /** @var \Minepic\Models\Account $account */
             $account = Account::find($result->id);
             if ($account) {
                 $this->info("Checking {$account->username} [{$account->uuid}]...");

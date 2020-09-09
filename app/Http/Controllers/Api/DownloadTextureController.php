@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api;
+namespace Minepic\Http\Controllers\Api;
 
-use App\Helpers\Storage\Files\SkinsStorage;
-use App\Image\Sections\Skin;
-use App\Minecraft\MinecraftDefaults;
-use App\Resolvers\UuidResolver;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
+use Minepic\Helpers\Storage\Files\SkinsStorage;
+use Minepic\Image\Sections\Skin;
+use Minepic\Minecraft\MinecraftDefaults;
+use Minepic\Resolvers\UuidResolver;
 
 /**
  * Class BaseApiController.
@@ -44,7 +44,7 @@ class DownloadTextureController extends BaseController
      *
      * @param string $uuid User UUID or Username
      *
-     * @throws \App\Image\Exceptions\ImageCreateFromPngFailedException
+     * @throws \Minepic\Image\Exceptions\ImageCreateFromPngFailedException
      *
      * @return \Illuminate\Http\Response
      */

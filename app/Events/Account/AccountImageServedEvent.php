@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Events\Account;
+namespace Minepic\Events\Account;
 
-use App\Events\Event;
-use App\Models\Account;
+use Minepic\Events\Event;
+use Minepic\Models\Account;
 
 class AccountImageServedEvent extends Event
 {

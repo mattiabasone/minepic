@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Providers;
+namespace Minepic\Providers;
 
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
@@ -14,14 +14,14 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\Account\UsernameChangeEvent' => [
-            'App\Listeners\Account\UsernameChangeListener',
+        'Minepic\Events\Account\UsernameChangeEvent' => [
+            'Minepic\Listeners\Account\UsernameChangeListener',
         ],
-        'App\Events\Account\AccountCreatedEvent' => [
-            'App\Listeners\Account\AccountCreatedListener',
+        'Minepic\Events\Account\AccountCreatedEvent' => [
+            'Minepic\Listeners\Account\AccountCreatedListener',
         ],
-        'App\Events\Account\AccountImageServedEvent' => [
-            'App\Listeners\Account\AccountImageServedListener',
+        'Minepic\Events\Account\AccountImageServedEvent' => [
+            'Minepic\Listeners\Account\AccountImageServedListener',
         ],
     ];
 }

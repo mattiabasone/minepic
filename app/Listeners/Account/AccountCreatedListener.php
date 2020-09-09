@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Listeners\Account;
+namespace Minepic\Listeners\Account;
 
-use App\Events\Account\AccountCreatedEvent;
-use App\Models\AccountStats;
+use Minepic\Events\Account\AccountCreatedEvent;
+use Minepic\Models\AccountStats;
 
 class AccountCreatedListener
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Image;
+namespace Minepic\Image;
 
 class Point
 {

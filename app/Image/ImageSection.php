@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Image;
+namespace Minepic\Image;
 
-use App\Image\Exceptions\ImageCreateFromPngFailedException;
-use App\Image\Exceptions\ImageTrueColorCreationFailedException;
+use Minepic\Image\Exceptions\ImageCreateFromPngFailedException;
+use Minepic\Image\Exceptions\ImageTrueColorCreationFailedException;
 
 /**
  * Class ImageSection.

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Listeners\Account;
+namespace Minepic\Listeners\Account;
 
-use App\Events\Account\AccountImageServedEvent;
-use App\Models\AccountStats;
 use Carbon\Carbon;
+use Minepic\Events\Account\AccountImageServedEvent;
+use Minepic\Models\AccountStats;
 
 class AccountImageServedListener
 {

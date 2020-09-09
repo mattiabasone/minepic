@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Image\Sections\Avatar;
+namespace Minepic\Image\Sections\Avatar;
 
-use App\Image\ImageSection;
-use App\Image\Point;
+use Minepic\Image\ImageSection;
+use Minepic\Image\Point;
 
 /**
  * Class Coordinates.

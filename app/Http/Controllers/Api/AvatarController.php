@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api;
+namespace Minepic\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -36,9 +36,9 @@ class AvatarController extends BaseApiController
     /**
      * @param int $size
      *
-     * @throws \App\Image\Exceptions\ImageCreateFromPngFailedException
-     * @throws \App\Image\Exceptions\ImageTrueColorCreationFailedException
-     * @throws \App\Image\Exceptions\InvalidSectionSpecifiedException
+     * @throws \Minepic\Image\Exceptions\ImageCreateFromPngFailedException
+     * @throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
+     * @throws \Minepic\Image\Exceptions\InvalidSectionSpecifiedException
      *
      * @return Response
      */

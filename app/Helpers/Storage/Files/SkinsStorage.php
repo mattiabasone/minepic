@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Helpers\Storage\Files;
+namespace Minepic\Helpers\Storage\Files;
 
-use App\Helpers\Storage\Storage;
+use Minepic\Helpers\Storage\Storage;
 
 class SkinsStorage extends Storage
 {
