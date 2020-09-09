@@ -8,9 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Minepic\Image\ImageSection;
 
-/**
- * Class BaseApiController.
- */
 class SkinBackController extends BaseApiController
 {
     /**
@@ -43,12 +40,14 @@ class SkinBackController extends BaseApiController
      */
     public function serveDefault($size = 0): Response
     {
-        return $this->pngResponse(
-            (string) $this->rendering->skin(
+        $image = $this->cache()->remember('rendering.system.default_skin_back', 3600, function () use ($size) {
+            return (string) $this->rendering->skin(
                 null,
                 (int) $size,
                 ImageSection::BACK
-            )
-        );
+            );
+        });
+
+        return $this->pngResponse($image);
     }
 }

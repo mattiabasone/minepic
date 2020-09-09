@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Minepic\Resolvers;
 
-use Event;
+use Illuminate\Contracts\Events\Dispatcher;
 use Log;
 use Minepic\Cache\UserNotFoundCache;
 use Minepic\Events\Account\AccountCreatedEvent;
@@ -55,14 +55,21 @@ class UuidResolver
      * @var MojangClient
      */
     private MojangClient $mojangClient;
+    /**
+     * @var Dispatcher
+     */
+    private Dispatcher $eventDispatcher;
 
     /**
-     * @param MojangClient $mojangClient Client for Mojang API
+     * @param MojangClient $mojangClient    Client for Mojang API
+     * @param Dispatcher   $eventDispatcher
      */
     public function __construct(
-        MojangClient $mojangClient
+        MojangClient $mojangClient,
+        Dispatcher $eventDispatcher
     ) {
         $this->mojangClient = $mojangClient;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -141,7 +148,7 @@ class UuidResolver
             $this->saveRemoteSkin();
 
             $this->uuid = $this->account->uuid;
-            Event::dispatch(new AccountCreatedEvent($this->account));
+            $this->eventDispatcher->dispatch(new AccountCreatedEvent($this->account));
 
             return true;
         }
@@ -249,7 +256,9 @@ class UuidResolver
     private function logUsernameChange(Account $account, string $previousUsername): void
     {
         if ($account->username !== $previousUsername && $previousUsername !== '') {
-            Event::dispatch(new UsernameChangeEvent($account->uuid, $previousUsername, $account->username));
+            $this->eventDispatcher->dispatch(
+                new UsernameChangeEvent($account->uuid, $previousUsername, $account->username)
+            );
         }
     }
 

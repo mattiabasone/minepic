@@ -18,7 +18,6 @@ class Rendering
      *
      * @throws Exceptions\ImageCreateFromPngFailedException
      * @throws Exceptions\ImageTrueColorCreationFailedException
-     * @throws Exceptions\InvalidSectionSpecifiedException
      *
      * @return Avatar
      */

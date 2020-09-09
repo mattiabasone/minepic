@@ -20,6 +20,10 @@ class UsernameResolver
      */
     private MojangClient $mojangClient;
 
+    /**
+     * @param AccountRepository $accountRepository
+     * @param MojangClient      $mojangClient
+     */
     public function __construct(
         AccountRepository $accountRepository,
         MojangClient $mojangClient

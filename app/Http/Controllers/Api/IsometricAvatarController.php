@@ -40,8 +40,10 @@ class IsometricAvatarController extends BaseApiController
      */
     public function serveDefault($size = 0): Response
     {
-        return $this->pngResponse(
-            (string) $this->rendering->isometricAvatar(null, (int) $size)
-        );
+        $image = $this->cache()->remember('rendering.system.default_isometric_avatar', 3600, function () use ($size) {
+            return (string) $this->rendering->isometricAvatar(null, (int) $size);
+        });
+
+        return $this->pngResponse($image);
     }
 }

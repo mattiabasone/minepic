@@ -8,9 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Minepic\Image\ImageSection;
 
-/**
- * Class SkinFrontController.
- */
 class SkinFrontController extends BaseApiController
 {
     /**
@@ -44,12 +41,14 @@ class SkinFrontController extends BaseApiController
      */
     public function serveDefault($size = 0): Response
     {
-        return $this->pngResponse(
-            (string) $this->rendering->skin(
+        $image = $this->cache()->remember('rendering.system.default_skin_front', 3600, function () use ($size) {
+            return (string) $this->rendering->skin(
                 null,
                 (int) $size,
                 ImageSection::FRONT
-            )
-        );
+            );
+        });
+
+        return $this->pngResponse($image);
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Minepic\Http\Controllers\Api;
 
+use Illuminate\Contracts\Cache\Repository as CacheRepository;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
@@ -13,9 +15,6 @@ use Minepic\Image\Rendering;
 use Minepic\Resolvers\UsernameResolver;
 use Minepic\Resolvers\UuidResolver;
 
-/**
- * Class BaseApiController.
- */
 abstract class BaseApiController extends BaseController
 {
     /**
@@ -34,6 +33,10 @@ abstract class BaseApiController extends BaseController
      * @var Rendering
      */
     protected Rendering $rendering;
+    /**
+     * @var Dispatcher
+     */
+    protected Dispatcher $eventDispatcher;
 
     /**
      * Api constructor.
@@ -42,17 +45,20 @@ abstract class BaseApiController extends BaseController
      * @param ResponseFactory  $responseFactory  Response Factory
      * @param UsernameResolver $usernameResolver
      * @param Rendering        $rendering
+     * @param Dispatcher       $eventDispatcher
      */
     public function __construct(
         UuidResolver $uuidResolver,
         ResponseFactory $responseFactory,
         UsernameResolver $usernameResolver,
-        Rendering $rendering
+        Rendering $rendering,
+        Dispatcher $eventDispatcher
     ) {
         $this->uuidResolver = $uuidResolver;
         $this->responseFactory = $responseFactory;
         $this->usernameResolver = $usernameResolver;
         $this->rendering = $rendering;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -104,6 +110,14 @@ abstract class BaseApiController extends BaseController
      */
     protected function dispatchAccountImageServedEvent(): void
     {
-        \Event::dispatch(new AccountImageServedEvent($this->uuidResolver->getAccount()));
+        $this->eventDispatcher->dispatch(new AccountImageServedEvent($this->uuidResolver->getAccount()));
+    }
+
+    /**
+     * @return CacheRepository
+     */
+    protected function cache(): CacheRepository
+    {
+        return \Cache::driver('file');
     }
 }

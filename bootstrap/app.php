@@ -22,6 +22,8 @@ $app = new Laravel\Lumen\Application(
     realpath(__DIR__.'/../')
 );
 
+$app->configure('swoole_http');
+
 $app->withFacades();
 $app->withEloquent();
 
