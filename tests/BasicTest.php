@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace MinepicTests;
+
 class BasicTest extends TestCase
 {
     /** @test */

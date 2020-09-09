@@ -2,20 +2,21 @@
 
 declare(strict_types=1);
 
-/**
- * Class SplashMessageTest.
- */
+namespace MinepicTests\Misc;
+
+use MinepicTests\TestCase;
+
 class SplashMessageTest extends TestCase
 {
     /** @test */
     public function shouldGetMessage(): void
     {
-        $this->assertIsString(\App\Misc\SplashMessage::get());
+        $this->assertIsString(\Minepic\Misc\SplashMessage::get());
     }
 
     /** @test */
     public function shouldGet404Message(): void
     {
-        $this->assertIsString(\App\Misc\SplashMessage::get404());
+        $this->assertIsString(\Minepic\Misc\SplashMessage::get404());
     }
 }

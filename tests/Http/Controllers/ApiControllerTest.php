@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Cache\UserNotFoundCache;
+namespace MinepicTests\Http\Controllers;
+
+use Minepic\Cache\UserNotFoundCache;
+use MinepicTests\TestCase;
 
 class ApiControllerTest extends TestCase
 {

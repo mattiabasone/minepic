@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-/**
- * Class WebsiteControllerTest.
- */
+namespace MinepicTests\Http\Controllers;
+
+use MinepicTests\TestCase;
+
 class WebsiteControllerTest extends TestCase
 {
     /** @test */

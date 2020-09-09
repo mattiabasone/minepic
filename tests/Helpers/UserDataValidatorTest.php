@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+namespace MinepicTests\Helpers;
+
+use MinepicTests\TestCase;
+
 class UserDataValidatorTest extends TestCase
 {
     public function shouldValidateUsernameDataProvider(): array
@@ -22,7 +26,7 @@ class UserDataValidatorTest extends TestCase
     public function shouldValidateUsername($value): void
     {
         $this->assertTrue(
-            \App\Helpers\UserDataValidator::isValidUsername($value)
+            \Minepic\Helpers\UserDataValidator::isValidUsername($value)
         );
     }
 
@@ -44,7 +48,7 @@ class UserDataValidatorTest extends TestCase
     public function shouldNotValidateUsername($value): void
     {
         $this->assertFalse(
-            \App\Helpers\UserDataValidator::isValidUsername($value)
+            \Minepic\Helpers\UserDataValidator::isValidUsername($value)
         );
     }
 
@@ -66,7 +70,7 @@ class UserDataValidatorTest extends TestCase
     public function shouldValidateUuid($value): void
     {
         $this->assertTrue(
-            \App\Helpers\UserDataValidator::isValidUuid($value)
+            \Minepic\Helpers\UserDataValidator::isValidUuid($value)
         );
     }
 
@@ -88,7 +92,7 @@ class UserDataValidatorTest extends TestCase
     public function shouldNotValidateUuid($value): void
     {
         $this->assertFalse(
-            \App\Helpers\UserDataValidator::isValidUuid($value)
+            \Minepic\Helpers\UserDataValidator::isValidUuid($value)
         );
     }
 
@@ -110,7 +114,7 @@ class UserDataValidatorTest extends TestCase
     public function shouldValidateEmail($value): void
     {
         $this->assertTrue(
-            \App\Helpers\UserDataValidator::isValidEmail($value)
+            \Minepic\Helpers\UserDataValidator::isValidEmail($value)
         );
     }
 
@@ -132,7 +136,7 @@ class UserDataValidatorTest extends TestCase
     public function shouldNotValidateEmail($value): void
     {
         $this->assertFalse(
-            \App\Helpers\UserDataValidator::isValidEmail($value)
+            \Minepic\Helpers\UserDataValidator::isValidEmail($value)
         );
     }
 }

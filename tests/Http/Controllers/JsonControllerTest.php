@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+namespace MinepicTests\Http\Controllers;
+
+use MinepicTests\TestCase;
+
 class JsonControllerTest extends TestCase
 {
     public function setUp(): void
