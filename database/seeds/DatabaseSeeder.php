@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Account;
-use App\Models\AccountStats;
+use Minepic\Models\Account;
+use Minepic\Models\AccountStats;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 

@@ -11,7 +11,7 @@
 |
 */
 
-$factory->define(App\Models\Account::class, function (Faker\Generator $faker) {
+$factory->define(Minepic\Models\Account::class, function (Faker\Generator $faker) {
     return [
         'uuid'      => $faker->uuid,
         'username'  => $faker->name,
@@ -24,7 +24,7 @@ $factory->define(App\Models\Account::class, function (Faker\Generator $faker) {
 });
 
 
-$factory->define(App\Models\AccountNameChange::class, function (Faker\Generator $faker) {
+$factory->define(Minepic\Models\AccountNameChange::class, function (Faker\Generator $faker) {
     return [
         'uuid' => $faker->uuid,
         'prev_name' => $faker->name,
@@ -33,7 +33,7 @@ $factory->define(App\Models\AccountNameChange::class, function (Faker\Generator 
     ];
 });
 
-$factory->define(App\Models\AccountStats::class, function (Faker\Generator $faker) {
+$factory->define(Minepic\Models\AccountStats::class, function (Faker\Generator $faker) {
     return [
         'uuid' => $faker->uuid,
         'count_request' => $faker->randomNumber(6),
