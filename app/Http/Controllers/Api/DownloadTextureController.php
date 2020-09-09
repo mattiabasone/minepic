@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\Storage\Files\SkinsStorage;
 use App\Image\Sections\Skin;
+use App\Minecraft\MinecraftDefaults;
 use App\Resolvers\UuidResolver;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
@@ -55,7 +56,9 @@ class DownloadTextureController extends BaseController
         ];
         $this->uuidResolver->resolve($uuid);
 
-        $skinPath = SkinsStorage::getPath($this->uuidResolver->getUuid());
+        $skinPath = $this->uuidResolver->resolve($uuid) ?
+            SkinsStorage::getPath($this->uuidResolver->getUuid()) :
+            SkinsStorage::getPath(MinecraftDefaults::STEVE_DEFAULT_SKIN_NAME);
 
         $userSkin = new Skin($skinPath);
         $userSkin->prepareTextureDownload();

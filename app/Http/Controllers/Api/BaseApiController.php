@@ -62,7 +62,16 @@ abstract class BaseApiController extends BaseController
      *
      * @return Response
      */
-    abstract public function serveUuid(Request $request, string $uuid, $size = 256): Response;
+    abstract public function serveUuid(Request $request, string $uuid, $size = 0): Response;
+
+    /**
+     * Serve default skin section.
+     *
+     * @param int $size
+     *
+     * @return Response
+     */
+    abstract public function serveDefault($size = 0): Response;
 
     /**
      * @param Request $request
@@ -77,7 +86,7 @@ abstract class BaseApiController extends BaseController
     {
         $uuid = $this->usernameResolver->resolve($username);
 
-        return $this->serveUuid($request, $uuid, $size);
+        return $uuid ? $this->serveUuid($request, $uuid, $size) : $this->serveDefault($size);
     }
 
     /**

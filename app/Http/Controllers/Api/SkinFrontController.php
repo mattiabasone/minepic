@@ -34,4 +34,22 @@ class SkinFrontController extends BaseApiController
             (string) $this->rendering->skin($this->uuidResolver->getUuid(), $size, ImageSection::FRONT)
         );
     }
+
+    /**
+     * @param int $size
+     *
+     * @throws \Throwable
+     *
+     * @return Response
+     */
+    public function serveDefault($size = 0): Response
+    {
+        return $this->pngResponse(
+            (string) $this->rendering->skin(
+                null,
+                (int) $size,
+                ImageSection::FRONT
+            )
+        );
+    }
 }

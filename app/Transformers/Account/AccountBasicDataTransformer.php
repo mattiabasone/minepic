@@ -16,7 +16,9 @@ class AccountBasicDataTransformer extends Fractal\TransformerAbstract
             'uuid' => $account->uuid,
             'username' => $account->username,
             'count_request' => $account->stats->count_request,
-            'last_request' => $account->stats->request_at->format(Carbon::ATOM),
+            'last_request' => $account->stats->request_at ?
+                $account->stats->request_at->format(Carbon::ATOM) :
+                null,
         ];
     }
 }

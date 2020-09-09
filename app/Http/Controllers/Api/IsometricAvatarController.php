@@ -22,13 +22,26 @@ class IsometricAvatarController extends BaseApiController
      */
     public function serveUuid(Request $request, $uuid, $size = 0): Response
     {
-        $size = (int) $size;
-
         $this->uuidResolver->resolve($uuid);
         $this->dispatchAccountImageServedEvent();
 
         return $this->pngResponse(
-            (string) $this->rendering->isometricAvatar($this->uuidResolver->getUuid(), $size)
+            (string) $this->rendering->isometricAvatar($this->uuidResolver->getUuid(), (int) $size)
+        );
+    }
+
+    /**
+     * @param int $size
+     *
+     * @throws \App\Image\Exceptions\SkinNotFountException
+     * @throws \Throwable
+     *
+     * @return Response
+     */
+    public function serveDefault($size = 0): Response
+    {
+        return $this->pngResponse(
+            (string) $this->rendering->isometricAvatar(null, (int) $size)
         );
     }
 }

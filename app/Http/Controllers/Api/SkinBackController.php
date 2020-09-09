@@ -26,12 +26,29 @@ class SkinBackController extends BaseApiController
      */
     public function serveUuid(Request $request, $uuid, $size = 0): Response
     {
-        $size = (int) $size;
         $this->uuidResolver->resolve($uuid);
         $this->dispatchAccountImageServedEvent();
 
         return $this->pngResponse(
-            (string) $this->rendering->skin($this->uuidResolver->getUuid(), $size, ImageSection::BACK)
+            (string) $this->rendering->skin($this->uuidResolver->getUuid(), (int) $size, ImageSection::BACK)
+        );
+    }
+
+    /**
+     * @param int $size
+     *
+     * @throws \Throwable
+     *
+     * @return Response
+     */
+    public function serveDefault($size = 0): Response
+    {
+        return $this->pngResponse(
+            (string) $this->rendering->skin(
+                null,
+                (int) $size,
+                ImageSection::BACK
+            )
         );
     }
 }

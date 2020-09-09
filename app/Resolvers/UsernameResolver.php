@@ -34,12 +34,12 @@ class UsernameResolver
      *
      * @throws \Exception
      *
-     * @return string
+     * @return string|null
      */
-    public function resolve(string $username): string
+    public function resolve(string $username): ?string
     {
         if (!$this->isValidUsername($username)) {
-            return MinecraftDefaults::UUID;
+            return null;
         }
 
         /** @var \App\Models\Account $account */
@@ -58,7 +58,7 @@ class UsernameResolver
             }
         }
 
-        return MinecraftDefaults::UUID;
+        return null;
     }
 
     /**

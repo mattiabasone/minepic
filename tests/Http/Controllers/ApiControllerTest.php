@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
+use App\Cache\UserNotFoundCache;
+
 class ApiControllerTest extends TestCase
 {
     public function setUp(): void
     {
         parent::setUp();
         \DB::beginTransaction();
+        UserNotFoundCache::add("ThisIsAnInvalidAccountName");
     }
 
     public function tearDown(): void
@@ -21,7 +24,7 @@ class ApiControllerTest extends TestCase
      */
     public function shouldReturnSteveAvatar(): void
     {
-        $this->get('/avatar/Steve');
+        $this->get('/avatar/ThisIsAnInvalidAccountName');
         $actualImage = $this->response->getContent();
         $expectedImage = \file_get_contents(base_path('tests/images/steve_avatar.png'));
         $this->assertEquals($expectedImage, $actualImage);
@@ -45,7 +48,7 @@ class ApiControllerTest extends TestCase
      */
     public function shouldReturnSteveSkin(): void
     {
-        $this->get('/skin/Steve');
+        $this->get('/skin/ThisIsAnInvalidAccountName');
         $actualImage = $this->response->getContent();
         $expectedImage = \file_get_contents(base_path('tests/images/steve_skin.png'));
         $this->assertEquals($expectedImage, $actualImage);
@@ -56,7 +59,7 @@ class ApiControllerTest extends TestCase
      */
     public function shouldReturnSteveSkinBack(): void
     {
-        $this->get('/skin-back/Steve');
+        $this->get('/skin-back/ThisIsAnInvalidAccountName');
         $actualImage = $this->response->getContent();
         $expectedImage = \file_get_contents(base_path('tests/images/steve_skin_back.png'));
         $this->assertEquals($expectedImage, $actualImage);
@@ -67,7 +70,7 @@ class ApiControllerTest extends TestCase
      */
     public function shouldReturnSteveHead(): void
     {
-        $this->get('/head/Steve');
+        $this->get('/head/ThisIsAnInvalidAccountName');
         $this->assertResponseOk();
         $this->assertEquals(
             'image/png',
@@ -80,7 +83,7 @@ class ApiControllerTest extends TestCase
      */
     public function shouldDownloadSteveTexture(): void
     {
-        $this->get('/download/8667ba71b85a4004af54457a9734eed7');
+        $this->get('/download/00000000000000000000000000000000');
         $actualImage = $this->response->getContent();
         $expectedImage = \file_get_contents(base_path('tests/images/steve_raw.png'));
 

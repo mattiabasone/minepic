@@ -12,7 +12,6 @@
         "ext-intl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "czim/laravel-repository": "^2.0",
         "guzzlehttp/guzzle": "^6.2",
         "illuminate/redis": "^6.0",
         "laravel/lumen-framework": "^6.0",
@@ -36,7 +35,8 @@
         "symfony/polyfill-intl-idn": "*",
         "symfony/polyfill-php70": "*",
         "symfony/polyfill-php72": "*",
-        "symfony/polyfill-php73": "*"
+        "symfony/polyfill-php73": "*",
+        "symfony/polyfill-php74": "*"
     },
     "autoload": {
         "classmap": [
@@ -60,9 +60,7 @@
             "php -r \"copy('.env.example', '.env');\""
         ],
         "fix": "@php vendor/bin/php-cs-fixer fix",
-        "ihg": "@php artisan ide-helper:generate",
-        "ecs-check": "@php vendor/bin/ecs check app",
-        "ecs-fix": "@php vendor/bin/ecs check app --fix"
+        "ihg": "@php artisan ide-helper:generate"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

@@ -7,9 +7,6 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-/**
- * Class BaseApiController.
- */
 class AvatarController extends BaseApiController
 {
     /**
@@ -25,15 +22,32 @@ class AvatarController extends BaseApiController
      */
     public function serveUuid(Request $request, string $uuid, $size = 0): Response
     {
-        $size = (int) $size;
-
         $this->uuidResolver->resolve($uuid);
         $this->dispatchAccountImageServedEvent();
 
         return $this->pngResponse(
             (string) $this->rendering->avatar(
                 $this->uuidResolver->getUuid(),
-                $size
+                (int) $size
+            )
+        );
+    }
+
+    /**
+     * @param int $size
+     *
+     * @throws \App\Image\Exceptions\ImageCreateFromPngFailedException
+     * @throws \App\Image\Exceptions\ImageTrueColorCreationFailedException
+     * @throws \App\Image\Exceptions\InvalidSectionSpecifiedException
+     *
+     * @return Response
+     */
+    public function serveDefault($size = 0): Response
+    {
+        return $this->pngResponse(
+            (string) $this->rendering->avatar(
+                null,
+                (int) $size
             )
         );
     }

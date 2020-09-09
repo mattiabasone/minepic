@@ -19,13 +19,13 @@ class UuidResolver
     /**
      * Requested string.
      *
-     * @var string
+     * @var string|null
      */
-    private string $request = '';
+    private ?string $request;
     /**
      * @var string|null
      */
-    private ?string $uuid = null;
+    private ?string $uuid;
     /**
      * Userdata from/to DB.
      *
@@ -66,9 +66,9 @@ class UuidResolver
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUuid(): string
+    public function getUuid(): ?string
     {
         return $this->uuid;
     }
@@ -121,6 +121,7 @@ class UuidResolver
      * Insert user data in database.
      **
      * @return bool
+     * @throws \Throwable
      */
     public function insertNewUuid(): bool
     {
@@ -152,16 +153,22 @@ class UuidResolver
     /**
      * Check requested string and initialize objects.
      *
-     * @param string
+     * @param string|null
      *
      * @throws \Exception
      *
      * @return bool
      */
-    public function resolve(string $string): bool
+    public function resolve(?string $uuid): bool
     {
         $this->dataUpdated = false;
-        $this->request = $string;
+        $this->request = $uuid;
+
+        if ($uuid === null) {
+            Log::debug('UUID is null');
+
+            return false;
+        }
 
         if ($this->initializeUuidRequest()) {
             return true;
