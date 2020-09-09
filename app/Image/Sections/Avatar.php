@@ -109,12 +109,17 @@ class Avatar extends ImageSection
         $helmCheckImage = $this->createHelmCheckImage($baseSkinImage, $helmCoordinates);
         $this->calculateHelmStandardDeviation($helmCheckImage);
 
-        return (
-                ($this->redStdDev > self::DEFAULT_STANDARD_DEVIATION && $this->greenStdDev > self::DEFAULT_STANDARD_DEVIATION) ||
-                ($this->redStdDev > self::DEFAULT_STANDARD_DEVIATION && $this->blueStdDev > self::DEFAULT_STANDARD_DEVIATION) ||
-                ($this->greenStdDev > self::DEFAULT_STANDARD_DEVIATION && $this->blueStdDev > self::DEFAULT_STANDARD_DEVIATION)
-            ) ||
-            $this->meanAlpha === 127;
+        return $this->isValidHelmStandardDeviation() || $this->meanAlpha === 127;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isValidHelmStandardDeviation(): bool
+    {
+        return ($this->redStdDev > self::DEFAULT_STANDARD_DEVIATION && $this->greenStdDev > self::DEFAULT_STANDARD_DEVIATION) ||
+            ($this->redStdDev > self::DEFAULT_STANDARD_DEVIATION && $this->blueStdDev > self::DEFAULT_STANDARD_DEVIATION) ||
+            ($this->greenStdDev > self::DEFAULT_STANDARD_DEVIATION && $this->blueStdDev > self::DEFAULT_STANDARD_DEVIATION);
     }
 
     /**
@@ -123,12 +128,12 @@ class Avatar extends ImageSection
      * @param int    $size Avatar size
      * @param string $type Section rendered
      *
-     * @throws \Minepic\Image\Exceptions\InvalidSectionSpecifiedException|\Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
      * @throws \Minepic\Image\Exceptions\ImageCreateFromPngFailedException
+     * @throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
      */
     public function render(int $size = 0, string $type = self::FRONT): void
     {
-        if ($size <= 0 || $size > env('MAX_AVATAR_SIZE')) {
+        if ($size <= 0 || $size > (int) env('MAX_AVATAR_SIZE')) {
             $size = (int) env('DEFAULT_AVATAR_SIZE');
         }
         // generate png from url/path

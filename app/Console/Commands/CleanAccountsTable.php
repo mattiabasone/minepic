@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Minepic\Console\Commands;
 
-use Minepic\Models\Account;
 use Illuminate\Console\Command;
+use Minepic\Models\Account;
 
-/**
- * Class CleanAccountsTable.
- */
 class CleanAccountsTable extends Command
 {
     /**

@@ -10,9 +10,6 @@ use Minepic\Helpers\Storage\Files\SkinsStorage;
 use Minepic\Minecraft\MojangClient;
 use Minepic\Models\Account;
 
-/**
- * Class CleanAccountsTable.
- */
 class CheckUuid extends Command
 {
     /**
@@ -32,26 +29,17 @@ class CheckUuid extends Command
     /**
      * Execute the console command.
      *
-     * @throws \Exception
+     * @param MojangClient $mojangClient
+     *
+     * @throws \Throwable
+     *
+     * @return int
      */
     public function handle(MojangClient $mojangClient): int
     {
         $this->info('Selecting old uuid...');
 
-        $timeCheck = Carbon::now()->subDays(28);
-
-        $results = Account::query()
-            ->select(['id'])
-            ->whereDate('updated_at', '<', $timeCheck->toDateTimeString())
-            ->orderBy('updated_at', 'ASC')
-            ->take(300)
-            ->get();
-
-        if ($results->count() === 0) {
-            $this->info('No old uuid found');
-
-            return 0;
-        }
+        $results = $this->getAccountsIds();
 
         foreach ($results as $result) {
             /** @var \Minepic\Models\Account $account */
@@ -98,5 +86,15 @@ class CheckUuid extends Command
         }
 
         return 0;
+    }
+
+    private function getAccountsIds()
+    {
+        return Account::query()
+            ->select(['id'])
+            ->whereDate('updated_at', '<', Carbon::now()->subDays(28)->toDateTimeString())
+            ->orderBy('updated_at', 'ASC')
+            ->take(300)
+            ->get();
     }
 }

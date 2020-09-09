@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Minepic\Minecraft;
 
-use Minepic\Minecraft\Exceptions\UserNotFoundException;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Support\Facades\Log;
+use Minepic\Minecraft\Exceptions\UserNotFoundException;
 use Psr\Http\Message\ResponseInterface;
 
 /**

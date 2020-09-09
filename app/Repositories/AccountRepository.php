@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Minepic\Repositories;
 
-use Minepic\Models\Account;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Minepic\Models\Account;
 
 class AccountRepository
 {

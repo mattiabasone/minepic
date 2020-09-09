@@ -12,7 +12,7 @@
         "ext-intl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "guzzlehttp/guzzle": "^6.2",
+        "guzzlehttp/guzzle": "^6.5",
         "illuminate/redis": "^7.0",
         "laravel/lumen-framework": "^7.0",
         "league/flysystem": "^1.0",

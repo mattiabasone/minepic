@@ -28,14 +28,10 @@ class MojangAccountFactory
      *
      * @throws \JsonException
      *
-     * @return MojangAccount|null
+     * @return MojangAccount
      */
-    public static function makeFromApiResponse(array $response): ?MojangAccount
+    public static function makeFromApiResponse(array $response): MojangAccount
     {
-        if (!\array_key_exists('id', $response) || !\array_key_exists('name', $response)) {
-            return null;
-        }
-
         $uuid = $response['id'];
         $username = $response['name'];
         $skin = '';

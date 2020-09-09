@@ -159,13 +159,13 @@ class JsonController extends BaseController
     /**
      * Username Typeahead.
      *
-     * @param $term
+     * @param $username
      *
      * @return JsonResponse
      */
-    public function userTypeahead($term): JsonResponse
+    public function userTypeahead(string $username): JsonResponse
     {
-        $accountsPagination = $this->accountRepository->filterPaginate(['term' => $term], 15);
+        $accountsPagination = $this->accountRepository->filterPaginate(['term' => $username], 15);
 
         $resource = new Fractal\Resource\Collection(
             $accountsPagination->items(),

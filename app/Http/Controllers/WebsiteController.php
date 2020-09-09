@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Minepic\Http\Controllers;
 
-use Minepic\Misc\SplashMessage;
-use Minepic\Models\AccountStats;
-use Minepic\Resolvers\UsernameResolver;
-use Minepic\Resolvers\UuidResolver;
-use Minepic\Transformers\Account\AccountBasicDataTransformer;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use League\Fractal;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\ArraySerializer;
+use Minepic\Misc\SplashMessage;
+use Minepic\Models\AccountStats;
+use Minepic\Resolvers\UsernameResolver;
+use Minepic\Resolvers\UuidResolver;
+use Minepic\Transformers\Account\AccountBasicDataTransformer;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

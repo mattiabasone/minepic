@@ -126,7 +126,7 @@ class UuidResolver
      */
     public function insertNewUuid(): bool
     {
-        if (UserNotFoundCache::has($this->request)) {
+        if ($this->request === null || UserNotFoundCache::has($this->request)) {
             return false;
         }
 
