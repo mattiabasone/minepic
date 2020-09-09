@@ -49,6 +49,58 @@ class ApiControllerTest extends TestCase
     /**
      * @test
      */
+    public function shouldReturnUserSkinWithoutSize(): void
+    {
+        $this->get('/skin/_Cyb3r');
+        $this->assertResponseOk();
+        $this->assertEquals(
+            'image/png',
+            $this->response->headers->get('Content-Type')
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function shouldReturnUserSkinBackWithoutSize(): void
+    {
+        $this->get('/skin-back/_Cyb3r');
+        $this->assertResponseOk();
+        $this->assertEquals(
+            'image/png',
+            $this->response->headers->get('Content-Type')
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function shouldReturnUserSkinWithSize(): void
+    {
+        $this->get('/skin/200/_Cyb3r');
+        $this->assertResponseOk();
+        $this->assertEquals(
+            'image/png',
+            $this->response->headers->get('Content-Type')
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function shouldReturnUserSkinBackWithSize(): void
+    {
+        $this->get('/skin-back/200/_Cyb3r');
+        $this->assertResponseOk();
+        $this->assertEquals(
+            'image/png',
+            $this->response->headers->get('Content-Type')
+        );
+    }
+
+    /**
+     * @test
+     */
     public function shouldReturnSteveSkin(): void
     {
         $this->get('/skin/ThisIsAnInvalidAccountName');
