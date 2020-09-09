@@ -7,7 +7,7 @@ ARG APP_USER=app
 ARG APP_PATH=/app
 
 RUN apk update \
-    && apk add --no-cache mysql-client curl icu libpng freetype libjpeg-turbo oniguruma-dev postgresql-dev libffi-dev libsodium libzip-dev \
+    && apk add --no-cache mysql-client curl icu libpng freetype git libjpeg-turbo oniguruma-dev postgresql-dev libffi-dev libsodium libzip-dev \
     && apk add --no-cache --virtual build-dependencies freetds-dev icu-dev libxml2-dev freetype-dev libpng-dev libjpeg-turbo-dev libzip-dev g++ make autoconf libsodium-dev
 
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
