@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\Log;
 use Minepic\Minecraft\Exceptions\UserNotFoundException;
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class MojangClient.
- */
 class MojangClient
 {
+    /**
+     * API response TTL.
+     */
+    private const CACHE_TTL = 120;
     /**
      * User Agent used for requests.
      */
@@ -64,6 +65,17 @@ class MojangClient
     }
 
     /**
+     * @param string $method
+     * @param string $url
+     *
+     * @return string
+     */
+    private function getCacheKey(string $method, string $url): string
+    {
+        return 'minecraft_api_response_'.\md5($method.'_'.$url);
+    }
+
+    /**
      * Send new request.
      *
      * @param string $method HTTP Verb
@@ -76,16 +88,18 @@ class MojangClient
     private function sendApiRequest(string $method, string $url): ?array
     {
         try {
-            $response = $this->httpClient->request($method, $url);
-            // No Content
-            if ($response->getStatusCode() === 204) {
-                return null;
-            }
+            return \Cache::remember($this->getCacheKey($method, $url), self::CACHE_TTL, function () use ($method, $url) {
+                $response = $this->httpClient->request($method, $url);
+                // No Content
+                if ($response->getStatusCode() === 204) {
+                    return null;
+                }
 
-            $responseContents = $response->getBody()->getContents();
-            Log::debug('Minecraft API Response: '.$responseContents, ['method' => $method, 'url' => $url]);
+                $responseContents = $response->getBody()->getContents();
+                Log::debug('Minecraft API Response: '.$responseContents, ['method' => $method, 'url' => $url]);
 
-            return \json_decode($responseContents, true, 512, JSON_THROW_ON_ERROR);
+                return \json_decode($responseContents, true, 512, JSON_THROW_ON_ERROR);
+            });
         } catch (BadResponseException $exception) {
             $this->handleGuzzleBadResponseException($exception);
 

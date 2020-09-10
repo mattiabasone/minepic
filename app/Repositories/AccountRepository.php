@@ -26,34 +26,6 @@ class AccountRepository
     }
 
     /**
-     * Find account using UUID.
-     *
-     * @param string $uuid
-     * @param array  $columns
-     *
-     * @return Account
-     */
-    public function findByUuid(string $uuid, $columns = ['*']): ?Account
-    {
-        return Account::whereUuid($uuid)
-            ->select($columns)
-            ->first();
-    }
-
-    /**
-     * @param string $username
-     * @param array  $columns
-     *
-     * @return Account
-     */
-    public function findByUsername(string $username, $columns = ['*']): ?Account
-    {
-        return Account::whereUsername($username)
-            ->select($columns)
-            ->first();
-    }
-
-    /**
      * Last updated username.
      *
      * @param string $uuid
