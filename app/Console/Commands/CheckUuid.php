@@ -26,6 +26,9 @@ class CheckUuid extends Command
      */
     protected $description = 'Check old uuid.';
 
+    /** @var MojangClient */
+    private MojangClient $mojangClient;
+
     /**
      * Execute the console command.
      *
@@ -37,6 +40,7 @@ class CheckUuid extends Command
      */
     public function handle(MojangClient $mojangClient): int
     {
+        $this->mojangClient = $mojangClient;
         $this->info('Selecting old uuid...');
 
         $results = $this->getAccountsIds();
@@ -44,50 +48,33 @@ class CheckUuid extends Command
         foreach ($results as $result) {
             /** @var \Minepic\Models\Account $account */
             $account = Account::find($result->id);
-            if ($account) {
-                $this->info("Checking {$account->username} [{$account->uuid}]...");
-                try {
-                    $accountApiData = $mojangClient->getUuidInfo($account->uuid);
-                    $this->info("\tUUID Valid");
-
-                    // Update database
-                    $account->update([
-                        'username' => $accountApiData->getUsername(),
-                        'skin' => $accountApiData->getSkin(),
-                        'cape' => $accountApiData->getCape(),
-                        'fail_count' => 0,
-                    ]);
-                    $this->info("\tData updated");
-
-                    try {
-                        $skinData = $mojangClient->getSkin($account->uuid);
-                        SkinsStorage::save($account->uuid, $skinData);
-                        $this->info("\tSkin png updated");
-                    } catch (\Exception $e) {
-                        SkinsStorage::copyAsSteve($account->uuid);
-                        $this->error("\tUsing Steve as skin");
-                        $this->error("\t".$e->getMessage());
-                    }
-                } catch (\Exception $e) {
-                    ++$account->fail_count;
-                    $account->update([
-                        'fail_count' => $account->fail_count,
-                    ]);
-                    $this->warn("\tFailed. Fail count: {$account->fail_count}");
-                    if ($account->fail_count > 10) {
-                        $account->delete();
-                        $this->error("\tDELETED!");
-                    } else {
-                        $account->save();
-                    }
+            $this->info("Checking {$account->username} [{$account->uuid}]...");
+            try {
+                $this->updateAccount($account);
+                $this->updateAccountSkin($account);
+            } catch (\Exception $e) {
+                ++$account->fail_count;
+                $account->update([
+                    'fail_count' => $account->fail_count,
+                ]);
+                $this->warn("\tFailed. Fail count: {$account->fail_count}");
+                if ($account->fail_count > 10) {
+                    $account->stats()->delete();
+                    $account->delete();
+                    $this->error("\tDELETED {$account->uuid}!");
+                } else {
+                    $account->save();
                 }
-                $this->line('################################################');
             }
+            $this->line('################################################');
         }
 
         return 0;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Account[]
+     */
     private function getAccountsIds()
     {
         return Account::query()
@@ -96,5 +83,44 @@ class CheckUuid extends Command
             ->orderBy('updated_at', 'ASC')
             ->take(300)
             ->get();
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @throws \Throwable
+     */
+    private function updateAccount(Account $account)
+    {
+        $accountApiData = $this->mojangClient->getUuidInfo($account->uuid);
+        $this->info("\tUUID Valid");
+
+        // Update database
+        $account->update([
+            'username' => $accountApiData->getUsername(),
+            'skin' => $accountApiData->getSkin(),
+            'cape' => $accountApiData->getCape(),
+            'fail_count' => 0,
+        ]);
+        $account->refresh();
+        $this->info("\tData updated");
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @throws \Throwable
+     */
+    private function updateAccountSkin(Account $account)
+    {
+        try {
+            $skinData = $this->mojangClient->getSkin($account->skin);
+            SkinsStorage::save($account->uuid, $skinData);
+            $this->info("\tSkin png updated");
+        } catch (\Exception $e) {
+            SkinsStorage::copyAsSteve($account->uuid);
+            $this->error("\tUsing Steve as skin");
+            $this->error("\t".$e->getMessage());
+        }
     }
 }

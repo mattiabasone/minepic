@@ -6,9 +6,6 @@ namespace Minepic\Minecraft;
 
 use Illuminate\Contracts\Support\Arrayable;
 
-/**
- * Class MojangAccount.
- */
 class MojangAccount implements Arrayable
 {
     /**

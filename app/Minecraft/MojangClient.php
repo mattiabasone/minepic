@@ -54,6 +54,9 @@ class MojangClient
         );
     }
 
+    /**
+     * @param \Throwable $exception
+     */
     private function handleThrowable(\Throwable $exception): void
     {
         Log::error($exception->getFile().':'.$exception->getLine().' - '.$exception->getMessage());

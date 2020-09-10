@@ -25,7 +25,7 @@ class UuidResolver
     /**
      * @var string|null
      */
-    private ?string $uuid;
+    private ?string $uuid = null;
     /**
      * Userdata from/to DB.
      *
