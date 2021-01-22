@@ -98,7 +98,7 @@ class MojangClient
                 $responseContents = $response->getBody()->getContents();
                 Log::debug('Minecraft API Response: '.$responseContents, ['method' => $method, 'url' => $url]);
 
-                return \json_decode($responseContents, true, 512, JSON_THROW_ON_ERROR);
+                return \json_decode($responseContents, true, 512, \JSON_THROW_ON_ERROR);
             });
         } catch (BadResponseException $exception) {
             $this->handleGuzzleBadResponseException($exception);

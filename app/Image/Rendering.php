@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Minepic\Image;
 
 use Minepic\Helpers\Storage\Files\SkinsStorage;
+use Minepic\Image\Components\Side;
 use Minepic\Image\Sections\Avatar;
 use Minepic\Image\Sections\Skin;
 use Minepic\Minecraft\MinecraftDefaults;
@@ -21,7 +22,7 @@ class Rendering
      *
      * @return Avatar
      */
-    public function avatar(?string $uuid, int $size, $type = ImageSection::FRONT): Avatar
+    public function avatar(?string $uuid, int $size, $type = Side::FRONT): Avatar
     {
         $avatar = new Avatar(
             $this->imagePath($uuid)
@@ -65,7 +66,7 @@ class Rendering
      *
      * @return Skin
      */
-    public function skin(?string $uuid, int $size, $type = ImageSection::FRONT): Skin
+    public function skin(?string $uuid, int $size, $type = Side::FRONT): Skin
     {
         $skin = new Skin(
             $this->imagePath($uuid)

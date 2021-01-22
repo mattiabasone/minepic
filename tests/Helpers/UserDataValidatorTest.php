@@ -18,12 +18,11 @@ class UserDataValidatorTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider shouldValidateUsernameDataProvider
      *
      * @param $value
      */
-    public function shouldValidateUsername($value): void
+    public function testShouldValidateUsername($value): void
     {
         $this->assertTrue(
             \Minepic\Helpers\UserDataValidator::isValidUsername($value)
@@ -40,12 +39,11 @@ class UserDataValidatorTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider shouldNotValidateUsernameDataProvider
      *
      * @param $value
      */
-    public function shouldNotValidateUsername($value): void
+    public function testShouldNotValidateUsername($value): void
     {
         $this->assertFalse(
             \Minepic\Helpers\UserDataValidator::isValidUsername($value)
@@ -62,12 +60,11 @@ class UserDataValidatorTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider shouldValidateUuidDataProvider
      *
      * @param $value
      */
-    public function shouldValidateUuid($value): void
+    public function testShouldValidateUuid($value): void
     {
         $this->assertTrue(
             \Minepic\Helpers\UserDataValidator::isValidUuid($value)
@@ -84,12 +81,11 @@ class UserDataValidatorTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider shouldNotValidateUuidDataProvider
      *
      * @param $value
      */
-    public function shouldNotValidateUuid($value): void
+    public function testShouldNotValidateUuid($value): void
     {
         $this->assertFalse(
             \Minepic\Helpers\UserDataValidator::isValidUuid($value)
@@ -106,12 +102,11 @@ class UserDataValidatorTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider shouldValidateEmailDataProvider
      *
      * @param $value
      */
-    public function shouldValidateEmail($value): void
+    public function testShouldValidateEmail($value): void
     {
         $this->assertTrue(
             \Minepic\Helpers\UserDataValidator::isValidEmail($value)
@@ -128,12 +123,11 @@ class UserDataValidatorTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider shouldNotValidateEmailDataProvider
      *
      * @param $value
      */
-    public function shouldNotValidateEmail($value): void
+    public function testShouldNotValidateEmail($value): void
     {
         $this->assertFalse(
             \Minepic\Helpers\UserDataValidator::isValidEmail($value)

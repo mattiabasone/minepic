@@ -6,8 +6,7 @@ namespace MinepicTests;
 
 class BasicTest extends TestCase
 {
-    /** @test */
-    public function shouldReturnHomePage(): void
+    public function testShouldReturnHomePage(): void
     {
         $this->get('/');
 

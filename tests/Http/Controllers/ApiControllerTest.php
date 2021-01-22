@@ -9,23 +9,20 @@ use MinepicTests\TestCase;
 
 class ApiControllerTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         \DB::beginTransaction();
         UserNotFoundCache::add('ThisIsAnInvalidAccountName');
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         \DB::rollBack();
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
-    public function shouldReturnSteveAvatar(): void
+    public function testShouldReturnSteveAvatar(): void
     {
         $this->get('/avatar/ThisIsAnInvalidAccountName');
         $actualImage = $this->response->getContent();
@@ -33,10 +30,7 @@ class ApiControllerTest extends TestCase
         $this->assertEquals($expectedImage, $actualImage);
     }
 
-    /**
-     * @test
-     */
-    public function shouldReturnUserAvatarWithSize(): void
+    public function testShouldReturnUserAvatarWithSize(): void
     {
         $this->get('/avatar/200/_Cyb3r');
         $this->assertResponseOk();
@@ -46,10 +40,7 @@ class ApiControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function shouldReturnUserSkinWithoutSize(): void
+    public function testShouldReturnUserSkinWithoutSize(): void
     {
         $this->get('/skin/_Cyb3r');
         $this->assertResponseOk();
@@ -59,10 +50,7 @@ class ApiControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function shouldReturnUserSkinBackWithoutSize(): void
+    public function testShouldReturnUserSkinBackWithoutSize(): void
     {
         $this->get('/skin-back/_Cyb3r');
         $this->assertResponseOk();
@@ -72,10 +60,7 @@ class ApiControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function shouldReturnUserSkinWithSize(): void
+    public function testShouldReturnUserSkinWithSize(): void
     {
         $this->get('/skin/200/_Cyb3r');
         $this->assertResponseOk();
@@ -85,10 +70,7 @@ class ApiControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function shouldReturnUserSkinBackWithSize(): void
+    public function testShouldReturnUserSkinBackWithSize(): void
     {
         $this->get('/skin-back/200/_Cyb3r');
         $this->assertResponseOk();
@@ -98,10 +80,7 @@ class ApiControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function shouldReturnSteveSkin(): void
+    public function testShouldReturnSteveSkin(): void
     {
         $this->get('/skin/ThisIsAnInvalidAccountName');
         $actualImage = $this->response->getContent();
@@ -109,10 +88,7 @@ class ApiControllerTest extends TestCase
         $this->assertEquals($expectedImage, $actualImage);
     }
 
-    /**
-     * @test
-     */
-    public function shouldReturnSteveSkinBack(): void
+    public function testShouldReturnSteveSkinBack(): void
     {
         $this->get('/skin-back/ThisIsAnInvalidAccountName');
         $actualImage = $this->response->getContent();
@@ -120,10 +96,7 @@ class ApiControllerTest extends TestCase
         $this->assertEquals($expectedImage, $actualImage);
     }
 
-    /**
-     * @test
-     */
-    public function shouldReturnSteveHead(): void
+    public function testShouldReturnSteveHead(): void
     {
         $this->get('/head/ThisIsAnInvalidAccountName');
         $this->assertResponseOk();
@@ -133,10 +106,7 @@ class ApiControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function shouldDownloadSteveTexture(): void
+    public function testShouldDownloadSteveTexture(): void
     {
         $this->get('/download/00000000000000000000000000000000');
         $actualImage = $this->response->getContent();
@@ -145,10 +115,7 @@ class ApiControllerTest extends TestCase
         $this->assertEquals($expectedImage, $actualImage);
     }
 
-    /**
-     * @test
-     */
-    public function shouldGenerateIsometricAvatar(): void
+    public function testShouldGenerateIsometricAvatar(): void
     {
         $this->get('/head/d59dcabb30424b978f7201d1a076637f');
         $this->assertResponseOk();
@@ -158,10 +125,7 @@ class ApiControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function shouldGenerateAvatarUsingDifferentUuidFormat(): void
+    public function testShouldGenerateAvatarUsingDifferentUuidFormat(): void
     {
         $this->get('/avatar/d59dcabb-3042-4b97-8f72-01d1a076637f');
         $this->assertResponseOk();
@@ -171,10 +135,7 @@ class ApiControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function shouldFailUpdatingUnExistingUser(): void
+    public function testShouldFailUpdatingUnExistingUser(): void
     {
         $this->get('/update/d59dcabb30424b978f7201ffffffffff');
 

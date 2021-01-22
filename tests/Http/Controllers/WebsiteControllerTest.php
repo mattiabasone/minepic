@@ -8,15 +8,13 @@ use MinepicTests\TestCase;
 
 class WebsiteControllerTest extends TestCase
 {
-    /** @test */
-    public function shouldDisplayHomePage(): void
+    public function testShouldDisplayHomePage(): void
     {
         $response = $this->get('/');
         $response->assertResponseStatus(200);
     }
 
-    /** @test */
-    public function shouldDisplayUserInfoPage(): void
+    public function testShouldDisplayUserInfoPage(): void
     {
         $users = ['_Cyb3r', 'hackLover', 'RaynLegends', 'xPeppe'];
         $user = \array_rand($users);
@@ -24,8 +22,7 @@ class WebsiteControllerTest extends TestCase
         $response->assertResponseStatus(200);
     }
 
-    /** @test */
-    public function shouldDisplay404ForUnExistentUser(): void
+    public function testShouldDisplay404ForUnExistentUser(): void
     {
         $response = $this->get('/user/IHopeThisUserDoesNotExists');
         $response->assertResponseStatus(404);

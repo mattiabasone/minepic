@@ -6,18 +6,16 @@ namespace Minepic\Image;
 
 use Minepic\Helpers\Storage\Files\IsometricsStorage;
 use Minepic\Helpers\Storage\Files\SkinsStorage;
+use Minepic\Image\Components\Side;
 use Minepic\Image\Exceptions\SkinNotFountException;
 use Minepic\Image\Sections\Avatar;
 
-/**
- * Class IsometricAvatar.
- */
 class IsometricAvatar
 {
     /**
      * Cosine PI/6.
      */
-    private const COSINE_PI_6 = M_SQRT3 / 2;
+    private const COSINE_PI_6 = \M_SQRT3 / 2;
 
     /**
      * Base size (all requests must be <=).
@@ -189,7 +187,7 @@ class IsometricAvatar
         $avatar = new Avatar($this->skinPath);
 
         // Face
-        $avatar->render(self::HEAD_BASE_SIZE, ImageSection::FRONT);
+        $avatar->render(self::HEAD_BASE_SIZE, Side::FRONT);
 
         $face = new \Imagick();
         $face->readImageBlob((string) $avatar);
@@ -206,7 +204,7 @@ class IsometricAvatar
         );
 
         // Top
-        $avatar->render(self::HEAD_BASE_SIZE, ImageSection::TOP);
+        $avatar->render(self::HEAD_BASE_SIZE, Side::TOP);
 
         $top = new \Imagick();
         $top->readImageBlob((string) $avatar);
@@ -223,7 +221,7 @@ class IsometricAvatar
         );
 
         // Right
-        $avatar->render(self::HEAD_BASE_SIZE, ImageSection::RIGHT);
+        $avatar->render(self::HEAD_BASE_SIZE, Side::RIGHT);
 
         $right = new \Imagick();
         $right->readImageBlob((string) $avatar);

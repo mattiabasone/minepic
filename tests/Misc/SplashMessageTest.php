@@ -8,14 +8,12 @@ use MinepicTests\TestCase;
 
 class SplashMessageTest extends TestCase
 {
-    /** @test */
-    public function shouldGetMessage(): void
+    public function testShouldGetMessage(): void
     {
         $this->assertIsString(\Minepic\Misc\SplashMessage::get());
     }
 
-    /** @test */
-    public function shouldGet404Message(): void
+    public function testShouldGet404Message(): void
     {
         $this->assertIsString(\Minepic\Misc\SplashMessage::get404());
     }

@@ -6,7 +6,7 @@ namespace Minepic\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Minepic\Image\ImageSection;
+use Minepic\Image\Components\Side;
 
 class SkinBackController extends BaseApiController
 {
@@ -27,7 +27,7 @@ class SkinBackController extends BaseApiController
         $this->dispatchAccountImageServedEvent();
 
         return $this->pngResponse(
-            (string) $this->rendering->skin($this->uuidResolver->getUuid(), (int) $size, ImageSection::BACK)
+            (string) $this->rendering->skin($this->uuidResolver->getUuid(), (int) $size, Side::BACK)
         );
     }
 
@@ -44,7 +44,7 @@ class SkinBackController extends BaseApiController
             return (string) $this->rendering->skin(
                 null,
                 (int) $size,
-                ImageSection::BACK
+                Side::BACK
             );
         });
 

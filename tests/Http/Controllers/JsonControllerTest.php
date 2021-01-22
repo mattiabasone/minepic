@@ -8,31 +8,25 @@ use MinepicTests\TestCase;
 
 class JsonControllerTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         \DB::beginTransaction();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         \DB::rollBack();
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
-    public function shouldReturnTypeaheadEntries(): void
+    public function testShouldReturnTypeaheadEntries(): void
     {
         $this->get('/api/v1/typeahead/Cy');
         $this->assertJson($this->response->content());
     }
 
-    /**
-     * @test
-     */
-    public function shouldReturnUserDataUsingUuid(): void
+    public function testShouldReturnUserDataUsingUuid(): void
     {
         $this->get('/api/v1/user/d59dcabb30424b978f7201d1a076637f');
         $responseContent = $this->response->content();
@@ -42,10 +36,7 @@ class JsonControllerTest extends TestCase
         $this->assertArrayHasKey('data', $decodedData);
     }
 
-    /**
-     * @test
-     */
-    public function shouldNotReturnUserDataUsingInvalidUuid(): void
+    public function testShouldNotReturnUserDataUsingInvalidUuid(): void
     {
         $this->get('/api/v1/user/d59dcabb30424b978f7201ffffffffff');
         $responseContent = $this->response->content();
@@ -56,10 +47,7 @@ class JsonControllerTest extends TestCase
         $this->assertArrayHasKey('message', $decodedData);
     }
 
-    /**
-     * @test
-     */
-    public function shouldReturnUserDataUsingUsername(): void
+    public function testShouldReturnUserDataUsingUsername(): void
     {
         $this->get('/api/v1/user/_Cyb3r');
         $responseContent = $this->response->content();
@@ -69,10 +57,7 @@ class JsonControllerTest extends TestCase
         $this->assertArrayHasKey('data', $decodedData);
     }
 
-    /**
-     * @test
-     */
-    public function shouldReturnMostWantedUser(): void
+    public function testShouldReturnMostWantedUser(): void
     {
         $this->get('/api/v1/stats/user/most-wanted');
         $responseContent = $this->response->content();

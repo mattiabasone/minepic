@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Minepic\Image\Sections;
 
+use Minepic\Image\Components\Component;
+use Minepic\Image\Components\Side;
 use Minepic\Image\ImageSection;
-use Minepic\Image\Point;
-use Minepic\Image\Sections\Avatar\Coordinates as AvatarCoordinates;
 
-/**
- * Class Avatar.
- */
 class Avatar extends ImageSection
 {
     /**
@@ -98,15 +95,15 @@ class Avatar extends ImageSection
      * Checks if base image has helm for section.
      *
      * @param resource $baseSkinImage
-     * @param Point    $helmCoordinates
+     * @param Side     $helmSide
      *
-     * @throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
+     *@throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
      *
      * @return bool
      */
-    private function hasHelm($baseSkinImage, Point $helmCoordinates): bool
+    private function hasHelm($baseSkinImage, Side $helmSide): bool
     {
-        $helmCheckImage = $this->createHelmCheckImage($baseSkinImage, $helmCoordinates);
+        $helmCheckImage = $this->createHelmCheckImage($baseSkinImage, $helmSide);
         $this->calculateHelmStandardDeviation($helmCheckImage);
 
         return $this->isValidHelmStandardDeviation() || $this->meanAlpha === 127;
@@ -145,18 +142,18 @@ class Avatar extends ImageSection
         $this->imgResource = $this->createTrueColorSquare($size);
 
         // Sections Coordinates
-        $faceCoordinates = AvatarCoordinates::getAvatarSection($type);
-        $helmCoordinates = AvatarCoordinates::getHelmSection($type);
+        $headSide = Component::getHead()->getSideByIdentifier($type);
+        $helmSide = Component::getHelm()->getSideByIdentifier($type);
 
-        \imagecopyresampled($this->imgResource, $baseSkinImage, 0, 0, $faceCoordinates->getX(), $faceCoordinates->getY(), $size, $size, 8, 8);
+        \imagecopyresampled($this->imgResource, $baseSkinImage, 0, 0, $headSide->getTopLeft()->getX(), $headSide->getTopLeft()->getY(), $size, $size, $headSide->getWidth(), $headSide->getHeight());
 
         // if all pixel have transparency or the colors are not the same
-        if ($this->hasHelm($baseSkinImage, $helmCoordinates)) {
+        if ($this->hasHelm($baseSkinImage, $helmSide)) {
             $helm = $this->createTrueColorSquare($size);
             \imagealphablending($helm, false);
             \imagesavealpha($helm, true);
             \imagefilledrectangle($helm, 0, 0, $size, $size, $this->colorAllocateAlpha($helm));
-            \imagecopyresampled($helm, $baseSkinImage, 0, 0, $helmCoordinates->getX(), $helmCoordinates->getY(), $size, $size, 8, 8);
+            \imagecopyresampled($helm, $baseSkinImage, 0, 0, $helmSide->getTopLeft()->getX(), $helmSide->getTopLeft()->getY(), $size, $size, 8, 8);
             $merge = $this->createTrueColorSquare($size);
             \imagecopy($merge, $this->imgResource, 0, 0, 0, 0, $size, $size);
             \imagecopy($merge, $helm, 0, 0, 0, 0, $size, $size);
@@ -168,19 +165,21 @@ class Avatar extends ImageSection
 
     /**
      * @param $image
-     * @param \Minepic\Image\Point $helmCoordinates
+     * @param Side $helmSide
      *
      * @throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
      *
      * @return resource
      */
-    public function createHelmCheckImage($image, Point $helmCoordinates)
+    public function createHelmCheckImage($image, Side $helmSide)
     {
-        $helmCheckImage = $this->createTrueColorSquare(8);
+        $width = $helmSide->getWidth();
+        $height = $helmSide->getHeight();
+        $helmCheckImage = $this->createTrueColorSquare($width);
         \imagealphablending($helmCheckImage, false);
         \imagesavealpha($helmCheckImage, true);
         \imagefilledrectangle($helmCheckImage, 0, 0, 8, 8, $this->colorAllocateAlpha($helmCheckImage));
-        \imagecopyresampled($helmCheckImage, $image, 0, 0, $helmCoordinates->getX(), $helmCoordinates->getY(), 8, 8, 8, 8);
+        \imagecopyresampled($helmCheckImage, $image, 0, 0, $helmSide->getTopLeft()->getX(), $helmSide->getTopLeft()->getY(), $width, $height, $width, $height);
 
         return $helmCheckImage;
     }
