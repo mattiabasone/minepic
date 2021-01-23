@@ -29,6 +29,7 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/i
         zip \
         pcntl \
         tokenizer \
+        xdebug \
         xml \
     && docker-php-ext-enable \
         redis \

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Minepic\Image\Sections;
 
+use Minepic\Image\Components\Side;
 use Minepic\Image\Exceptions\ImageResourceCreationFailedException;
 use Minepic\Image\ImageSection;
 
@@ -16,8 +17,8 @@ class Skin extends ImageSection
      */
     private function checkType(string $type): string
     {
-        if ($type !== self::BACK) {
-            $type = self::FRONT;
+        if ($type !== Side::BACK) {
+            $type = Side::FRONT;
         }
 
         return $type;
@@ -57,7 +58,7 @@ class Skin extends ImageSection
      *
      * @throws \Throwable
      */
-    public function render(int $skin_height = 256, $type = self::FRONT): void
+    public function render(int $skin_height = 256, $type = Side::FRONT): void
     {
         $type = $this->checkType($type);
         $skin_height = $this->checkHeight($skin_height);
@@ -69,7 +70,7 @@ class Skin extends ImageSection
         $tmpAvatar = new Avatar($this->skinPath);
         $tmpAvatar->render(8, $type);
         // Front
-        if ($type === self::FRONT) {
+        if ($type === Side::FRONT) {
             // Head
             \imagecopyresized($tmpImageResource, $tmpAvatar->getResource(), 4, 0, 0, 0, 8, 8, 8, 8);
             // Body Front

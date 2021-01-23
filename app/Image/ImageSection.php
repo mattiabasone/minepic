@@ -7,25 +7,26 @@ namespace Minepic\Image;
 use Minepic\Image\Exceptions\ImageCreateFromPngFailedException;
 use Minepic\Image\Exceptions\ImageTrueColorCreationFailedException;
 
-/**
- * Class ImageSection.
- */
 abstract class ImageSection
 {
-    public const TOP = 'TOP';
-    public const BOTTOM = 'BOTTOM';
-    public const FRONT = 'FRONT';
-    public const BACK = 'BACK';
-    public const RIGHT = 'RIGHT';
-    public const LEFT = 'LEFT';
-
     /**
      * Skin Path.
      *
      * @var string
      */
     protected string $skinPath = '';
-
+    /**
+     * @var resource
+     */
+    protected $skinResource;
+    /**
+     * @var int
+     */
+    protected int $skinWidth;
+    /**
+     * @var int
+     */
+    protected int $skinHeight;
     /**
      * Resource with the image.
      *
@@ -34,13 +35,23 @@ abstract class ImageSection
     protected $imgResource;
 
     /**
-     * Avatar constructor.
-     *
      * @param string $skinPath
+     * @throws ImageCreateFromPngFailedException
      */
     public function __construct(string $skinPath)
     {
         $this->skinPath = $skinPath;
+        $this->skinResource = $this->createImageFromPng($this->skinPath);
+        $this->skinWidth = (int) imagesx($this->skinResource);
+        $this->skinHeight = (int) imagesy($this->skinResource);
+    }
+
+    /**
+     * @return bool
+     */
+    public function is64x64(): bool
+    {
+        return $this->skinWidth === 64 && $this->skinHeight === 64;
     }
 
     /**

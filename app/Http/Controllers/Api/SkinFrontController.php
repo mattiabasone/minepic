@@ -6,13 +6,10 @@ namespace Minepic\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Minepic\Image\Components\Side;
 
 class SkinFrontController extends BaseApiController
 {
     /**
-     * Serve Avatar.
-     *
      * @param \Illuminate\Http\Request
      * @param string $uuid User UUID or Username
      * @param int    $size
@@ -21,19 +18,19 @@ class SkinFrontController extends BaseApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function serveUuid(Request $request, $uuid, $size = 0): Response
+    public function serveUuid(Request $request, string $uuid, $size = 0): Response
     {
         $size = (int) $size;
         $this->uuidResolver->resolve($uuid);
         $this->dispatchAccountImageServedEvent();
 
         return $this->pngResponse(
-            (string) $this->rendering->skin($this->uuidResolver->getUuid(), $size, Side::FRONT)
+            (string) $this->rendering->skinFront($this->uuidResolver->getUuid(), $size)
         );
     }
 
     /**
-     * @param int $size
+     * @param int|string $size
      *
      * @throws \Throwable
      *
@@ -42,10 +39,9 @@ class SkinFrontController extends BaseApiController
     public function serveDefault($size = 0): Response
     {
         $image = $this->cache()->remember('rendering.system.default_skin_front', 3600, function () use ($size) {
-            return (string) $this->rendering->skin(
+            return (string) $this->rendering->skinFront(
                 null,
-                (int) $size,
-                Side::FRONT
+                (int) $size
             );
         });
 

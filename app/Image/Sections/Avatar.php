@@ -128,7 +128,7 @@ class Avatar extends ImageSection
      * @throws \Minepic\Image\Exceptions\ImageCreateFromPngFailedException
      * @throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
      */
-    public function render(int $size = 0, string $type = self::FRONT): void
+    public function render(int $size = 0, string $type = Side::FRONT): void
     {
         if ($size <= 0 || $size > (int) env('MAX_AVATAR_SIZE')) {
             $size = (int) env('DEFAULT_AVATAR_SIZE');
@@ -143,7 +143,7 @@ class Avatar extends ImageSection
 
         // Sections Coordinates
         $headSide = Component::getHead()->getSideByIdentifier($type);
-        $helmSide = Component::getHelm()->getSideByIdentifier($type);
+        $helmSide = Component::getHeadLayer()->getSideByIdentifier($type);
 
         \imagecopyresampled($this->imgResource, $baseSkinImage, 0, 0, $headSide->getTopLeft()->getX(), $headSide->getTopLeft()->getY(), $size, $size, $headSide->getWidth(), $headSide->getHeight());
 

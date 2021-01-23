@@ -8,6 +8,7 @@ use Minepic\Helpers\Storage\Files\SkinsStorage;
 use Minepic\Image\Components\Side;
 use Minepic\Image\Sections\Avatar;
 use Minepic\Image\Sections\Skin;
+use Minepic\Image\Sections\SkinFront;
 use Minepic\Minecraft\MinecraftDefaults;
 
 class Rendering
@@ -72,6 +73,23 @@ class Rendering
             $this->imagePath($uuid)
         );
         $skin->render($size, $type);
+
+        return $skin;
+    }
+
+    /**
+     * @param string|null $uuid
+     * @param int $size
+     * @return SkinFront
+     * @throws Exceptions\ImageCreateFromPngFailedException
+     * @throws Exceptions\ImageResourceCreationFailedException
+     */
+    public function skinFront(?string $uuid, int $size): SkinFront
+    {
+        $skin = new SkinFront(
+            $this->imagePath($uuid)
+        );
+        $skin->render($size);
 
         return $skin;
     }
