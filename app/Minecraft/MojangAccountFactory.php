@@ -7,20 +7,6 @@ namespace Minepic\Minecraft;
 class MojangAccountFactory
 {
     /**
-     * Extract texture (skin/cape) ids from URL.
-     *
-     * @param string $url
-     *
-     * @return string
-     */
-    private static function extractTextureIdFromUrl(string $url): string
-    {
-        \preg_match('#'.env('MINECRAFT_TEXTURE_URL').'(.*)$#', $url, $matches);
-
-        return $matches[1] ?? '';
-    }
-
-    /**
      * @param array $response
      *
      * @throws \JsonException
@@ -53,5 +39,19 @@ class MojangAccountFactory
         }
 
         return new MojangAccount($uuid, $username, $skin, $cape);
+    }
+
+    /**
+     * Extract texture (skin/cape) ids from URL.
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    private static function extractTextureIdFromUrl(string $url): string
+    {
+        \preg_match('#'.env('MINECRAFT_TEXTURE_URL').'(.*)$#', $url, $matches);
+
+        return $matches[1] ?? '';
     }
 }

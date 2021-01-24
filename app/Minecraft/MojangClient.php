@@ -42,6 +42,66 @@ class MojangClient
         );
     }
 
+    /**
+     * Account info from username.
+     *
+     * @param string $username
+     *
+     * @throws \Throwable
+     *
+     * @return MojangAccount
+     */
+    public function sendUsernameInfoRequest(string $username): MojangAccount
+    {
+        $response = $this->sendApiRequest('GET', env('MINECRAFT_PROFILE_URL').$username);
+
+        if ($response !== null) {
+            return new MojangAccount($response['id'], $response['name']);
+        }
+
+        throw new UserNotFoundException("Unknown user {$username}");
+    }
+
+    /**
+     * Account info from UUID.
+     *
+     * @param string $uuid User UUID
+     *
+     * @throws \Throwable
+     *
+     * @return MojangAccount
+     */
+    public function getUuidInfo(string $uuid): MojangAccount
+    {
+        $response = $this->sendApiRequest('GET', env('MINECRAFT_SESSION_URL').$uuid);
+
+        if ($response === null) {
+            throw new \Exception('Cannot create data account');
+        }
+
+        return MojangAccountFactory::makeFromApiResponse($response);
+    }
+
+    /**
+     * Get Skin.
+     *
+     * @param string $skin Skin uuid
+     *
+     * @throws \Exception|\Throwable
+     *
+     * @return string
+     */
+    public function getSkin(string $skin): string
+    {
+        $response = $this->sendRequest('GET', env('MINECRAFT_TEXTURE_URL').$skin);
+
+        if ($response->getHeader('content-type')[0] === 'image/png') {
+            return $response->getBody()->getContents();
+        }
+
+        throw new \Exception('Invalid Response content type: '.$response->getHeader('content-type')[0]);
+    }
+
     private function handleGuzzleBadResponseException(
         BadResponseException $badResponseException
     ): void {
@@ -134,65 +194,5 @@ class MojangClient
 
             throw $exception;
         }
-    }
-
-    /**
-     * Account info from username.
-     *
-     * @param string $username
-     *
-     * @throws \Throwable
-     *
-     * @return MojangAccount
-     */
-    public function sendUsernameInfoRequest(string $username): MojangAccount
-    {
-        $response = $this->sendApiRequest('GET', env('MINECRAFT_PROFILE_URL').$username);
-
-        if ($response !== null) {
-            return new MojangAccount($response['id'], $response['name']);
-        }
-
-        throw new UserNotFoundException("Unknown user {$username}");
-    }
-
-    /**
-     * Account info from UUID.
-     *
-     * @param string $uuid User UUID
-     *
-     * @throws \Throwable
-     *
-     * @return MojangAccount
-     */
-    public function getUuidInfo(string $uuid): MojangAccount
-    {
-        $response = $this->sendApiRequest('GET', env('MINECRAFT_SESSION_URL').$uuid);
-
-        if ($response === null) {
-            throw new \Exception('Cannot create data account');
-        }
-
-        return MojangAccountFactory::makeFromApiResponse($response);
-    }
-
-    /**
-     * Get Skin.
-     *
-     * @param string $skin Skin uuid
-     *
-     * @throws \Exception|\Throwable
-     *
-     * @return string
-     */
-    public function getSkin(string $skin): string
-    {
-        $response = $this->sendRequest('GET', env('MINECRAFT_TEXTURE_URL').$skin);
-
-        if ($response->getHeader('content-type')[0] === 'image/png') {
-            return $response->getBody()->getContents();
-        }
-
-        throw new \Exception('Invalid Response content type: '.$response->getHeader('content-type')[0]);
     }
 }

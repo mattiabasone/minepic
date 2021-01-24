@@ -53,7 +53,7 @@ abstract class BaseSkinSection extends ImageSection
             return;
         }
 
-        if (array_key_exists(Component::LEFT_ARM, $this->startingPoints())) {
+        if (\array_key_exists(Component::LEFT_ARM, $this->startingPoints())) {
             $this->flipComponent(
                 $tmpImageResource,
                 Component::getLeftArm(),
@@ -62,7 +62,7 @@ abstract class BaseSkinSection extends ImageSection
             );
         }
 
-        if (array_key_exists(Component::LEFT_LEG, $this->startingPoints())) {
+        if (\array_key_exists(Component::LEFT_LEG, $this->startingPoints())) {
             $this->flipComponent(
                 $tmpImageResource,
                 Component::getLeftLeg(),
@@ -166,7 +166,7 @@ abstract class BaseSkinSection extends ImageSection
      * @param $tmpImageResource
      * @param string $componentName
      * @param Component $base
-     * @param Component|null $layer
+     * @param null|Component $layer
      * @throws \Exception
      */
     protected function copyComponent($tmpImageResource, string $componentName, Component $base, ?Component $layer): void

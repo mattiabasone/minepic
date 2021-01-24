@@ -24,9 +24,8 @@ class LayerValidator
      * @param resource $sourceImage
      * @param Side     $side
      *
-     *@return bool
      *@throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
-     *
+     *@return bool
      */
     public function check($sourceImage, Side $side): bool
     {
@@ -89,9 +88,8 @@ class LayerValidator
      * @param resource $sourceImage
      * @param Side $side
      *
-     * @return resource
      *@throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
-     *
+     * @return resource
      */
     private function createCheckImage($sourceImage, Side $side)
     {

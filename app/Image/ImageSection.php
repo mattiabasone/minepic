@@ -43,16 +43,18 @@ abstract class ImageSection
     {
         $this->skinPath = $skinPath;
         $this->skinResource = $this->createImageFromPng($this->skinPath);
-        $this->skinWidth = (int) imagesx($this->skinResource);
-        $this->skinHeight = (int) imagesy($this->skinResource);
+        $this->skinWidth = (int) \imagesx($this->skinResource);
+        $this->skinHeight = (int) \imagesy($this->skinResource);
     }
 
     /**
-     * @return bool
+     * Destructor.
      */
-    public function is64x64(): bool
+    public function __destruct()
     {
-        return $this->skinWidth === 64 && $this->skinHeight === 64;
+        if ($this->imgResource) {
+            \imagedestroy($this->imgResource);
+        }
     }
 
     /**
@@ -68,13 +70,11 @@ abstract class ImageSection
     }
 
     /**
-     * Destructor.
+     * @return bool
      */
-    public function __destruct()
+    public function is64x64(): bool
     {
-        if ($this->imgResource) {
-            \imagedestroy($this->imgResource);
-        }
+        return $this->skinWidth === 64 && $this->skinHeight === 64;
     }
 
     /**
@@ -85,6 +85,14 @@ abstract class ImageSection
     public function getResource()
     {
         return $this->imgResource;
+    }
+
+    /**
+     * @return resource
+     */
+    public function getSkinResource()
+    {
+        return $this->skinResource;
     }
 
     /**
@@ -104,14 +112,6 @@ abstract class ImageSection
         }
 
         return $resource;
-    }
-
-    /**
-     * @return resource
-     */
-    public function getSkinResource()
-    {
-        return $this->skinResource;
     }
 
     /**

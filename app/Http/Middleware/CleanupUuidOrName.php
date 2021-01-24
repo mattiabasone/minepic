@@ -43,7 +43,7 @@ class CleanupUuidOrName
     /**
      * @param string $username
      *
-     * @return string|string[]|null
+     * @return null|string|string[]
      */
     private function cleanUsername(string $username)
     {

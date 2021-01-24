@@ -8,7 +8,6 @@ namespace Minepic\Image\Components;
  * Class Coordinates.
  *
  * Stores components coordinates in array, first entry is top-left, second one bottom-right.
- *
  */
 final class Coordinates
 {

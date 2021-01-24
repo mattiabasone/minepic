@@ -9,7 +9,6 @@ use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Minepic\Helpers\Storage\Files\SkinsStorage;
 use Minepic\Image\Sections\Raw;
-use Minepic\Image\Sections\SkinFront;
 use Minepic\Minecraft\MinecraftDefaults;
 use Minepic\Resolvers\UuidResolver;
 

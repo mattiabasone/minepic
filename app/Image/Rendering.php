@@ -14,7 +14,7 @@ use Minepic\Minecraft\MinecraftDefaults;
 class Rendering
 {
     /**
-     * @param string|null $uuid
+     * @param null|string $uuid
      * @param int         $size
      * @param string      $type
      *
@@ -34,9 +34,9 @@ class Rendering
     }
 
     /**
-     * @param string|null $uuid
+     * @param null|string $uuid
      * @param int         $size
-     * @param int|null    $lastUpdateTimestamp
+     * @param null|int    $lastUpdateTimestamp
      *
      * @throws Exceptions\SkinNotFountException
      * @throws \Throwable
@@ -59,11 +59,11 @@ class Rendering
     }
 
     /**
-     * @param string|null $uuid
+     * @param null|string $uuid
      * @param int $size
-     * @return SkinFront
      * @throws Exceptions\ImageCreateFromPngFailedException
      * @throws Exceptions\ImageResourceCreationFailedException
+     * @return SkinFront
      */
     public function skinFront(?string $uuid, int $size): SkinFront
     {
@@ -76,11 +76,11 @@ class Rendering
     }
 
     /**
-     * @param string|null $uuid
+     * @param null|string $uuid
      * @param int $size
-     * @return SkinBack
      * @throws Exceptions\ImageCreateFromPngFailedException
      * @throws Exceptions\ImageResourceCreationFailedException
+     * @return SkinBack
      */
     public function skinBack(?string $uuid, int $size): SkinBack
     {
@@ -93,7 +93,7 @@ class Rendering
     }
 
     /**
-     * @param string|null $uuid
+     * @param null|string $uuid
      *
      * @throws \Exception
      *

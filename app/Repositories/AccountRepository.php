@@ -31,7 +31,7 @@ class AccountRepository
      * @param string $uuid
      * @param array  $columns
      *
-     * @return Builder|\Illuminate\Database\Eloquent\Model|object|null
+     * @return null|Builder|\Illuminate\Database\Eloquent\Model|object
      */
     public function findLastUpdatedByUsername(string $uuid, $columns = ['*'])
     {
@@ -44,10 +44,10 @@ class AccountRepository
 
     /**
      * @param array    $filters
-     * @param int|null $perPage
+     * @param null|int $perPage
      * @param array    $columns
      * @param string   $pageName
-     * @param int|null $page
+     * @param null|int $page
      *
      * @return LengthAwarePaginator
      */

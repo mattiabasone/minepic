@@ -22,20 +22,6 @@ use Illuminate\Database\Eloquent\Model;
 class AccountStats extends Model
 {
     /**
-     * Table name.
-     *
-     * @var string
-     */
-    protected $table = 'accounts_stats';
-
-    /**
-     * Primary key.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'uuid';
-
-    /**
      * No primary key.
      *
      * @var bool
@@ -58,6 +44,19 @@ class AccountStats extends Model
         'count_request' => 'int',
         'request_at' => 'datetime',
     ];
+    /**
+     * Table name.
+     *
+     * @var string
+     */
+    protected $table = 'accounts_stats';
+
+    /**
+     * Primary key.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'uuid';
 
     /**
      * @var array

@@ -6,7 +6,6 @@ namespace Minepic\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Minepic\Image\Components\Side;
 
 class SkinBackController extends BaseApiController
 {

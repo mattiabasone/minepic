@@ -1,7 +1,7 @@
 {
-    "name": "mattiabasone/minepic-api",
+    "name": "mattiabasone/minepic",
     "description": "Minepic Website and API service",
-    "keywords": ["minepic", "avatar", "minecraft"],
+    "keywords": ["minepic", "avatar", "minecraft", "skins"],
     "license": "BSD-3-Clause",
     "type": "project",
     "require": {
@@ -12,18 +12,18 @@
         "ext-intl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "guzzlehttp/guzzle": "^6.5",
-        "illuminate/redis": "^7.0",
-        "laravel/lumen-framework": "^7.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "illuminate/redis": "^8.0",
+        "laravel/lumen-framework": "^8.0",
         "league/flysystem": "^1.0",
         "league/fractal": "^0.19.0",
         "ramsey/uuid": "^4.0",
         "swooletw/laravel-swoole": "^2.6",
-        "vlucas/phpdotenv": "^4.0"
+        "vlucas/phpdotenv": "^5.0"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.9.1",
-        "phpunit/phpunit": "^8.5",
+        "phpunit/phpunit": "^9.3",
         "mockery/mockery": "^1.3.1",
         "friendsofphp/php-cs-fixer": "^2.16",
         "barryvdh/laravel-ide-helper": "^2.6",
@@ -44,9 +44,13 @@
             "database/factories"
         ],
         "psr-4": {
-            "Minepic\\": "app/"
+            "Minepic\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         },
-        "files": ["app/Helpers/helpers.php"]
+        "files": [
+            "app/Helpers/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

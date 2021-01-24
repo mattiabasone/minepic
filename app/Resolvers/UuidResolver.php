@@ -19,23 +19,23 @@ class UuidResolver
     /**
      * Requested string.
      *
-     * @var string|null
+     * @var null|string
      */
     private ?string $request;
     /**
-     * @var string|null
+     * @var null|string
      */
     private ?string $uuid = null;
     /**
      * Userdata from/to DB.
      *
-     * @var Account|null
+     * @var null|Account
      */
     private ?Account $account;
     /**
      * Full Minecraft/Mojang Account Data.
      *
-     * @var MojangAccount|null
+     * @var null|MojangAccount
      */
     private ?MojangAccount $mojangAccount;
     /**
@@ -73,25 +73,11 @@ class UuidResolver
     }
 
     /**
-     * @return string|null
+     * @return null|string
      */
     public function getUuid(): ?string
     {
         return $this->uuid;
-    }
-
-    /**
-     * Check if cache is still valid.
-     *
-     * @param int
-     *
-     * @return bool
-     */
-    private function checkDbCache(): bool
-    {
-        $accountUpdatedAtTimestamp = $this->account->updated_at->timestamp ?? 0;
-
-        return (\time() - $accountUpdatedAtTimestamp) < env('USERDATA_CACHE_TIME');
     }
 
     /**
@@ -102,26 +88,6 @@ class UuidResolver
     public function getAccount(): Account
     {
         return $this->account ?? new Account();
-    }
-
-    /**
-     * Check if an UUID is in the database.
-     *
-     * @return bool Returns true/false
-     */
-    private function requestedUuidInDb(): bool
-    {
-        $this->account = Account::query()
-            ->whereUuid($this->request)
-            ->first();
-
-        if ($this->account === null) {
-            return false;
-        }
-
-        $this->uuid = $this->account->uuid;
-
-        return true;
     }
 
     /**
@@ -161,7 +127,7 @@ class UuidResolver
     /**
      * Check requested string and initialize objects.
      *
-     * @param string|null
+     * @param null|string
      *
      * @throws \Exception
      *
@@ -185,6 +151,82 @@ class UuidResolver
         $this->setFailedRequest('Account not found');
 
         return false;
+    }
+
+    /**
+     * Return if data has been updated.
+     */
+    public function userDataUpdated(): bool
+    {
+        return $this->dataUpdated;
+    }
+
+    /**
+     * Save skin image.
+     *
+     * @param mixed
+     *
+     * @throws \Throwable
+     *
+     * @return bool
+     */
+    public function saveRemoteSkin(): bool
+    {
+        if (!empty($this->account->skin) && $this->account->skin !== '') {
+            try {
+                $skinData = $this->mojangClient->getSkin($this->account->skin);
+
+                return SkinsStorage::save($this->account->uuid, $skinData);
+            } catch (\Exception $e) {
+                Log::error($e->getTraceAsString());
+            }
+        }
+
+        return SkinsStorage::copyAsSteve($this->account->uuid);
+    }
+
+    /**
+     * Set force update.
+     *
+     * @param bool $forceUpdate
+     */
+    public function setForceUpdate(bool $forceUpdate): void
+    {
+        $this->forceUpdate = $forceUpdate;
+    }
+
+    /**
+     * Check if cache is still valid.
+     *
+     * @param int
+     *
+     * @return bool
+     */
+    private function checkDbCache(): bool
+    {
+        $accountUpdatedAtTimestamp = $this->account->updated_at->timestamp ?? 0;
+
+        return (\time() - $accountUpdatedAtTimestamp) < env('USERDATA_CACHE_TIME');
+    }
+
+    /**
+     * Check if an UUID is in the database.
+     *
+     * @return bool Returns true/false
+     */
+    private function requestedUuidInDb(): bool
+    {
+        $this->account = Account::query()
+            ->whereUuid($this->request)
+            ->first();
+
+        if ($this->account === null) {
+            return false;
+        }
+
+        $this->uuid = $this->account->uuid;
+
+        return true;
     }
 
     /**
@@ -240,14 +282,6 @@ class UuidResolver
     }
 
     /**
-     * Return if data has been updated.
-     */
-    public function userDataUpdated(): bool
-    {
-        return $this->dataUpdated;
-    }
-
-    /**
      * Log the username change.
      *
      * @param $account Account User Account
@@ -283,40 +317,6 @@ class UuidResolver
 
             return false;
         }
-    }
-
-    /**
-     * Save skin image.
-     *
-     * @param mixed
-     *
-     * @throws \Throwable
-     *
-     * @return bool
-     */
-    public function saveRemoteSkin(): bool
-    {
-        if (!empty($this->account->skin) && $this->account->skin !== '') {
-            try {
-                $skinData = $this->mojangClient->getSkin($this->account->skin);
-
-                return SkinsStorage::save($this->account->uuid, $skinData);
-            } catch (\Exception $e) {
-                Log::error($e->getTraceAsString());
-            }
-        }
-
-        return SkinsStorage::copyAsSteve($this->account->uuid);
-    }
-
-    /**
-     * Set force update.
-     *
-     * @param bool $forceUpdate
-     */
-    public function setForceUpdate(bool $forceUpdate): void
-    {
-        $this->forceUpdate = $forceUpdate;
     }
 
     /**

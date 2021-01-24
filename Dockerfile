@@ -33,8 +33,8 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/i
     && docker-php-ext-enable \
         redis \
         opcache \
-        swoole \
-        xdebug
+        swoole
+        # xdebug
 
 # Imagick Setup
 RUN set -ex \
@@ -51,9 +51,9 @@ RUN adduser -D ${APP_USER} -u ${DEFAULT_USER_UID} -s /bin/bash
 RUN mkdir ${APP_PATH} && \
     chown -R ${APP_USER}:${APP_USER} ${APP_PATH}
 
-RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini \
-    && echo "[XDEBUG]" >> /usr/local/etc/php/php.ini \
-    && echo "xdebug.mode=coverage" >> /usr/local/etc/php/php.ini
+#RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini \
+#    && echo "[XDEBUG]" >> /usr/local/etc/php/php.ini \
+#    && echo "xdebug.mode=coverage" >> /usr/local/etc/php/php.ini
 
 WORKDIR ${APP_PATH}
 
