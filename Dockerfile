@@ -12,7 +12,7 @@ RUN apk update \
 
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-configure pdo_dblib --with-libdir=lib \
-    && pecl install redis swoole \
+    && pecl install redis swoole xdebug \
     && docker-php-ext-install \
         bcmath \
         dom \
@@ -29,12 +29,12 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/i
         zip \
         pcntl \
         tokenizer \
-        xdebug \
         xml \
     && docker-php-ext-enable \
         redis \
         opcache \
-        swoole
+        swoole \
+        xdebug
 
 # Imagick Setup
 RUN set -ex \
@@ -50,6 +50,10 @@ RUN chmod +x /entrypoint
 RUN adduser -D ${APP_USER} -u ${DEFAULT_USER_UID} -s /bin/bash
 RUN mkdir ${APP_PATH} && \
     chown -R ${APP_USER}:${APP_USER} ${APP_PATH}
+
+RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini \
+    && echo "[XDEBUG]" >> /usr/local/etc/php/php.ini \
+    && echo "xdebug.mode=coverage" >> /usr/local/etc/php/php.ini
 
 WORKDIR ${APP_PATH}
 

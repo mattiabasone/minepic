@@ -8,7 +8,8 @@ use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Minepic\Helpers\Storage\Files\SkinsStorage;
-use Minepic\Image\Sections\Skin;
+use Minepic\Image\Sections\Raw;
+use Minepic\Image\Sections\SkinFront;
 use Minepic\Minecraft\MinecraftDefaults;
 use Minepic\Resolvers\UuidResolver;
 
@@ -60,9 +61,9 @@ class DownloadTextureController extends BaseController
             SkinsStorage::getPath($this->uuidResolver->getUuid()) :
             SkinsStorage::getPath(MinecraftDefaults::STEVE_DEFAULT_SKIN_NAME);
 
-        $userSkin = new Skin($skinPath);
-        $userSkin->prepareTextureDownload();
+        $rawSkin = new Raw($skinPath);
+        $rawSkin->render();
 
-        return $this->responseFactory->make($userSkin, 200, $headers);
+        return $this->responseFactory->make($rawSkin, 200, $headers);
     }
 }

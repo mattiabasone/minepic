@@ -45,7 +45,8 @@
         ],
         "psr-4": {
             "Minepic\\": "app/"
-        }
+        },
+        "files": ["app/Helpers/helpers.php"]
     },
     "autoload-dev": {
         "psr-4": {

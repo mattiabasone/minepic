@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Minepic\Image;
 
 use Minepic\Image\Exceptions\ImageCreateFromPngFailedException;
+use Minepic\Image\Exceptions\ImageResourceCreationFailedException;
 use Minepic\Image\Exceptions\ImageTrueColorCreationFailedException;
 
 abstract class ImageSection
@@ -103,6 +104,36 @@ abstract class ImageSection
         }
 
         return $resource;
+    }
+
+    /**
+     * @return resource
+     */
+    public function getSkinResource()
+    {
+        return $this->skinResource;
+    }
+
+    /**
+     * @param int $width
+     * @param int $height
+     *
+     * @throws ImageResourceCreationFailedException
+     *
+     * @return resource
+     */
+    protected function emptyBaseImage(int $width, int $height)
+    {
+        $tmpImageResource = \imagecreatetruecolor($width, $height);
+        if ($tmpImageResource === false) {
+            throw new ImageResourceCreationFailedException('imagecreatetruecolor() failed');
+        }
+        \imagealphablending($tmpImageResource, false);
+        \imagesavealpha($tmpImageResource, true);
+        $transparent = \imagecolorallocatealpha($tmpImageResource, 255, 255, 255, 127);
+        \imagefilledrectangle($tmpImageResource, 0, 0, $width, $height, $transparent);
+
+        return $tmpImageResource;
     }
 
     /**

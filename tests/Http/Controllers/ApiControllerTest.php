@@ -106,6 +106,9 @@ class ApiControllerTest extends TestCase
         );
     }
 
+    /**
+     * @group pippo
+     */
     public function testShouldDownloadSteveTexture(): void
     {
         $this->get('/download/00000000000000000000000000000000');
