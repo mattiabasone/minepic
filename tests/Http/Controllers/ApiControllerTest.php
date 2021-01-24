@@ -152,8 +152,10 @@ class ApiControllerTest extends TestCase
     {
         // Cleanup
         $steve = Account::whereUsername('MHF_Steve')->first();
-        AccountStats::whereUuid($steve->uuid)->delete();
-        $steve->delete();
+        if ($steve !== null) {
+            AccountStats::whereUuid($steve->uuid)->delete();
+            $steve->delete();
+        }
 
         $this->expectsEvents(AccountCreatedEvent::class);
         $this->get('/avatar/MHF_Steve');
@@ -162,6 +164,5 @@ class ApiControllerTest extends TestCase
         $expectedContentType = 'image/png';
         self::assertEquals($expectedContentType, $this->response->headers->get('Content-Type'));
         self::assertEquals($expectedStatusCode, $this->response->getStatusCode());
-
     }
 }

@@ -22,10 +22,11 @@ class AccountNameChangeFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => $this->faker->uuid,
+            'uuid' => str_replace('-', '', $this->faker->uuid),
             'prev_name' => $this->faker->name,
             'new_name' => $this->faker->name,
-            'time_change' => $this->faker->unixTime,
+            'created_at' => $this->faker->dateTime,
+            'updated_at' => $this->faker->dateTime,
         ];
     }
 }

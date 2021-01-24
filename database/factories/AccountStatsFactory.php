@@ -22,9 +22,11 @@ class AccountStatsFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => $this->faker->uuid,
+            'uuid' => str_replace('-', '', $this->faker->uuid),
             'count_request' => $this->faker->randomNumber(6),
             'request_at' => $this->faker->dateTime,
+            'created_at' => $this->faker->dateTime,
+            'updated_at' => $this->faker->dateTime,
         ];
     }
 }

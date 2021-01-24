@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MinepicTests\Http\Controllers;
 
+use Database\Factories\AccountFactory;
 use MinepicTests\TestCase;
 
 class JsonControllerTest extends TestCase
@@ -20,8 +21,11 @@ class JsonControllerTest extends TestCase
         parent::tearDown();
     }
 
-    public function testShouldReturnTypeaheadEntries(): void
+    public function testReturnTypeaheadEntries(): void
     {
+        AccountFactory::new()->create(['username' => 'Cyber']);
+        AccountFactory::new()->create(['username' => '_Cyb3r']);
+
         $this->get('/api/v1/typeahead/Cy');
         self::assertJson($this->response->content());
     }
