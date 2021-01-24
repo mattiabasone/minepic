@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Minepic\Providers;
 
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
-use Minepic\Events\Account\UsernameChangeEvent;
-use Minepic\Listeners\Account\UsernameChangeListener;
 use Minepic\Events\Account\AccountCreatedEvent;
-use Minepic\Listeners\Account\AccountCreatedListener;
 use Minepic\Events\Account\AccountImageServedEvent;
+use Minepic\Events\Account\UsernameChangeEvent;
+use Minepic\Listeners\Account\AccountCreatedListener;
 use Minepic\Listeners\Account\AccountImageServedListener;
+use Minepic\Listeners\Account\UsernameChangeListener;
 
 class EventServiceProvider extends ServiceProvider
 {

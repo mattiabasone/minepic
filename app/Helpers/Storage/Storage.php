@@ -56,7 +56,7 @@ class Storage
     public static function save(string $uuid, $rawData): bool
     {
         $fp = \fopen(static::getPath($uuid), 'wb');
-        if (is_resource($fp)) {
+        if (\is_resource($fp)) {
             \fwrite($fp, $rawData);
             \fclose($fp);
 

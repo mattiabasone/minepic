@@ -39,10 +39,6 @@
         "symfony/polyfill-php74": "*"
     },
     "autoload": {
-        "classmap": [
-            "database/seeds",
-            "database/factories"
-        ],
         "psr-4": {
             "Minepic\\": "app/",
             "Database\\Factories\\": "database/factories/",
