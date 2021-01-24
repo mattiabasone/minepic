@@ -29,11 +29,11 @@ class UserNotFoundCache
     }
 
     /**
-     * @param $usernameOrUuid
+     * @param string $usernameOrUuid
      *
      * @return bool
      */
-    public static function add($usernameOrUuid): bool
+    public static function add(string $usernameOrUuid): bool
     {
         return Cache::add(self::PREFIX.\md5($usernameOrUuid), 1, self::TTL);
     }

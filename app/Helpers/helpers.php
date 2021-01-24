@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 /**
  * @see https://www.php.net/manual/en/function.imagecopymerge.php#92787
- * @param $dst_im
- * @param $src_im
- * @param $dst_x
- * @param $dst_y
- * @param $src_x
- * @param $src_y
- * @param $src_w
- * @param $src_h
- * @param $pct
+ * @param \GdImage $dst_im
+ * @param \GdImage $src_im
+ * @param int $dst_x
+ * @param int $dst_y
+ * @param int $src_x
+ * @param int $src_y
+ * @param int $src_w
+ * @param int $src_h
+ * @param int $pct
  */
 function imagecopymerge_alpha($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $pct)
 {

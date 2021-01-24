@@ -17,9 +17,6 @@ use Minepic\Resolvers\UuidResolver;
 use Minepic\Transformers\Account\AccountBasicDataTransformer;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * Class WebsiteController.
- */
 class WebsiteController extends BaseController
 {
     /**

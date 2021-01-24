@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property string         $uuid
  * @property int            $count_request
- * @property \Carbon\Carbon $request_at
+ * @property null|\Carbon\Carbon $request_at
  *
  * @method static \Illuminate\Database\Eloquent\Builder|AccountStats newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AccountStats newQuery()

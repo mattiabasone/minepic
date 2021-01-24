@@ -12,13 +12,13 @@ class UserDataValidator
     /**
      * Checks if the given string is a valid username.
      *
-     * @param $username
+     * @param string $username
      *
      * @return bool
      */
     public static function isValidUsername(string $username): bool
     {
-        return !(\preg_match('#[\W]+#', $username) === 1);
+        return \preg_match('#[\W]+#', $username) !== 1;
     }
 
     /**
@@ -36,7 +36,7 @@ class UserDataValidator
     /**
      * Check if is an email address has invalid characters.
      *
-     * @param string
+     * @param string $email
      *
      * @return bool
      */

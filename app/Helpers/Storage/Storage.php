@@ -69,14 +69,16 @@ class Storage
     /**
      * Use Steve file for given uuid.
      *
-     * @param mixed
+     * @param string $name
+     * @throws \Exception
+     * @return bool
      */
-    public static function copyAsSteve(string $string): bool
+    public static function copyAsSteve(string $name): bool
     {
-        if ($string !== '') {
+        if ($name !== '') {
             return \copy(
                 static::getPath(MinecraftDefaults::getRandomDefaultSkin()),
-                static::getPath($string)
+                static::getPath($name)
             );
         }
 

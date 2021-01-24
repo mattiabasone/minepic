@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class CleanupUuidOrName
 {
+    /**
+     * @param Request $request
+     * @param Closure $next
+     * @return mixed
+     */
     public function handle(Request $request, Closure $next)
     {
         /** @var array $route */
@@ -31,9 +36,9 @@ class CleanupUuidOrName
     /**
      * @param string $uuid
      *
-     * @return string|string[]
+     * @return string
      */
-    private function cleanUuid(string $uuid)
+    private function cleanUuid(string $uuid): string
     {
         $uuid = \preg_replace("#\.png.*#", '', $uuid);
 
@@ -43,9 +48,9 @@ class CleanupUuidOrName
     /**
      * @param string $username
      *
-     * @return null|string|string[]
+     * @return string
      */
-    private function cleanUsername(string $username)
+    private function cleanUsername(string $username): string
     {
         return \preg_replace("#\.png$#", '', $username);
     }

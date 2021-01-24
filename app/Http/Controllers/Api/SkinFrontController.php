@@ -10,7 +10,7 @@ use Illuminate\Http\Response;
 class SkinFrontController extends BaseApiController
 {
     /**
-     * @param \Illuminate\Http\Request
+     * @param \Illuminate\Http\Request $request
      * @param string $uuid User UUID or Username
      * @param int    $size
      *

@@ -118,7 +118,7 @@ class ApiControllerTest extends TestCase
         self::assertEquals($expectedImage, $actualImage);
     }
 
-    public function testShouldGenerateIsometricAvatar(): void
+    public function testReturnIsometricAvatar(): void
     {
         $this->get('/head/d59dcabb30424b978f7201d1a076637f');
         $this->assertResponseOk();
@@ -128,7 +128,23 @@ class ApiControllerTest extends TestCase
         );
     }
 
-    public function testShouldGenerateAvatarUsingDifferentUuidFormat(): void
+    public function testReturnDefaultIsometricAvatar(): void
+    {
+        UserNotFoundCache::add('9bac3f78c4a44f5e841627a674981a5a');
+        $this->get('/head/9bac3f78c4a44f5e841627a674981a5a');
+        $this->assertResponseOk();
+        self::assertEquals(
+            'image/png',
+            $this->response->headers->get('Content-Type')
+        );
+        /*
+        $actualImage = $this->response->getContent();
+        $expectedImage = \file_get_contents(base_path('tests/images/steve_avatar.png'));
+        self::assertEquals($expectedImage, $actualImage);
+        */
+    }
+
+    public function testReturnAvatarUsingDifferentUuidFormat(): void
     {
         $this->get('/avatar/d59dcabb-3042-4b97-8f72-01d1a076637f');
         $this->assertResponseOk();

@@ -112,11 +112,11 @@ class IsometricAvatar
     /**
      * Render image resized.
      *
-     * @param $size
+     * @param int $size
      *
      * @throws \Throwable
      */
-    public function render($size): void
+    public function render(int $size): void
     {
         if ($size < self::MIN_SIZE || $size > self::MAX_SIZE) {
             $size = 256;

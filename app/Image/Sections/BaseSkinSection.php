@@ -43,6 +43,11 @@ abstract class BaseSkinSection extends ImageSection
     }
 
     /**
+     * @return Point[]
+     */
+    abstract protected function startingPoints(): array;
+
+    /**
      * In old skins (pre 1.8) left arm/leg are right arm/leg flipped
      * @param $tmpImageResource
      * @throws \Exception
@@ -121,21 +126,6 @@ abstract class BaseSkinSection extends ImageSection
         }
 
         return $skinHeight;
-    }
-
-    /**
-     * @return Point[]
-     */
-    protected function startingPoints(): array
-    {
-        return [
-            Component::HEAD => new Point(0, 0),
-            Component::TORSO => new Point(0, 0),
-            Component::RIGHT_ARM => new Point(0, 0),
-            Component::LEFT_ARM => new Point(0, 0),
-            Component::RIGHT_LEG => new Point(0, 0),
-            Component::LEFT_LEG => new Point(0, 0),
-        ];
     }
 
     /**

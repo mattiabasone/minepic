@@ -127,10 +127,9 @@ class UuidResolver
     /**
      * Check requested string and initialize objects.
      *
-     * @param null|string
+     * @param null|string $uuid
      *
-     * @throws \Exception
-     *
+     * @throws \Throwable
      * @return bool
      */
     public function resolve(?string $uuid): bool
@@ -164,8 +163,6 @@ class UuidResolver
     /**
      * Save skin image.
      *
-     * @param mixed
-     *
      * @throws \Throwable
      *
      * @return bool
@@ -197,8 +194,6 @@ class UuidResolver
 
     /**
      * Check if cache is still valid.
-     *
-     * @param int
      *
      * @return bool
      */
@@ -284,8 +279,8 @@ class UuidResolver
     /**
      * Log the username change.
      *
-     * @param $account Account User Account
-     * @param $previousUsername string Previous username
+     * @param Account $account User Account
+     * @param string $previousUsername Previous username
      */
     private function logUsernameChange(Account $account, string $previousUsername): void
     {
@@ -298,8 +293,6 @@ class UuidResolver
 
     /**
      * Get userdata from Mojang API.
-     *
-     * @param mixed
      *
      * @throws \Throwable
      *
@@ -329,6 +322,7 @@ class UuidResolver
     }
 
     /**
+     * @throws \Throwable
      * @return bool
      */
     private function initializeUuidRequest(): bool

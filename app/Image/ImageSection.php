@@ -6,7 +6,6 @@ namespace Minepic\Image;
 
 use Minepic\Image\Exceptions\ImageCreateFromPngFailedException;
 use Minepic\Image\Exceptions\ImageResourceCreationFailedException;
-use Minepic\Image\Exceptions\ImageTrueColorCreationFailedException;
 
 abstract class ImageSection
 {
@@ -17,7 +16,7 @@ abstract class ImageSection
      */
     protected string $skinPath = '';
     /**
-     * @var resource
+     * @var \GdImage
      */
     protected $skinResource;
     /**
@@ -31,7 +30,7 @@ abstract class ImageSection
     /**
      * Resource with the image.
      *
-     * @var resource
+     * @var \GdImage
      */
     protected $imgResource;
 
@@ -88,21 +87,13 @@ abstract class ImageSection
     }
 
     /**
-     * @return resource
-     */
-    public function getSkinResource()
-    {
-        return $this->skinResource;
-    }
-
-    /**
      * Creates imagecreatefrompng resource, it fails throws an Exception.
      *
      * @param string $path
      *
      * @throws ImageCreateFromPngFailedException
      *
-     * @return resource
+     * @return \GdImage
      */
     protected function createImageFromPng(string $path)
     {
@@ -120,7 +111,7 @@ abstract class ImageSection
      *
      * @throws ImageResourceCreationFailedException
      *
-     * @return resource
+     * @return \GdImage
      */
     protected function emptyBaseImage(int $width, int $height)
     {
@@ -134,41 +125,5 @@ abstract class ImageSection
         \imagefilledrectangle($tmpImageResource, 0, 0, $width, $height, $transparent);
 
         return $tmpImageResource;
-    }
-
-    /**
-     * Create imagecreatetruecolor square empty image.
-     *
-     * @param $size
-     *
-     * @throws ImageTrueColorCreationFailedException
-     *
-     * @return resource
-     */
-    protected function createTrueColorSquare($size)
-    {
-        $square = \imagecreatetruecolor($size, $size);
-        if ($square === false) {
-            throw new ImageTrueColorCreationFailedException('imagecreatetruecolor failed');
-        }
-
-        return $square;
-    }
-
-    /**
-     * @param $image
-     *
-     * @throws \Exception
-     *
-     * @return int
-     */
-    protected function colorAllocateAlpha($image): int
-    {
-        $colorIdentifier = \imagecolorallocatealpha($image, 255, 255, 255, 127);
-        if (!$colorIdentifier) {
-            throw new \Exception();
-        }
-
-        return $colorIdentifier;
     }
 }

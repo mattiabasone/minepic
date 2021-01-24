@@ -12,9 +12,6 @@ use Minepic\Image\Sections\Raw;
 use Minepic\Minecraft\MinecraftDefaults;
 use Minepic\Resolvers\UuidResolver;
 
-/**
- * Class BaseApiController.
- */
 class DownloadTextureController extends BaseController
 {
     /**
@@ -63,6 +60,6 @@ class DownloadTextureController extends BaseController
         $rawSkin = new Raw($skinPath);
         $rawSkin->render();
 
-        return $this->responseFactory->make($rawSkin, 200, $headers);
+        return $this->responseFactory->make((string) $rawSkin, 200, $headers);
     }
 }

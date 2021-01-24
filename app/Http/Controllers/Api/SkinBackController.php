@@ -12,7 +12,7 @@ class SkinBackController extends BaseApiController
     /**
      * Serve Avatar.
      *
-     * @param \Illuminate\Http\Request
+     * @param \Illuminate\Http\Request $request
      * @param string $uuid User UUID
      * @param int    $size
      *

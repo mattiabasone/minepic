@@ -22,12 +22,13 @@
         "vlucas/phpdotenv": "^5.0"
     },
     "require-dev": {
-        "fzaninotto/faker": "^1.9.1",
-        "phpunit/phpunit": "^9.3",
-        "mockery/mockery": "^1.3.1",
-        "friendsofphp/php-cs-fixer": "^2.16",
         "barryvdh/laravel-ide-helper": "^2.6",
-        "php-coveralls/php-coveralls": "^2.2"
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "fakerphp/faker": "^1.9.1",
+        "mockery/mockery": "^1.3.1",
+        "nunomaduro/larastan": "^0.6.13",
+        "php-coveralls/php-coveralls": "^2.2",
+        "phpunit/phpunit": "^9.3"
     },
     "replace": {
         "symfony/polyfill-mbstring": "*",
@@ -61,7 +62,8 @@
             "php -r \"copy('.env.example', '.env');\""
         ],
         "fix": "@php vendor/bin/php-cs-fixer fix",
-        "ihg": "@php artisan ide-helper:generate"
+        "ihg": "@php artisan ide-helper:generate",
+        "analyse": "@php vendor/bin/phpstan analyse"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
