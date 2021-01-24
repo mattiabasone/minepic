@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|AccountStats newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AccountStats newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AccountStats query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereUuid($value)
  * @mixin \Eloquent
  */
 class AccountStats extends Model
