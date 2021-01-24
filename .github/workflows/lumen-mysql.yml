@@ -82,5 +82,3 @@ jobs:
         run: git fetch && git checkout ${{ steps.extract_branch.outputs.branch }}
       - name: "[Coveralls] Send report"
         run: vendor/bin/php-coveralls -v -x clover.xml -o coveralls-upload.json
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
