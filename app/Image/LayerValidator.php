@@ -21,7 +21,7 @@ class LayerValidator
     /**
      * Checks if base image has helm for section.
      *
-     * @param resource $sourceImage
+     * @param \GdImage $sourceImage
      * @param Side     $side
      *
      *@throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
@@ -38,7 +38,8 @@ class LayerValidator
     /**
      * Calculate sttdev for merging helm.
      *
-     * @param $checkImage
+     * @param \GdImage $checkImage
+     * @param Side $side
      */
     protected function calculate($checkImage, Side $side): void
     {
@@ -85,7 +86,7 @@ class LayerValidator
     }
 
     /**
-     * @param resource $sourceImage
+     * @param \GdImage $sourceImage
      * @param Side $side
      *
      *@throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
