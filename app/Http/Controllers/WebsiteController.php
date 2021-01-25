@@ -17,9 +17,6 @@ use Minepic\Resolvers\UuidResolver;
 use Minepic\Transformers\Account\AccountBasicDataTransformer;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * Class WebsiteController.
- */
 class WebsiteController extends BaseController
 {
     /**
@@ -84,53 +81,6 @@ class WebsiteController extends BaseController
     }
 
     /**
-     * Compose view with header and footer.
-     *
-     * @param string $page
-     * @param array  $bodyData
-     * @param array  $headerData
-     *
-     * @return string
-     */
-    private function composeView(
-        string $page = '',
-        array $bodyData = [],
-        array $headerData = []
-    ): string {
-        return view('public.template.header', $headerData).
-            view('public.'.$page, $bodyData).
-            view('public.template.footer');
-    }
-
-    /**
-     * Render fullpage (headers, body, footer).
-     *
-     * @param string $page
-     * @param array  $bodyData
-     * @param array  $headerData
-     *
-     * @return Response
-     */
-    private function renderPage(
-        string $page = '',
-        array $bodyData = [],
-        array $headerData = []
-    ): Response {
-        $realHeaderData = [];
-        $realHeaderData['title'] = $headerData['title'] ?? self::DEFAULT_PAGE_TITLE;
-        $realHeaderData['description'] = $headerData['description'] ?? self::DEFAULT_PAGE_DESCRIPTION;
-        $realHeaderData['keywords'] = $headerData['keywords'] ?? self::DEFAULT_PAGE_KEYWORDS;
-        $realHeaderData['randomMessage'] = SplashMessage::get();
-
-        $view = $this->composeView($page, $bodyData, $realHeaderData);
-
-        return $this->responseFactory->make(
-            $view,
-            Response::HTTP_OK
-        );
-    }
-
-    /**
      * Index.
      */
     public function index(): Response
@@ -190,5 +140,52 @@ class WebsiteController extends BaseController
         }
 
         return $this->user($uuid);
+    }
+
+    /**
+     * Compose view with header and footer.
+     *
+     * @param string $page
+     * @param array  $bodyData
+     * @param array  $headerData
+     *
+     * @return string
+     */
+    private function composeView(
+        string $page = '',
+        array $bodyData = [],
+        array $headerData = []
+    ): string {
+        return view('public.template.header', $headerData).
+            view('public.'.$page, $bodyData).
+            view('public.template.footer');
+    }
+
+    /**
+     * Render fullpage (headers, body, footer).
+     *
+     * @param string $page
+     * @param array  $bodyData
+     * @param array  $headerData
+     *
+     * @return Response
+     */
+    private function renderPage(
+        string $page = '',
+        array $bodyData = [],
+        array $headerData = []
+    ): Response {
+        $realHeaderData = [];
+        $realHeaderData['title'] = $headerData['title'] ?? self::DEFAULT_PAGE_TITLE;
+        $realHeaderData['description'] = $headerData['description'] ?? self::DEFAULT_PAGE_DESCRIPTION;
+        $realHeaderData['keywords'] = $headerData['keywords'] ?? self::DEFAULT_PAGE_KEYWORDS;
+        $realHeaderData['randomMessage'] = SplashMessage::get();
+
+        $view = $this->composeView($page, $bodyData, $realHeaderData);
+
+        return $this->responseFactory->make(
+            $view,
+            Response::HTTP_OK
+        );
     }
 }

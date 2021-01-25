@@ -6,6 +6,13 @@ namespace Minepic\Image\Components;
 
 class Component
 {
+    public const HEAD = 'HEAD';
+    public const TORSO = 'TORSO';
+    public const RIGHT_ARM = 'RIGHT_ARM';
+    public const LEFT_ARM = 'LEFT_ARM';
+    public const RIGHT_LEG = 'RIGHT_LEG';
+    public const LEFT_LEG = 'LEFT_LEG';
+
     protected Side $top;
     protected Side $bottom;
     protected Side $front;
@@ -103,9 +110,9 @@ class Component
         return new self(Coordinates::HEAD);
     }
 
-    public static function getHelm(): self
+    public static function getHeadLayer(): self
     {
-        return new self(Coordinates::HELM);
+        return new self(Coordinates::HEAD_LAYER);
     }
 
     public static function getTorso(): self

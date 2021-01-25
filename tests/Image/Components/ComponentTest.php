@@ -34,7 +34,7 @@ class ComponentTest extends TestCase
 
     public function testValidHelmComponent()
     {
-        $component = Component::getHelm();
+        $component = Component::getHeadLayer();
 
         $this->assertEquals(8, $component->getTop()->getWidth());
         $this->assertEquals(8, $component->getTop()->getHeight());

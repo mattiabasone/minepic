@@ -54,18 +54,18 @@
 </pre>
                     Bigger is better
 <pre>
-&lt;img src="<?php echo url(); ?>/avatar/<span class="pre-api-param">512</span>/<span class="pre-api-param">{uuid|username}</span>" />
+&lt;img src="<?php echo url(); ?>/avatar/<span class="pre-api-param">{uuid|username}</span>/<span class="pre-api-param">512</span>" />
 </pre>
 
                     <b style="color: red;">NEW!</b> Isometric head
 <pre>
 &lt;img src="<?php echo url(); ?>/head/<span class="pre-api-param">{uuid|username}</span>" />
-&lt;img src="<?php echo url(); ?>/head/<span class="pre-api-param">256</span>/<span class="pre-api-param">{uuid|username}</span>" />
+&lt;img src="<?php echo url(); ?>/head/<span class="pre-api-param">{uuid|username}</span>/<span class="pre-api-param">{size}</span>" />
 </pre>
                     If you need 2D skin
 <pre>
 &lt;img src="<?php echo url(); ?>/skin/<span class="pre-api-param">{uuid|username}</span>" />
-&lt;img src="<?php echo url(); ?>/skin/<span class="pre-api-param">{size}</span>/<span class="pre-api-param">{uuid|username}</span>" />
+&lt;img src="<?php echo url(); ?>/skin/<span class="pre-api-param">{uuid|username}</span>/<span class="pre-api-param">{size}</span>" />
 </pre>
                     2D back skin
 <pre>

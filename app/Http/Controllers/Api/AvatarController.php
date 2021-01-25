@@ -12,7 +12,7 @@ class AvatarController extends BaseApiController
     /**
      * Serve Avatar.
      *
-     * @param \Illuminate\Http\Request
+     * @param \Illuminate\Http\Request $request
      * @param string $uuid
      * @param int    $size
      *
@@ -34,11 +34,7 @@ class AvatarController extends BaseApiController
     }
 
     /**
-     * @param int $size
-     *
-     * @throws \Minepic\Image\Exceptions\ImageCreateFromPngFailedException
-     * @throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
-     * @throws \Minepic\Image\Exceptions\InvalidSectionSpecifiedException
+     * @param int|string $size
      *
      * @return Response
      */

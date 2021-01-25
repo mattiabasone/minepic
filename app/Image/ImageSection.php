@@ -5,42 +5,55 @@ declare(strict_types=1);
 namespace Minepic\Image;
 
 use Minepic\Image\Exceptions\ImageCreateFromPngFailedException;
-use Minepic\Image\Exceptions\ImageTrueColorCreationFailedException;
+use Minepic\Image\Exceptions\ImageResourceCreationFailedException;
 
-/**
- * Class ImageSection.
- */
 abstract class ImageSection
 {
-    public const TOP = 'TOP';
-    public const BOTTOM = 'BOTTOM';
-    public const FRONT = 'FRONT';
-    public const BACK = 'BACK';
-    public const RIGHT = 'RIGHT';
-    public const LEFT = 'LEFT';
-
     /**
      * Skin Path.
      *
      * @var string
      */
     protected string $skinPath = '';
-
+    /**
+     * @var \GdImage
+     */
+    protected $skinResource;
+    /**
+     * @var int
+     */
+    protected int $skinWidth;
+    /**
+     * @var int
+     */
+    protected int $skinHeight;
     /**
      * Resource with the image.
      *
-     * @var resource
+     * @var \GdImage
      */
     protected $imgResource;
 
     /**
-     * Avatar constructor.
-     *
      * @param string $skinPath
+     * @throws ImageCreateFromPngFailedException
      */
     public function __construct(string $skinPath)
     {
         $this->skinPath = $skinPath;
+        $this->skinResource = $this->createImageFromPng($this->skinPath);
+        $this->skinWidth = (int) \imagesx($this->skinResource);
+        $this->skinHeight = (int) \imagesy($this->skinResource);
+    }
+
+    /**
+     * Destructor.
+     */
+    public function __destruct()
+    {
+        if ($this->imgResource) {
+            \imagedestroy($this->imgResource);
+        }
     }
 
     /**
@@ -56,13 +69,11 @@ abstract class ImageSection
     }
 
     /**
-     * Destructor.
+     * @return bool
      */
-    public function __destruct()
+    public function is64x64(): bool
     {
-        if ($this->imgResource) {
-            \imagedestroy($this->imgResource);
-        }
+        return $this->skinWidth === 64 && $this->skinHeight === 64;
     }
 
     /**
@@ -82,7 +93,7 @@ abstract class ImageSection
      *
      * @throws ImageCreateFromPngFailedException
      *
-     * @return resource
+     * @return \GdImage
      */
     protected function createImageFromPng(string $path)
     {
@@ -95,38 +106,24 @@ abstract class ImageSection
     }
 
     /**
-     * Create imagecreatetruecolor square empty image.
+     * @param int $width
+     * @param int $height
      *
-     * @param $size
+     * @throws ImageResourceCreationFailedException
      *
-     * @throws ImageTrueColorCreationFailedException
-     *
-     * @return resource
+     * @return \GdImage
      */
-    protected function createTrueColorSquare($size)
+    protected function emptyBaseImage(int $width, int $height)
     {
-        $square = \imagecreatetruecolor($size, $size);
-        if ($square === false) {
-            throw new ImageTrueColorCreationFailedException('imagecreatetruecolor failed');
+        $tmpImageResource = \imagecreatetruecolor($width, $height);
+        if ($tmpImageResource === false) {
+            throw new ImageResourceCreationFailedException('imagecreatetruecolor() failed');
         }
+        \imagealphablending($tmpImageResource, false);
+        \imagesavealpha($tmpImageResource, true);
+        $transparent = \imagecolorallocatealpha($tmpImageResource, 255, 255, 255, 127);
+        \imagefilledrectangle($tmpImageResource, 0, 0, $width, $height, $transparent);
 
-        return $square;
-    }
-
-    /**
-     * @param $image
-     *
-     * @throws \Exception
-     *
-     * @return int
-     */
-    protected function colorAllocateAlpha($image): int
-    {
-        $colorIdentifier = \imagecolorallocatealpha($image, 255, 255, 255, 127);
-        if (!$colorIdentifier) {
-            throw new \Exception();
-        }
-
-        return $colorIdentifier;
+        return $tmpImageResource;
     }
 }

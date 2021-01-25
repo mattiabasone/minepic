@@ -5,6 +5,12 @@ declare(strict_types=1);
 namespace Minepic\Providers;
 
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
+use Minepic\Events\Account\AccountCreatedEvent;
+use Minepic\Events\Account\AccountImageServedEvent;
+use Minepic\Events\Account\UsernameChangeEvent;
+use Minepic\Listeners\Account\AccountCreatedListener;
+use Minepic\Listeners\Account\AccountImageServedListener;
+use Minepic\Listeners\Account\UsernameChangeListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -14,14 +20,14 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Minepic\Events\Account\UsernameChangeEvent' => [
-            'Minepic\Listeners\Account\UsernameChangeListener',
+        UsernameChangeEvent::class => [
+            UsernameChangeListener::class,
         ],
-        'Minepic\Events\Account\AccountCreatedEvent' => [
-            'Minepic\Listeners\Account\AccountCreatedListener',
+        AccountCreatedEvent::class => [
+            AccountCreatedListener::class,
         ],
-        'Minepic\Events\Account\AccountImageServedEvent' => [
-            'Minepic\Listeners\Account\AccountImageServedListener',
+        AccountImageServedEvent::class => [
+            AccountImageServedListener::class,
         ],
     ];
 }

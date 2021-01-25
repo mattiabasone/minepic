@@ -110,6 +110,30 @@ class IsometricAvatar
     }
 
     /**
+     * Render image resized.
+     *
+     * @param int $size
+     *
+     * @throws \Throwable
+     */
+    public function render(int $size): void
+    {
+        if ($size < self::MIN_SIZE || $size > self::MAX_SIZE) {
+            $size = 256;
+        }
+
+        if (!$this->verifyCachedFile()) {
+            $this->renderFullSize();
+        } else {
+            $this->createFromFile();
+        }
+
+        if ($size !== self::MAX_SIZE) {
+            $this->head->resizeImage($size, $size, \Imagick::FILTER_LANCZOS2, 0.9);
+        }
+    }
+
+    /**
      * Get ImagickPixel transparent object.
      *
      * @return \ImagickPixel
@@ -117,63 +141,6 @@ class IsometricAvatar
     final protected function getImagickPixelTransparent(): \ImagickPixel
     {
         return new \ImagickPixel('transparent');
-    }
-
-    /**
-     * Point for face section.
-     *
-     * @param int $size
-     *
-     * @return array
-     */
-    private function getFrontPoints($size = self::HEAD_BASE_SIZE): array
-    {
-        $cosine_result = \round(self::COSINE_PI_6 * $size);
-        $half_size = \round($size / 2);
-
-        return [
-            0, 0, 0, 0,
-            0, $size, 0, $size,
-            $size, 0, -$cosine_result, $half_size,
-        ];
-    }
-
-    /**
-     * Points for top section.
-     *
-     * @param int $size
-     *
-     * @return array
-     */
-    private function getTopPoints($size = self::HEAD_BASE_SIZE): array
-    {
-        $cosine_result = \round(self::COSINE_PI_6 * $size);
-        $half_size = \round($size / 2);
-
-        return [
-            0, $size, 0, 0,
-            0, 0, -$cosine_result, -($half_size),
-            $size, $size, $cosine_result, -($half_size),
-        ];
-    }
-
-    /**
-     * Points for right section.
-     *
-     * @param int $size
-     *
-     * @return array
-     */
-    private function getRightPoints($size = self::HEAD_BASE_SIZE): array
-    {
-        $cosine_result = \round(self::COSINE_PI_6 * $size);
-        $half_size = \round($size / 2);
-
-        return [
-            $size, 0, 0, 0,
-            0, 0, -($cosine_result), -($half_size),
-            $size, $size, 0, $size,
-        ];
     }
 
     /**
@@ -294,26 +261,59 @@ class IsometricAvatar
     }
 
     /**
-     * Render image resized.
+     * Point for face section.
      *
-     * @param $size
+     * @param int $size
      *
-     * @throws \Throwable
+     * @return array
      */
-    public function render($size): void
+    private function getFrontPoints($size = self::HEAD_BASE_SIZE): array
     {
-        if ($size < self::MIN_SIZE || $size > self::MAX_SIZE) {
-            $size = 256;
-        }
+        $cosine_result = \round(self::COSINE_PI_6 * $size);
+        $half_size = \round($size / 2);
 
-        if (!$this->verifyCachedFile()) {
-            $this->renderFullSize();
-        } else {
-            $this->createFromFile();
-        }
+        return [
+            0, 0, 0, 0,
+            0, $size, 0, $size,
+            $size, 0, -$cosine_result, $half_size,
+        ];
+    }
 
-        if ($size !== self::MAX_SIZE) {
-            $this->head->resizeImage($size, $size, \Imagick::FILTER_LANCZOS2, 0.9);
-        }
+    /**
+     * Points for top section.
+     *
+     * @param int $size
+     *
+     * @return array
+     */
+    private function getTopPoints($size = self::HEAD_BASE_SIZE): array
+    {
+        $cosine_result = \round(self::COSINE_PI_6 * $size);
+        $half_size = \round($size / 2);
+
+        return [
+            0, $size, 0, 0,
+            0, 0, -$cosine_result, -($half_size),
+            $size, $size, $cosine_result, -($half_size),
+        ];
+    }
+
+    /**
+     * Points for right section.
+     *
+     * @param int $size
+     *
+     * @return array
+     */
+    private function getRightPoints($size = self::HEAD_BASE_SIZE): array
+    {
+        $cosine_result = \round(self::COSINE_PI_6 * $size);
+        $half_size = \round($size / 2);
+
+        return [
+            $size, 0, 0, 0,
+            0, 0, -($cosine_result), -($half_size),
+            $size, $size, 0, $size,
+        ];
     }
 }

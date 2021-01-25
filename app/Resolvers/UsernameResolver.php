@@ -37,7 +37,7 @@ class UsernameResolver
      *
      * @throws \Exception
      *
-     * @return string|null
+     * @return null|string
      */
     public function resolve(string $username): ?string
     {

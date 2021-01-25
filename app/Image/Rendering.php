@@ -7,19 +7,21 @@ namespace Minepic\Image;
 use Minepic\Helpers\Storage\Files\SkinsStorage;
 use Minepic\Image\Components\Side;
 use Minepic\Image\Sections\Avatar;
-use Minepic\Image\Sections\Skin;
+use Minepic\Image\Sections\SkinBack;
+use Minepic\Image\Sections\SkinFront;
 use Minepic\Minecraft\MinecraftDefaults;
 
 class Rendering
 {
     /**
-     * @param string|null $uuid
-     * @param int         $size
-     * @param string      $type
+     * @param null|string $uuid
+     * @param int $size
+     * @param string $type
      *
      * @throws Exceptions\ImageCreateFromPngFailedException
+     * @throws Exceptions\ImageResourceCreationFailedException
      * @throws Exceptions\ImageTrueColorCreationFailedException
-     *
+     * @throws \Exception
      * @return Avatar
      */
     public function avatar(?string $uuid, int $size, $type = Side::FRONT): Avatar
@@ -33,9 +35,9 @@ class Rendering
     }
 
     /**
-     * @param string|null $uuid
+     * @param null|string $uuid
      * @param int         $size
-     * @param int|null    $lastUpdateTimestamp
+     * @param null|int    $lastUpdateTimestamp
      *
      * @throws Exceptions\SkinNotFountException
      * @throws \Throwable
@@ -58,26 +60,43 @@ class Rendering
     }
 
     /**
-     * @param string|null $uuid
-     * @param int         $size
-     * @param string      $type
-     *
-     * @throws \Throwable
-     *
-     * @return Skin
+     * @param null|string $uuid
+     * @param int $size
+     * @throws Exceptions\ImageResourceCreationFailedException*@throws \Exception
+     * @throws Exceptions\ImageCreateFromPngFailedException
+     * @throws \Exception
+     * @return SkinFront
      */
-    public function skin(?string $uuid, int $size, $type = Side::FRONT): Skin
+    public function skinFront(?string $uuid, int $size): SkinFront
     {
-        $skin = new Skin(
+        $skin = new SkinFront(
             $this->imagePath($uuid)
         );
-        $skin->render($size, $type);
+        $skin->render($size);
 
         return $skin;
     }
 
     /**
-     * @param string|null $uuid
+     * @param null|string $uuid
+     * @param int $size
+     * @throws Exceptions\ImageResourceCreationFailedException*@throws \Exception
+     * @throws Exceptions\ImageCreateFromPngFailedException
+     * @throws \Exception
+     * @return SkinBack
+     */
+    public function skinBack(?string $uuid, int $size): SkinBack
+    {
+        $skin = new SkinBack(
+            $this->imagePath($uuid)
+        );
+        $skin->render($size);
+
+        return $skin;
+    }
+
+    /**
+     * @param null|string $uuid
      *
      * @throws \Exception
      *

@@ -49,6 +49,7 @@ class CheckUuid extends Command
             /** @var \Minepic\Models\Account $account */
             $account = Account::find($result->id);
             $this->info("Checking {$account->username} [{$account->uuid}]...");
+
             try {
                 $this->updateAccount($account);
                 $this->updateAccountSkin($account);
@@ -73,7 +74,7 @@ class CheckUuid extends Command
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Account[]
+     * @return Account[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     private function getAccountsIds()
     {

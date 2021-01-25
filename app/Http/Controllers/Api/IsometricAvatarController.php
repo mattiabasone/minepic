@@ -12,7 +12,7 @@ class IsometricAvatarController extends BaseApiController
     /**
      * Serve isometric avatar.
      *
-     * @param \Illuminate\Http\Request
+     * @param \Illuminate\Http\Request $request
      * @param string $uuid User UUID
      * @param int    $size
      *
@@ -20,7 +20,7 @@ class IsometricAvatarController extends BaseApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function serveUuid(Request $request, $uuid, $size = 0): Response
+    public function serveUuid(Request $request, string $uuid, $size = 0): Response
     {
         $this->uuidResolver->resolve($uuid);
         $this->dispatchAccountImageServedEvent();
@@ -31,9 +31,8 @@ class IsometricAvatarController extends BaseApiController
     }
 
     /**
-     * @param int $size
+     * @param int|string $size
      *
-     * @throws \Minepic\Image\Exceptions\SkinNotFountException
      * @throws \Throwable
      *
      * @return Response

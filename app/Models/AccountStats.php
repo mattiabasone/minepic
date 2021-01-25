@@ -12,29 +12,16 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property string         $uuid
  * @property int            $count_request
- * @property \Carbon\Carbon $request_at
+ * @property null|\Carbon\Carbon $request_at
  *
  * @method static \Illuminate\Database\Eloquent\Builder|AccountStats newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AccountStats newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AccountStats query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereUuid($value)
  * @mixin \Eloquent
  */
 class AccountStats extends Model
 {
-    /**
-     * Table name.
-     *
-     * @var string
-     */
-    protected $table = 'accounts_stats';
-
-    /**
-     * Primary key.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'uuid';
-
     /**
      * No primary key.
      *
@@ -58,6 +45,19 @@ class AccountStats extends Model
         'count_request' => 'int',
         'request_at' => 'datetime',
     ];
+    /**
+     * Table name.
+     *
+     * @var string
+     */
+    protected $table = 'accounts_stats';
+
+    /**
+     * Primary key.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'uuid';
 
     /**
      * @var array

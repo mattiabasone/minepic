@@ -10,12 +10,12 @@ use Minepic\Models\Account;
 class AccountCreatedEvent extends Event
 {
     /**
-     * @var Account|null
+     * @var null|Account
      */
     private ?Account $account;
 
     /**
-     * @param Account|null $account
+     * @param null|Account $account
      */
     public function __construct(?Account $account)
     {

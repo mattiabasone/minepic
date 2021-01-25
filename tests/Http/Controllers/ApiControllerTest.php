@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace MinepicTests\Http\Controllers;
 
 use Minepic\Cache\UserNotFoundCache;
+use Minepic\Events\Account\AccountCreatedEvent;
+use Minepic\Models\Account;
+use Minepic\Models\AccountStats;
 use MinepicTests\TestCase;
 
 class ApiControllerTest extends TestCase
@@ -27,14 +30,14 @@ class ApiControllerTest extends TestCase
         $this->get('/avatar/ThisIsAnInvalidAccountName');
         $actualImage = $this->response->getContent();
         $expectedImage = \file_get_contents(base_path('tests/images/steve_avatar.png'));
-        $this->assertEquals($expectedImage, $actualImage);
+        self::assertEquals($expectedImage, $actualImage);
     }
 
     public function testShouldReturnUserAvatarWithSize(): void
     {
         $this->get('/avatar/200/_Cyb3r');
         $this->assertResponseOk();
-        $this->assertEquals(
+        self::assertEquals(
             'image/png',
             $this->response->headers->get('Content-Type')
         );
@@ -44,7 +47,7 @@ class ApiControllerTest extends TestCase
     {
         $this->get('/skin/_Cyb3r');
         $this->assertResponseOk();
-        $this->assertEquals(
+        self::assertEquals(
             'image/png',
             $this->response->headers->get('Content-Type')
         );
@@ -54,7 +57,7 @@ class ApiControllerTest extends TestCase
     {
         $this->get('/skin-back/_Cyb3r');
         $this->assertResponseOk();
-        $this->assertEquals(
+        self::assertEquals(
             'image/png',
             $this->response->headers->get('Content-Type')
         );
@@ -64,7 +67,7 @@ class ApiControllerTest extends TestCase
     {
         $this->get('/skin/200/_Cyb3r');
         $this->assertResponseOk();
-        $this->assertEquals(
+        self::assertEquals(
             'image/png',
             $this->response->headers->get('Content-Type')
         );
@@ -74,7 +77,7 @@ class ApiControllerTest extends TestCase
     {
         $this->get('/skin-back/200/_Cyb3r');
         $this->assertResponseOk();
-        $this->assertEquals(
+        self::assertEquals(
             'image/png',
             $this->response->headers->get('Content-Type')
         );
@@ -85,7 +88,7 @@ class ApiControllerTest extends TestCase
         $this->get('/skin/ThisIsAnInvalidAccountName');
         $actualImage = $this->response->getContent();
         $expectedImage = \file_get_contents(base_path('tests/images/steve_skin.png'));
-        $this->assertEquals($expectedImage, $actualImage);
+        self::assertEquals($expectedImage, $actualImage);
     }
 
     public function testShouldReturnSteveSkinBack(): void
@@ -93,14 +96,14 @@ class ApiControllerTest extends TestCase
         $this->get('/skin-back/ThisIsAnInvalidAccountName');
         $actualImage = $this->response->getContent();
         $expectedImage = \file_get_contents(base_path('tests/images/steve_skin_back.png'));
-        $this->assertEquals($expectedImage, $actualImage);
+        self::assertEquals($expectedImage, $actualImage);
     }
 
     public function testShouldReturnSteveHead(): void
     {
         $this->get('/head/ThisIsAnInvalidAccountName');
         $this->assertResponseOk();
-        $this->assertEquals(
+        self::assertEquals(
             'image/png',
             $this->response->headers->get('Content-Type')
         );
@@ -112,24 +115,40 @@ class ApiControllerTest extends TestCase
         $actualImage = $this->response->getContent();
         $expectedImage = \file_get_contents(base_path('tests/images/steve_raw.png'));
 
-        $this->assertEquals($expectedImage, $actualImage);
+        self::assertEquals($expectedImage, $actualImage);
     }
 
-    public function testShouldGenerateIsometricAvatar(): void
+    public function testReturnIsometricAvatar(): void
     {
         $this->get('/head/d59dcabb30424b978f7201d1a076637f');
         $this->assertResponseOk();
-        $this->assertEquals(
+        self::assertEquals(
             'image/png',
             $this->response->headers->get('Content-Type')
         );
     }
 
-    public function testShouldGenerateAvatarUsingDifferentUuidFormat(): void
+    public function testReturnDefaultIsometricAvatar(): void
+    {
+        UserNotFoundCache::add('9bac3f78c4a44f5e841627a674981a5a');
+        $this->get('/head/9bac3f78c4a44f5e841627a674981a5a');
+        $this->assertResponseOk();
+        self::assertEquals(
+            'image/png',
+            $this->response->headers->get('Content-Type')
+        );
+        /*
+        $actualImage = $this->response->getContent();
+        $expectedImage = \file_get_contents(base_path('tests/images/steve_avatar.png'));
+        self::assertEquals($expectedImage, $actualImage);
+        */
+    }
+
+    public function testReturnAvatarUsingDifferentUuidFormat(): void
     {
         $this->get('/avatar/d59dcabb-3042-4b97-8f72-01d1a076637f');
         $this->assertResponseOk();
-        $this->assertEquals(
+        self::assertEquals(
             'image/png',
             $this->response->headers->get('Content-Type')
         );
@@ -141,7 +160,25 @@ class ApiControllerTest extends TestCase
 
         $expectedStatusCode = 404;
         $expectedContentType = 'application/json';
-        $this->assertEquals($expectedContentType, $this->response->headers->get('Content-Type'));
-        $this->assertEquals($expectedStatusCode, $this->response->getStatusCode());
+        self::assertEquals($expectedContentType, $this->response->headers->get('Content-Type'));
+        self::assertEquals($expectedStatusCode, $this->response->getStatusCode());
+    }
+
+    public function testRetrieveNewUser(): void
+    {
+        // Cleanup
+        $steve = Account::whereUsername('MHF_Steve')->first();
+        if ($steve !== null) {
+            AccountStats::whereUuid($steve->uuid)->delete();
+            $steve->delete();
+        }
+
+        $this->expectsEvents(AccountCreatedEvent::class);
+        $this->get('/avatar/MHF_Steve');
+
+        $expectedStatusCode = 200;
+        $expectedContentType = 'image/png';
+        self::assertEquals($expectedContentType, $this->response->headers->get('Content-Type'));
+        self::assertEquals($expectedStatusCode, $this->response->getStatusCode());
     }
 }

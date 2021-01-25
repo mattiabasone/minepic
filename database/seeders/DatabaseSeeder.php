@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use Minepic\Models\Account;
 use Minepic\Models\AccountStats;
 use Carbon\Carbon;

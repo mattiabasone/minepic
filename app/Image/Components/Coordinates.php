@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Minepic\Image\Components;
 
-/**
- * Class Coordinates.
- *
- * Stores Avatar coordinates in array, first X second Y
+/***
+ * Stores components coordinates in array, first entry is top-left, second one bottom-right.
  */
 final class Coordinates
 {
@@ -18,15 +16,6 @@ final class Coordinates
         Side::BACK => [[24, 8], [32, 16]],
         Side::RIGHT => [[0, 8], [8, 16]],
         Side::LEFT => [[16, 8], [24, 16]],
-    ];
-
-    public const HELM = [
-        Side::TOP => [[40, 0], [48, 8]],
-        Side::BOTTOM => [[48, 0], [56, 8]],
-        Side::FRONT => [[40, 8], [48, 16]],
-        Side::BACK => [[56, 8], [64, 16]],
-        Side::RIGHT => [[32, 8], [40, 16]],
-        Side::LEFT => [[48, 8], [56, 16]],
     ];
 
     public const TORSO = [
@@ -72,6 +61,15 @@ final class Coordinates
         Side::BACK => [[28, 52], [32, 64]],
         Side::RIGHT => [[16, 52], [20, 64]],
         Side::LEFT => [[24, 52], [28, 64]],
+    ];
+
+    public const HEAD_LAYER = [
+        Side::TOP => [[40, 0], [48, 8]],
+        Side::BOTTOM => [[48, 0], [56, 8]],
+        Side::FRONT => [[40, 8], [48, 16]],
+        Side::BACK => [[56, 8], [64, 16]],
+        Side::RIGHT => [[32, 8], [40, 16]],
+        Side::LEFT => [[48, 8], [56, 16]],
     ];
 
     public const TORSO_LAYER = [

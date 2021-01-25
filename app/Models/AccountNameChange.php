@@ -13,8 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string              $uuid
  * @property string              $prev_name
  * @property string              $new_name
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property null|\Carbon\Carbon $created_at
+ * @property null|\Carbon\Carbon $updated_at
  *
  * @method static \Illuminate\Database\Eloquent\Builder|AccountNameChange newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AccountNameChange newQuery()

@@ -20,6 +20,8 @@ use Minepic\Transformers\Account\AccountTypeaheadTransformer;
 
 class JsonController extends BaseController
 {
+    private const USER_NOT_FOUND_MESSAGE = 'User not found';
+
     /**
      * @var ResponseFactory
      */
@@ -42,8 +44,6 @@ class JsonController extends BaseController
     private UsernameResolver $usernameResolver;
 
     /**
-     * JsonController constructor.
-     *
      * @param AccountRepository $accountRepository
      * @param UuidResolver      $uuidResolver
      * @param Manager           $dataManger
@@ -81,7 +81,7 @@ class JsonController extends BaseController
             $httpStatus = 404;
             $response = [
                 'ok' => false,
-                'message' => 'User not found',
+                'message' => self::USER_NOT_FOUND_MESSAGE,
             ];
 
             return $this->responseFactory->json($response, $httpStatus);
@@ -110,7 +110,7 @@ class JsonController extends BaseController
     {
         $uuid = $this->usernameResolver->resolve($username);
         if ($uuid === null) {
-            throw new NotFoundHttpJsonException('User not found');
+            throw new NotFoundHttpJsonException(self::USER_NOT_FOUND_MESSAGE);
         }
 
         return $this->user($uuid);
@@ -149,7 +149,7 @@ class JsonController extends BaseController
                 $httpStatus = 403;
             }
         } else {
-            $response = ['ok' => false, 'message' => 'User not found'];
+            $response = ['ok' => false, 'message' => self::USER_NOT_FOUND_MESSAGE];
             $httpStatus = 404;
         }
 
@@ -159,7 +159,7 @@ class JsonController extends BaseController
     /**
      * Username Typeahead.
      *
-     * @param $username
+     * @param string $username
      *
      * @return JsonResponse
      */
