@@ -14,9 +14,9 @@ Base
 `https://minepic.org/avatar/{uuid|username}`
 
 With size
-`https://minepic.org/avatar/{size}/{uuid|username}`
+`https://minepic.org/avatar/{uuid|username}/{size}`
 
-![Avatar](https://minepic.org/avatar/64/_Cyb3r)
+![Avatar](https://minepic.org/avatar/_Cyb3r/64)
 
 ##### Head
 
@@ -24,23 +24,23 @@ Base
 `https://minepic.org/head/{uuid|username}`
 
 With size
-`https://minepic.org/head/{size}/{uuid|username}`
+`https://minepic.org/head/{uuid|username}/{size}`
 
-![Head](https://minepic.org/head/64/_Cyb3r)
+![Head](https://minepic.org/head/_Cyb3r/64)
 
 #### Skin
 
 Front `https://minepic.org/skin/{uuid|username}`
 
-Front with size `https://minepic.org/skin/{size}/{uuid|username}`
+Front with size `https://minepic.org/skin/{uuid|username}/{size}`
 
-![Head](https://minepic.org/skin/64/_Cyb3r)
+![Head](https://minepic.org/skin/_Cyb3r/64)
 
 Back `https://minepic.org/skin-back/{uuid|username}`
 
-Back with size `https://minepic.org/skin/{size}/{uuid|username}`
+Back with size `https://minepic.org/skin/{uuid|username}/{size}`
 
-![Head](https://minepic.org/skin-back/64/_Cyb3r)
+![Head](https://minepic.org/skin-back/_Cyb3r/64)
 
 #### Download
 
