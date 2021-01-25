@@ -15,12 +15,16 @@ declare(strict_types=1);
 
 /* @var \Laravel\Lumen\Routing\Router $router */
 
-$router->group(['middleware' => ['headers.cache', 'image.clean_params']], static function () use ($router) {
+$router->group(['middleware' => ['headers.cache', 'input.clean_params']], static function () use ($router) {
     // Avatar
     $router->group(['prefix' => 'avatar'], static function () use ($router) {
         $router->get(ROUTE_UUID_MATCH, 'Api\AvatarController@serveUuid');
         $router->get(ROUTE_USERNAME_MATCH, 'Api\AvatarController@serveUsername');
 
+        $router->get(ROUTE_UUID_MATCH.ROUTE_SIZE_MATCH, 'Api\AvatarController@serveUuid');
+        $router->get(ROUTE_USERNAME_MATCH.ROUTE_SIZE_MATCH, 'Api\AvatarController@serveUsername');
+
+        // Deprecated
         $router->get(ROUTE_SIZE_MATCH.ROUTE_UUID_MATCH, 'Api\AvatarController@serveUuid');
         $router->get(ROUTE_SIZE_MATCH.ROUTE_USERNAME_MATCH, 'Api\AvatarController@serveUsername');
     });
@@ -30,6 +34,10 @@ $router->group(['middleware' => ['headers.cache', 'image.clean_params']], static
         $router->get(ROUTE_UUID_MATCH, 'Api\IsometricAvatarController@serveUuid');
         $router->get(ROUTE_USERNAME_MATCH, 'Api\IsometricAvatarController@serveUsername');
 
+        $router->get(ROUTE_UUID_MATCH.ROUTE_SIZE_MATCH, 'Api\IsometricAvatarController@serveUuid');
+        $router->get(ROUTE_USERNAME_MATCH.ROUTE_SIZE_MATCH, 'Api\IsometricAvatarController@serveUsername');
+
+        // Deprecated
         $router->get(ROUTE_SIZE_MATCH.ROUTE_UUID_MATCH, 'Api\IsometricAvatarController@serveUuid');
         $router->get(ROUTE_SIZE_MATCH.ROUTE_USERNAME_MATCH, 'Api\IsometricAvatarController@serveUsername');
     });
@@ -39,6 +47,10 @@ $router->group(['middleware' => ['headers.cache', 'image.clean_params']], static
         $router->get(ROUTE_UUID_MATCH, 'Api\SkinFrontController@serveUuid');
         $router->get(ROUTE_USERNAME_MATCH, 'Api\SkinFrontController@serveUsername');
 
+        $router->get(ROUTE_UUID_MATCH.ROUTE_SIZE_MATCH, 'Api\SkinFrontController@serveUuid');
+        $router->get(ROUTE_USERNAME_MATCH.ROUTE_SIZE_MATCH, 'Api\SkinFrontController@serveUsername');
+
+        // Deprecated
         $router->get(ROUTE_SIZE_MATCH.ROUTE_UUID_MATCH, 'Api\SkinFrontController@serveUuid');
         $router->get(ROUTE_SIZE_MATCH.ROUTE_USERNAME_MATCH, 'Api\SkinFrontController@serveUsername');
     });
@@ -48,30 +60,35 @@ $router->group(['middleware' => ['headers.cache', 'image.clean_params']], static
         $router->get(ROUTE_UUID_MATCH, 'Api\SkinBackController@serveUuid');
         $router->get(ROUTE_USERNAME_MATCH, 'Api\SkinBackController@serveUsername');
 
+        $router->get(ROUTE_UUID_MATCH.ROUTE_SIZE_MATCH, 'Api\SkinBackController@serveUuid');
+        $router->get(ROUTE_USERNAME_MATCH.ROUTE_SIZE_MATCH, 'Api\SkinBackController@serveUsername');
+
+        // Deprecated
         $router->get(ROUTE_SIZE_MATCH.ROUTE_UUID_MATCH, 'Api\SkinBackController@serveUuid');
         $router->get(ROUTE_SIZE_MATCH.ROUTE_USERNAME_MATCH, 'Api\SkinBackController@serveUsername');
     });
 });
 
-$router->get('update'.ROUTE_UUID_MATCH, 'JsonController@updateUser');
-
-// Download
-$router->get('/download'.ROUTE_UUID_MATCH, 'Api\DownloadTextureController@serve');
-
-// HTML
-$router->get('/', 'WebsiteController@index');
-$router->get('/user'.ROUTE_UUID_MATCH, 'WebsiteController@user');
-$router->get('/user'.ROUTE_USERNAME_MATCH, 'WebsiteController@userWithUsername');
-
 // JSON
-$router->group(['prefix' => 'api/v1'], static function () use ($router) {
-    $router->get('user'.ROUTE_UUID_MATCH, 'JsonController@user');
-    $router->get('user'.ROUTE_USERNAME_MATCH, 'JsonController@userWithUsername');
-    $router->get('user'.ROUTE_UUID_MATCH.'/update', 'JsonController@updateUser');
+$router->group(['prefix' => 'api/v1', 'middleware' => ['input.clean_params']], static function () use ($router) {
+    $router->group(['prefix' => 'user'], static function () use ($router) {
+        $router->get(ROUTE_UUID_MATCH, 'JsonController@user');
+        $router->get(ROUTE_USERNAME_MATCH, 'JsonController@userWithUsername');
+        $router->get(ROUTE_UUID_MATCH.'/update', 'JsonController@updateUser');
+    });
 
-    $router->get('uuid'.ROUTE_UUID_MATCH, 'JsonController@uuidToUsername');
+    $router->get('/uuid'.ROUTE_UUID_MATCH, 'JsonController@uuidToUsername');
 
-    $router->get('typeahead'.ROUTE_USERNAME_MATCH, 'JsonController@userTypeahead');
+    $router->get('/typeahead'.ROUTE_USERNAME_MATCH, 'JsonController@userTypeahead');
 
-    $router->get('stats/user/most-wanted', 'JsonController@getMostWantedUsers');
+    $router->get('/stats/user/most-wanted', 'JsonController@getMostWantedUsers');
 });
+
+$router->group(['middleware' => ['input.clean_params']], static function () use ($router) {
+    $router->get('/update'.ROUTE_UUID_MATCH, 'JsonController@updateUser');
+    $router->get('/download'.ROUTE_UUID_MATCH, 'Api\DownloadTextureController@serve');
+    $router->get('/user'.ROUTE_UUID_MATCH, 'WebsiteController@user');
+    $router->get('/user'.ROUTE_USERNAME_MATCH, 'WebsiteController@userWithUsername');
+});
+
+$router->get('/', 'WebsiteController@index');

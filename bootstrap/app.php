@@ -59,13 +59,9 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
-//    App\Http\Middleware\ExampleMiddleware::class
-// ]);
-
  $app->routeMiddleware([
      'headers.cache' => Minepic\Http\Middleware\SetCacheHeaders::class,
-     'image.clean_params' => Minepic\Http\Middleware\CleanupUuidOrName::class,
+     'input.clean_params' => Minepic\Http\Middleware\CleanupUuidOrName::class,
 ]);
 
 /*
