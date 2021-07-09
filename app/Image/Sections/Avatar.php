@@ -28,19 +28,19 @@ class Avatar extends ImageSection
         }
         // generate png from url/path
         $baseSkinImage = $this->createImageFromPng($this->skinPath);
-        \imagealphablending($baseSkinImage, false);
-        \imagesavealpha($baseSkinImage, true);
+        imagealphablending($baseSkinImage, false);
+        imagesavealpha($baseSkinImage, true);
 
         // Sections Coordinates
         $headSide = Component::getHead()->getSideByIdentifier($type);
         $helmSide = Component::getHeadLayer()->getSideByIdentifier($type);
 
         $tmpImageResource = $this->emptyBaseImage($headSide->getWidth(), $headSide->getHeight());
-        \imagecopy($tmpImageResource, $baseSkinImage, 0, 0, $headSide->getTopLeft()->getX(), $headSide->getTopLeft()->getY(), $headSide->getWidth(), $headSide->getHeight());
+        imagecopy($tmpImageResource, $baseSkinImage, 0, 0, $headSide->getTopLeft()->getX(), $headSide->getTopLeft()->getY(), $headSide->getWidth(), $headSide->getHeight());
 
         // if all pixel have transparency or the colors are not the same
         if ((new LayerValidator())->check($baseSkinImage, $helmSide)) {
-            \imagecopymerge_alpha(
+            imagecopymerge_alpha(
                 $tmpImageResource,
                 $baseSkinImage,
                 0,
@@ -54,6 +54,6 @@ class Avatar extends ImageSection
         }
 
         $this->imgResource = $this->emptyBaseImage($size, $size);
-        \imagecopyresized($this->imgResource, $tmpImageResource, 0, 0, 0, 0, $size, $size, $headSide->getWidth(), $headSide->getHeight());
+        imagecopyresized($this->imgResource, $tmpImageResource, 0, 0, 0, 0, $size, $size, $headSide->getWidth(), $headSide->getHeight());
     }
 }

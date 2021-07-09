@@ -30,7 +30,7 @@ class Storage
             $uuid = MinecraftDefaults::getRandomDefaultSkin();
         }
 
-        return \sprintf(storage_path(static::$folder.'/%s.png'), $uuid);
+        return sprintf(storage_path(static::$folder.'/%s.png'), $uuid);
     }
 
     /**
@@ -42,7 +42,7 @@ class Storage
      */
     public static function exists(string $uuid): bool
     {
-        return \file_exists(static::getPath($uuid));
+        return file_exists(static::getPath($uuid));
     }
 
     /**
@@ -55,10 +55,10 @@ class Storage
      */
     public static function save(string $uuid, $rawData): bool
     {
-        $fp = \fopen(static::getPath($uuid), 'wb');
+        $fp = fopen(static::getPath($uuid), 'wb');
         if (\is_resource($fp)) {
-            \fwrite($fp, $rawData);
-            \fclose($fp);
+            fwrite($fp, $rawData);
+            fclose($fp);
 
             return true;
         }
@@ -76,7 +76,7 @@ class Storage
     public static function copyAsSteve(string $name): bool
     {
         if ($name !== '') {
-            return \copy(
+            return copy(
                 static::getPath(MinecraftDefaults::getRandomDefaultSkin()),
                 static::getPath($name)
             );

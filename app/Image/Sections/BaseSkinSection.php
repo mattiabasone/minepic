@@ -36,10 +36,10 @@ abstract class BaseSkinSection extends ImageSection
         if ($scale === 0) {
             $scale = 1;
         }
-        $skinWidth = (int) \round($scale * ($this->baseImageWidth));
+        $skinWidth = (int) round($scale * ($this->baseImageWidth));
 
         $this->imgResource = $this->emptyBaseImage($skinWidth, $skinHeight);
-        \imagecopyresized($this->imgResource, $tmpImageResource, 0, 0, 0, 0, $skinWidth, $skinHeight, $this->baseImageWidth, $this->baseImageHeight);
+        imagecopyresized($this->imgResource, $tmpImageResource, 0, 0, 0, 0, $skinWidth, $skinHeight, $this->baseImageWidth, $this->baseImageHeight);
     }
 
     /**
@@ -90,9 +90,10 @@ abstract class BaseSkinSection extends ImageSection
         $rightArmData = $srcComponent->getSideByIdentifier($this->side);
         $width = $leftArmData->getWidth();
         $height = $leftArmData->getHeight();
-        $leftArm = \imagecreatetruecolor($width, $height);
+        $leftArm = imagecreatetruecolor($width, $height);
         for ($x = 0; $x < 4; ++$x) {
-            \imagecopy($leftArm,
+            imagecopy(
+                $leftArm,
                 $this->skinResource,
                 $x,
                 0,
@@ -102,7 +103,8 @@ abstract class BaseSkinSection extends ImageSection
                 $height
             );
         }
-        \imagecopymerge($tmpImageResource,
+        imagecopymerge(
+            $tmpImageResource,
             $leftArm,
             $startingPoint->getX(),
             $startingPoint->getY(),
@@ -110,7 +112,7 @@ abstract class BaseSkinSection extends ImageSection
             0,
             $width,
             $height,
-        100
+            100
         );
     }
 
@@ -166,7 +168,7 @@ abstract class BaseSkinSection extends ImageSection
         $height = $sideBase->getHeight();
 
         $startingPoint = $this->startingPoints()[$componentName] ?? new Point(0, 0);
-        \imagecopy(
+        imagecopy(
             $tmpImageResource,
             $this->skinResource,
             $startingPoint->getX(),
@@ -178,7 +180,7 @@ abstract class BaseSkinSection extends ImageSection
         );
         if ($layer !== null && (new LayerValidator())->check($this->skinResource, $layer->getSideByIdentifier($this->side))) {
             $sideLayer = $layer->getSideByIdentifier($this->side);
-            \imagecopymerge_alpha(
+            imagecopymerge_alpha(
                 $tmpImageResource,
                 $this->skinResource,
                 $startingPoint->getX(),

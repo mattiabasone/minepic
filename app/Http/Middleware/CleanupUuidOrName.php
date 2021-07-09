@@ -40,9 +40,9 @@ class CleanupUuidOrName
      */
     private function cleanUuid(string $uuid): string
     {
-        $uuid = \preg_replace("#\.png.*#", '', $uuid);
+        $uuid = preg_replace("#\.png.*#", '', $uuid);
 
-        return \str_replace('-', '', $uuid);
+        return str_replace('-', '', $uuid);
     }
 
     /**
@@ -52,6 +52,6 @@ class CleanupUuidOrName
      */
     private function cleanUsername(string $username): string
     {
-        return \preg_replace("#\.png$#", '', $username);
+        return preg_replace("#\.png$#", '', $username);
     }
 }

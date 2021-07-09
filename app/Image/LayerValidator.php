@@ -52,8 +52,8 @@ class LayerValidator
         while ($x < $side->getWidth()) {
             $y = 0;
             while ($y < $side->getHeight()) {
-                $color = \imagecolorat($checkImage, $x, $y);
-                $colors = \imagecolorsforindex($checkImage, $color);
+                $color = imagecolorat($checkImage, $x, $y);
+                $colors = imagecolorsforindex($checkImage, $color);
                 $allRed[] = $colors['red'];
                 $allGreen[] = $colors['green'];
                 $allBlue[] = $colors['blue'];
@@ -64,10 +64,10 @@ class LayerValidator
         }
         // mean value for each color
         $totalPixels = $side->getWidth() * $side->getHeight();
-        $meanRed = \array_sum($allRed) / $totalPixels;
-        $meanGreen = \array_sum($allGreen) / $totalPixels;
-        $meanBlue = \array_sum($allBlue) / $totalPixels;
-        $this->meanAlpha = (int) \round(\array_sum($allAlpha) / $totalPixels);
+        $meanRed = array_sum($allRed) / $totalPixels;
+        $meanGreen = array_sum($allGreen) / $totalPixels;
+        $meanBlue = array_sum($allBlue) / $totalPixels;
+        $this->meanAlpha = (int) round(array_sum($allAlpha) / $totalPixels);
         // Arrays deviation
         $devsRed = [];
         $devsGreen = [];
@@ -80,9 +80,9 @@ class LayerValidator
             ++$i;
         }
         // stddev for each color
-        $this->redStdDev = \sqrt(\array_sum($devsRed) / $totalPixels);
-        $this->greenStdDev = \sqrt(\array_sum($devsGreen) / $totalPixels);
-        $this->blueStdDev = \sqrt(\array_sum($devsBlue) / $totalPixels);
+        $this->redStdDev = sqrt(array_sum($devsRed) / $totalPixels);
+        $this->greenStdDev = sqrt(array_sum($devsGreen) / $totalPixels);
+        $this->blueStdDev = sqrt(array_sum($devsBlue) / $totalPixels);
     }
 
     /**
@@ -96,15 +96,15 @@ class LayerValidator
     {
         $width = $side->getWidth();
         $height = $side->getHeight();
-        $checkImage = \imagecreatetruecolor($side->getWidth(), $side->getHeight());
+        $checkImage = imagecreatetruecolor($side->getWidth(), $side->getHeight());
         if ($checkImage === false) {
             throw new ImageTrueColorCreationFailedException('imagecreatetruecolor failed');
         }
-        \imagealphablending($checkImage, false);
-        \imagesavealpha($checkImage, true);
-        $colorIdentifier = \imagecolorallocatealpha($checkImage, 255, 255, 255, 127);
-        \imagefilledrectangle($checkImage, 0, 0, $width, $height, $colorIdentifier);
-        \imagecopy($checkImage, $sourceImage, 0, 0, $side->getTopLeft()->getX(), $side->getTopLeft()->getY(), $width, $height);
+        imagealphablending($checkImage, false);
+        imagesavealpha($checkImage, true);
+        $colorIdentifier = imagecolorallocatealpha($checkImage, 255, 255, 255, 127);
+        imagefilledrectangle($checkImage, 0, 0, $width, $height, $colorIdentifier);
+        imagecopy($checkImage, $sourceImage, 0, 0, $side->getTopLeft()->getX(), $side->getTopLeft()->getY(), $width, $height);
 
         return $checkImage;
     }

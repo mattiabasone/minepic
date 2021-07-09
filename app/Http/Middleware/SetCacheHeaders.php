@@ -29,7 +29,7 @@ class SetCacheHeaders
             return $response;
         }
 
-        $response->setEtag(\md5($response->getContent()), false);
+        $response->setEtag(md5($response->getContent()), false);
         $response->setPublic();
         $response->setMaxAge((int) env('USERDATA_CACHE_TIME'));
         $response->isNotModified($request);

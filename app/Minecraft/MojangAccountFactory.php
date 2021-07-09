@@ -21,12 +21,12 @@ class MojangAccountFactory
         $cape = '';
 
         if (\array_key_exists('properties', $response)) {
-            $textures = \array_filter($response['properties'], static function ($entry) {
+            $textures = array_filter($response['properties'], static function ($entry) {
                 return $entry['name'] === 'textures';
             });
 
             if (!empty($textures)) {
-                $textureData = \json_decode(\base64_decode($textures[0]['value'], true), true, 512, \JSON_THROW_ON_ERROR);
+                $textureData = json_decode(base64_decode($textures[0]['value'], true), true, 512, \JSON_THROW_ON_ERROR);
 
                 if (isset($textureData['textures']['SKIN']['url'])) {
                     $skin = self::extractTextureIdFromUrl($textureData['textures']['SKIN']['url']);
@@ -50,7 +50,7 @@ class MojangAccountFactory
      */
     private static function extractTextureIdFromUrl(string $url): string
     {
-        \preg_match('#'.env('MINECRAFT_TEXTURE_URL').'(.*)$#', $url, $matches);
+        preg_match('#'.env('MINECRAFT_TEXTURE_URL').'(.*)$#', $url, $matches);
 
         return $matches[1] ?? '';
     }

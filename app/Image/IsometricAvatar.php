@@ -213,9 +213,9 @@ class IsometricAvatar
         $this->head->newImage($finalImageSize, $finalImageSize, $this->getImagickPixelTransparent());
 
         // This is weird, but it works
-        $faceX = ((int) \round(($doubleAvatarSize / 2))) - 2 + self::HEAD_MARGIN;
-        $faceY = $rightY = ((int) \round($doubleAvatarSize / 4)) - 1 + self::HEAD_MARGIN;
-        $topX = $rightX = ((int) \round($doubleAvatarSize / 16)) + self::HEAD_MARGIN;
+        $faceX = ((int) round(($doubleAvatarSize / 2))) - 2 + self::HEAD_MARGIN;
+        $faceY = $rightY = ((int) round($doubleAvatarSize / 4)) - 1 + self::HEAD_MARGIN;
+        $topX = $rightX = ((int) round($doubleAvatarSize / 16)) + self::HEAD_MARGIN;
         $topY = -1 + self::HEAD_MARGIN;
 
         // Add Face Section
@@ -253,7 +253,7 @@ class IsometricAvatar
             return true;
         }
 
-        if (!$this->isometricPath || (\filemtime($this->isometricPath) <= $this->lastUpdate)) {
+        if (!$this->isometricPath || (filemtime($this->isometricPath) <= $this->lastUpdate)) {
             return false;
         }
 
@@ -269,8 +269,8 @@ class IsometricAvatar
      */
     private function getFrontPoints($size = self::HEAD_BASE_SIZE): array
     {
-        $cosine_result = \round(self::COSINE_PI_6 * $size);
-        $half_size = \round($size / 2);
+        $cosine_result = round(self::COSINE_PI_6 * $size);
+        $half_size = round($size / 2);
 
         return [
             0, 0, 0, 0,
@@ -288,8 +288,8 @@ class IsometricAvatar
      */
     private function getTopPoints($size = self::HEAD_BASE_SIZE): array
     {
-        $cosine_result = \round(self::COSINE_PI_6 * $size);
-        $half_size = \round($size / 2);
+        $cosine_result = round(self::COSINE_PI_6 * $size);
+        $half_size = round($size / 2);
 
         return [
             0, $size, 0, 0,
@@ -307,8 +307,8 @@ class IsometricAvatar
      */
     private function getRightPoints($size = self::HEAD_BASE_SIZE): array
     {
-        $cosine_result = \round(self::COSINE_PI_6 * $size);
-        $half_size = \round($size / 2);
+        $cosine_result = round(self::COSINE_PI_6 * $size);
+        $half_size = round($size / 2);
 
         return [
             $size, 0, 0, 0,

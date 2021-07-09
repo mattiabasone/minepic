@@ -16,6 +16,6 @@ class MinecraftDefaults
      */
     public static function getRandomDefaultSkin(): string
     {
-        return \random_int(0, 1) === 1 ? self::STEVE_DEFAULT_SKIN_NAME : self::ALEX_DEFAULT_SKIN_NAME;
+        return random_int(0, 1) === 1 ? self::STEVE_DEFAULT_SKIN_NAME : self::ALEX_DEFAULT_SKIN_NAME;
     }
 }

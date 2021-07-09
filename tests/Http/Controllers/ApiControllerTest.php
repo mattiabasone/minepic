@@ -29,7 +29,7 @@ class ApiControllerTest extends TestCase
     {
         $this->get('/avatar/ThisIsAnInvalidAccountName');
         $actualImage = $this->response->getContent();
-        $expectedImage = \file_get_contents(base_path('tests/images/steve_avatar.png'));
+        $expectedImage = file_get_contents(base_path('tests/images/steve_avatar.png'));
         self::assertEquals($expectedImage, $actualImage);
     }
 
@@ -87,7 +87,7 @@ class ApiControllerTest extends TestCase
     {
         $this->get('/skin/ThisIsAnInvalidAccountName');
         $actualImage = $this->response->getContent();
-        $expectedImage = \file_get_contents(base_path('tests/images/steve_skin.png'));
+        $expectedImage = file_get_contents(base_path('tests/images/steve_skin.png'));
         self::assertEquals($expectedImage, $actualImage);
     }
 
@@ -95,7 +95,7 @@ class ApiControllerTest extends TestCase
     {
         $this->get('/skin-back/ThisIsAnInvalidAccountName');
         $actualImage = $this->response->getContent();
-        $expectedImage = \file_get_contents(base_path('tests/images/steve_skin_back.png'));
+        $expectedImage = file_get_contents(base_path('tests/images/steve_skin_back.png'));
         self::assertEquals($expectedImage, $actualImage);
     }
 
@@ -113,7 +113,7 @@ class ApiControllerTest extends TestCase
     {
         $this->get('/download/00000000000000000000000000000000');
         $actualImage = $this->response->getContent();
-        $expectedImage = \file_get_contents(base_path('tests/images/steve_raw.png'));
+        $expectedImage = file_get_contents(base_path('tests/images/steve_raw.png'));
 
         self::assertEquals($expectedImage, $actualImage);
     }

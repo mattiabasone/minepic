@@ -14,7 +14,7 @@ class Raw extends ImageSection
     public function render()
     {
         $this->imgResource = $this->createImageFromPng($this->skinPath);
-        \imagealphablending($this->imgResource, true);
-        \imagesavealpha($this->imgResource, true);
+        imagealphablending($this->imgResource, true);
+        imagesavealpha($this->imgResource, true);
     }
 }

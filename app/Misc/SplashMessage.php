@@ -38,11 +38,11 @@ class SplashMessage
      */
     public static function get(): string
     {
-        return self::$messages[\array_rand(self::$messages)];
+        return self::$messages[array_rand(self::$messages)];
     }
 
     public static function get404()
     {
-        return self::$messages404[\array_rand(self::$messages404)];
+        return self::$messages404[array_rand(self::$messages404)];
     }
 }

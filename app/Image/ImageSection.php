@@ -42,8 +42,8 @@ abstract class ImageSection
     {
         $this->skinPath = $skinPath;
         $this->skinResource = $this->createImageFromPng($this->skinPath);
-        $this->skinWidth = (int) \imagesx($this->skinResource);
-        $this->skinHeight = (int) \imagesy($this->skinResource);
+        $this->skinWidth = (int) imagesx($this->skinResource);
+        $this->skinHeight = (int) imagesy($this->skinResource);
     }
 
     /**
@@ -52,7 +52,7 @@ abstract class ImageSection
     public function __destruct()
     {
         if ($this->imgResource) {
-            \imagedestroy($this->imgResource);
+            imagedestroy($this->imgResource);
         }
     }
 
@@ -61,9 +61,9 @@ abstract class ImageSection
      */
     public function __toString(): string
     {
-        \ob_start();
-        \imagepng($this->imgResource);
-        $imgToString = (string) \ob_get_clean();
+        ob_start();
+        imagepng($this->imgResource);
+        $imgToString = (string) ob_get_clean();
 
         return $imgToString;
     }
@@ -97,7 +97,7 @@ abstract class ImageSection
      */
     protected function createImageFromPng(string $path)
     {
-        $resource = \imagecreatefrompng($path);
+        $resource = imagecreatefrompng($path);
         if ($resource === false) {
             throw new ImageCreateFromPngFailedException("Cannot create png image from file {$path}");
         }
@@ -115,14 +115,14 @@ abstract class ImageSection
      */
     protected function emptyBaseImage(int $width, int $height)
     {
-        $tmpImageResource = \imagecreatetruecolor($width, $height);
+        $tmpImageResource = imagecreatetruecolor($width, $height);
         if ($tmpImageResource === false) {
             throw new ImageResourceCreationFailedException('imagecreatetruecolor() failed');
         }
-        \imagealphablending($tmpImageResource, false);
-        \imagesavealpha($tmpImageResource, true);
-        $transparent = \imagecolorallocatealpha($tmpImageResource, 255, 255, 255, 127);
-        \imagefilledrectangle($tmpImageResource, 0, 0, $width, $height, $transparent);
+        imagealphablending($tmpImageResource, false);
+        imagesavealpha($tmpImageResource, true);
+        $transparent = imagecolorallocatealpha($tmpImageResource, 255, 255, 255, 127);
+        imagefilledrectangle($tmpImageResource, 0, 0, $width, $height, $transparent);
 
         return $tmpImageResource;
     }

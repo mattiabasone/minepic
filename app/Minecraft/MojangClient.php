@@ -132,7 +132,7 @@ class MojangClient
      */
     private function getCacheKey(string $method, string $url): string
     {
-        return 'minecraft_api_response_'.\md5($method.'_'.$url);
+        return 'minecraft_api_response_'.md5($method.'_'.$url);
     }
 
     /**
@@ -158,7 +158,7 @@ class MojangClient
                 $responseContents = $response->getBody()->getContents();
                 Log::debug('Minecraft API Response: '.$responseContents, ['method' => $method, 'url' => $url]);
 
-                return \json_decode($responseContents, true, 512, \JSON_THROW_ON_ERROR);
+                return json_decode($responseContents, true, 512, \JSON_THROW_ON_ERROR);
             });
         } catch (BadResponseException $exception) {
             $this->handleGuzzleBadResponseException($exception);

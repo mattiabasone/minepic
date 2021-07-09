@@ -201,7 +201,7 @@ class UuidResolver
     {
         $accountUpdatedAtTimestamp = $this->account->updated_at->timestamp ?? 0;
 
-        return (\time() - $accountUpdatedAtTimestamp) < env('USERDATA_CACHE_TIME');
+        return (time() - $accountUpdatedAtTimestamp) < env('USERDATA_CACHE_TIME');
     }
 
     /**
@@ -318,7 +318,7 @@ class UuidResolver
     private function forceUpdatePossible(): bool
     {
         return ($this->forceUpdate) &&
-            ((\time() - $this->account->updated_at->timestamp) > env('MIN_USERDATA_UPDATE_INTERVAL'));
+            ((time() - $this->account->updated_at->timestamp) > env('MIN_USERDATA_UPDATE_INTERVAL'));
     }
 
     /**

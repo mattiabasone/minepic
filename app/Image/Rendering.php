@@ -47,7 +47,7 @@ class Rendering
     public function isometricAvatar(?string $uuid, int $size, int $lastUpdateTimestamp = null): IsometricAvatar
     {
         if ($lastUpdateTimestamp === null) {
-            $lastUpdateTimestamp = \time();
+            $lastUpdateTimestamp = time();
         }
 
         $isometricAvatar = new IsometricAvatar(

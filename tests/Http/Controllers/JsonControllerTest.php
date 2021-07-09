@@ -34,7 +34,7 @@ class JsonControllerTest extends TestCase
     {
         $this->get('/api/v1/user/d59dcabb30424b978f7201d1a076637f');
         $responseContent = $this->response->content();
-        $decodedData = \json_decode($responseContent, true);
+        $decodedData = json_decode($responseContent, true);
         self::assertJson($responseContent);
         self::assertArrayHasKey('ok', $decodedData);
         self::assertArrayHasKey('data', $decodedData);
@@ -44,7 +44,7 @@ class JsonControllerTest extends TestCase
     {
         $this->get('/api/v1/user/d59dcabb30424b978f7201ffffffffff');
         $responseContent = $this->response->content();
-        $decodedData = \json_decode($responseContent, true);
+        $decodedData = json_decode($responseContent, true);
         $this->assertResponseStatus(404);
         self::assertJson($responseContent);
         self::assertArrayHasKey('ok', $decodedData);
@@ -55,7 +55,7 @@ class JsonControllerTest extends TestCase
     {
         $this->get('/api/v1/user/_Cyb3r');
         $responseContent = $this->response->content();
-        $decodedData = \json_decode($responseContent, true);
+        $decodedData = json_decode($responseContent, true);
         self::assertJson($responseContent);
         self::assertArrayHasKey('ok', $decodedData);
         self::assertArrayHasKey('data', $decodedData);
@@ -65,7 +65,7 @@ class JsonControllerTest extends TestCase
     {
         $this->get('/api/v1/stats/user/most-wanted');
         $responseContent = $this->response->content();
-        $decodedData = \json_decode($responseContent, true);
+        $decodedData = json_decode($responseContent, true);
         self::assertJson($responseContent);
         self::assertArrayHasKey('ok', $decodedData);
         self::assertArrayHasKey('data', $decodedData);
