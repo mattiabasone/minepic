@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Support\Facades\Log;
 use Minepic\Minecraft\Exceptions\UserNotFoundException;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 class MojangClient
 {
@@ -24,9 +25,9 @@ class MojangClient
     /**
      * HTTP Client for requests.
      *
-     * @var \GuzzleHttp\Client
+     * @var HttpClient
      */
-    private \GuzzleHttp\Client $httpClient;
+    private HttpClient $httpClient;
 
     /**
      * MojangClient constructor.
@@ -47,7 +48,7 @@ class MojangClient
      *
      * @param string $username
      *
-     * @throws \Throwable
+     * @throws Throwable
      *
      * @return MojangAccount
      */
@@ -67,7 +68,7 @@ class MojangClient
      *
      * @param string $uuid User UUID
      *
-     * @throws \Throwable
+     * @throws Throwable
      *
      * @return MojangAccount
      */
@@ -87,9 +88,9 @@ class MojangClient
      *
      * @param string $skin Skin uuid
      *
-     * @throws \Exception|\Throwable
-     *
      * @return string
+     *@throws \Exception|Throwable
+     *
      */
     public function getSkin(string $skin): string
     {
@@ -116,9 +117,9 @@ class MojangClient
     }
 
     /**
-     * @param \Throwable $exception
+     * @param Throwable $exception
      */
-    private function handleThrowable(\Throwable $exception): void
+    private function handleThrowable(Throwable $exception): void
     {
         Log::error($exception->getFile().':'.$exception->getLine().' - '.$exception->getMessage());
         Log::error($exception->getTraceAsString());
@@ -141,7 +142,7 @@ class MojangClient
      * @param string $method HTTP Verb
      * @param string $url    API Endpoint
      *
-     * @throws \Throwable
+     * @throws Throwable
      *
      * @return array
      */
@@ -164,7 +165,7 @@ class MojangClient
             $this->handleGuzzleBadResponseException($exception);
 
             throw $exception;
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $this->handleThrowable($exception);
 
             throw $exception;
@@ -177,7 +178,7 @@ class MojangClient
      * @param string $method
      * @param string $url
      *
-     * @throws \Throwable
+     * @throws Throwable
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
@@ -189,7 +190,7 @@ class MojangClient
             $this->handleGuzzleBadResponseException($exception);
 
             throw $exception;
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $this->handleThrowable($exception);
 
             throw $exception;

@@ -24,8 +24,8 @@ class LayerValidator
      * @param \GdImage $sourceImage
      * @param Side     $side
      *
-     *@throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
-     *@return bool
+     * @throws ImageTrueColorCreationFailedException
+     * @return bool
      */
     public function check($sourceImage, Side $side): bool
     {
@@ -89,7 +89,7 @@ class LayerValidator
      * @param \GdImage $sourceImage
      * @param Side $side
      *
-     *@throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
+     * @throws ImageTrueColorCreationFailedException
      * @return resource
      */
     private function createCheckImage($sourceImage, Side $side)
