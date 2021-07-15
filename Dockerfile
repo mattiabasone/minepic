@@ -1,4 +1,4 @@
-FROM php:7.4.14-cli-alpine
+FROM php:8.0.8-cli-alpine
 
 LABEL maintainer="Mattia Basone mattia.basone@gmail.com"
 
