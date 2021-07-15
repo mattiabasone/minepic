@@ -20,6 +20,9 @@ class Component
     protected Side $right;
     protected Side $left;
 
+    /**
+     * @param array $sectionsCoordinates
+     */
     public function __construct(array $sectionsCoordinates)
     {
         $this->top = Side::fromRawPoints($sectionsCoordinates[Side::TOP]);
@@ -87,79 +90,108 @@ class Component
      */
     public function getSideByIdentifier(string $side): Side
     {
-        switch ($side) {
-            case Side::TOP:
-                return $this->getTop();
-            case Side::BOTTOM:
-                return $this->getBottom();
-            case Side::FRONT:
-                return $this->getFront();
-            case Side::BACK:
-                return $this->getBack();
-            case Side::RIGHT:
-                return $this->getRight();
-            case Side::LEFT:
-                return $this->getLeft();
-            default:
-                throw new \Exception("Invalid Side {$side}");
-        }
+        return match ($side) {
+            Side::TOP => $this->getTop(),
+            Side::BOTTOM => $this->getBottom(),
+            Side::FRONT => $this->getFront(),
+            Side::BACK => $this->getBack(),
+            Side::RIGHT => $this->getRight(),
+            Side::LEFT => $this->getLeft(),
+            default => throw new \Exception("Invalid Side {$side}")
+        };
     }
 
+    /**
+     * @return static
+     */
     public static function getHead(): self
     {
         return new self(Coordinates::HEAD);
     }
 
+    /**
+     * @return static
+     */
     public static function getHeadLayer(): self
     {
         return new self(Coordinates::HEAD_LAYER);
     }
 
+    /**
+     * @return static
+     */
     public static function getTorso(): self
     {
         return new self(Coordinates::TORSO);
     }
 
+    /**
+     * @return static
+     */
     public static function getTorsoLayer(): self
     {
         return new self(Coordinates::TORSO_LAYER);
     }
 
+    /**
+     * @return static
+     */
     public static function getRightArm(): self
     {
         return new self(Coordinates::RIGHT_ARM);
     }
 
+    /**
+     * @return static
+     */
     public static function getRightArmLayer(): self
     {
         return new self(Coordinates::RIGHT_ARM_LAYER);
     }
 
+    /**
+     * @return static
+     */
     public static function getLeftArm(): self
     {
         return new self(Coordinates::LEFT_ARM);
     }
 
+    /**
+     * @return static
+     */
     public static function getLeftArmLayer(): self
     {
         return new self(Coordinates::LEFT_ARM_LAYER);
     }
 
+    /**
+     * @return static
+     */
     public static function getRightLeg(): self
     {
         return new self(Coordinates::RIGHT_LEG);
     }
 
+    /**
+     * @return static
+     */
     public static function getRightLegLayer(): self
     {
         return new self(Coordinates::RIGHT_LEG_LAYER);
     }
 
+    /**
+     * @return static
+     */
     public static function getLeftLeg(): self
     {
         return new self(Coordinates::LEFT_LEG);
     }
 
+    /**
+     * @return static
+     */
     public static function getLeftLegLayer(): self
     {
         return new self(Coordinates::LEFT_LEG_LAYER);

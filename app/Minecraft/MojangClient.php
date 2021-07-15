@@ -88,9 +88,8 @@ class MojangClient
      *
      * @param string $skin Skin uuid
      *
+     * @throws \Exception|Throwable
      * @return string
-     *@throws \Exception|Throwable
-     *
      */
     public function getSkin(string $skin): string
     {

@@ -71,8 +71,7 @@ class JsonController extends BaseController
      *
      * @param string $uuid
      *
-     * @throws \Exception
-     *
+     * @throws \Throwable
      * @return JsonResponse
      */
     public function user($uuid = ''): JsonResponse
@@ -102,7 +101,7 @@ class JsonController extends BaseController
     /**
      * @param string $username
      *
-     * @throws \Exception
+     * @throws \Throwable
      *
      * @return JsonResponse
      */
