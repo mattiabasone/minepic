@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Minepic\Providers;
 
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -18,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
     {
         if (env('APP_FORCE_HTTPS')) {
             $this->app['request']->server->set('HTTPS', true);
+        }
+
+        if ($this->app->environment() === 'local') {
+            $this->app->register(IdeHelperServiceProvider::class);
         }
     }
 
