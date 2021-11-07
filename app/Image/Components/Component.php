@@ -102,7 +102,7 @@ class Component
     }
 
     /**
-     * @return static
+     * @return self
      */
     public static function getHead(): self
     {
@@ -110,7 +110,7 @@ class Component
     }
 
     /**
-     * @return static
+     * @return self
      */
     public static function getHeadLayer(): self
     {
@@ -118,7 +118,7 @@ class Component
     }
 
     /**
-     * @return static
+     * @return self
      */
     public static function getTorso(): self
     {
@@ -126,7 +126,7 @@ class Component
     }
 
     /**
-     * @return static
+     * @return self
      */
     public static function getTorsoLayer(): self
     {
@@ -134,7 +134,7 @@ class Component
     }
 
     /**
-     * @return static
+     * @return self
      */
     public static function getRightArm(): self
     {
@@ -142,7 +142,7 @@ class Component
     }
 
     /**
-     * @return static
+     * @return self
      */
     public static function getRightArmLayer(): self
     {
@@ -150,7 +150,7 @@ class Component
     }
 
     /**
-     * @return static
+     * @return self
      */
     public static function getLeftArm(): self
     {
@@ -158,7 +158,7 @@ class Component
     }
 
     /**
-     * @return static
+     * @return self
      */
     public static function getLeftArmLayer(): self
     {
@@ -166,7 +166,7 @@ class Component
     }
 
     /**
-     * @return static
+     * @return self
      */
     public static function getRightLeg(): self
     {
@@ -174,7 +174,7 @@ class Component
     }
 
     /**
-     * @return static
+     * @return self
      */
     public static function getRightLegLayer(): self
     {
@@ -182,7 +182,7 @@ class Component
     }
 
     /**
-     * @return static
+     * @return self
      */
     public static function getLeftLeg(): self
     {
@@ -190,7 +190,7 @@ class Component
     }
 
     /**
-     * @return static
+     * @return self
      */
     public static function getLeftLegLayer(): self
     {

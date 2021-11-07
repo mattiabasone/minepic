@@ -19,9 +19,9 @@ class UuidResolver
     /**
      * Requested string.
      *
-     * @var null|string
+     * @var string
      */
-    private ?string $request;
+    private string $request;
     /**
      * @var null|string
      */
@@ -32,12 +32,6 @@ class UuidResolver
      * @var null|Account
      */
     private ?Account $account;
-    /**
-     * Full Minecraft/Mojang Account Data.
-     *
-     * @var null|MojangAccount
-     */
-    private ?MojangAccount $mojangAccount;
     /**
      * User data has been updated?
      *
@@ -99,16 +93,17 @@ class UuidResolver
      */
     public function insertNewUuid(): bool
     {
-        if ($this->request === null || UserNotFoundCache::has($this->request)) {
+        if ($this->request === '' || UserNotFoundCache::has($this->request)) {
             return false;
         }
 
-        if ($this->getFullUserdataApi()) {
+        $mojangAccount = $this->getFullUserdataApi();
+        if ($mojangAccount instanceof MojangAccount) {
             $this->account = Account::create([
-                'username' => $this->mojangAccount->getUsername(),
-                'uuid' => $this->mojangAccount->getUuid(),
-                'skin' => $this->mojangAccount->getSkin(),
-                'cape' => $this->mojangAccount->getCape(),
+                'username' => $mojangAccount->getUsername(),
+                'uuid' => $mojangAccount->getUuid(),
+                'skin' => $mojangAccount->getSkin(),
+                'cape' => $mojangAccount->getCape(),
             ]);
 
             $this->saveRemoteSkin();
@@ -135,7 +130,7 @@ class UuidResolver
     public function resolve(?string $uuid): bool
     {
         $this->dataUpdated = false;
-        $this->request = $uuid;
+        $this->request = $uuid ?? '';
 
         if ($uuid === null) {
             Log::debug('UUID is null');
@@ -169,6 +164,10 @@ class UuidResolver
      */
     public function saveRemoteSkin(): bool
     {
+        if ($this->account instanceof Account === false) {
+            return false;
+        }
+
         if (!empty($this->account->skin) && $this->account->skin !== '') {
             try {
                 $skinData = $this->mojangClient->getSkin($this->account->skin);
@@ -199,9 +198,9 @@ class UuidResolver
      */
     private function checkDbCache(): bool
     {
-        $accountUpdatedAtTimestamp = $this->account->updated_at->timestamp ?? 0;
+        $accountUpdatedAtTimestamp = (int) ($this->account->updated_at->timestamp ?? 0);
 
-        return (time() - $accountUpdatedAtTimestamp) < env('USERDATA_CACHE_TIME');
+        return (time() - $accountUpdatedAtTimestamp) < (int) env('USERDATA_CACHE_TIME');
     }
 
     /**
@@ -245,12 +244,13 @@ class UuidResolver
     {
         if (isset($this->account->username) && $this->account->uuid !== '') {
             // Get data from API
-            if ($this->getFullUserdataApi()) {
+            $mojangAccount = $this->getFullUserdataApi();
+            if ($mojangAccount instanceof MojangAccount) {
                 $previousUsername = $this->account->username;
                 // Update database
-                $this->account->username = $this->mojangAccount->getUsername();
-                $this->account->skin = $this->mojangAccount->getSkin();
-                $this->account->cape = $this->mojangAccount->getCape();
+                $this->account->username = $mojangAccount->getUsername();
+                $this->account->skin = $mojangAccount->getSkin() ?? '';
+                $this->account->cape = $mojangAccount->getCape() ?? '';
                 $this->account->fail_count = 0;
                 $this->account->save();
 
@@ -292,23 +292,18 @@ class UuidResolver
     }
 
     /**
-     * Get userdata from Mojang API.
+     * Get userdata from Mojang/Minecraft API.
      *
-     * @throws \Throwable
-     *
-     * @return bool
+     * @return null|MojangAccount
      */
-    private function getFullUserdataApi(): bool
+    private function getFullUserdataApi(): ?MojangAccount
     {
         try {
-            $this->mojangAccount = $this->mojangClient->getUuidInfo($this->request);
-
-            return true;
-        } catch (\Exception $e) {
+            return $this->mojangClient->getUuidInfo($this->request);
+        } catch (\Throwable $e) {
             Log::error($e->getTraceAsString(), ['request' => $this->request]);
-            $this->mojangAccount = null;
 
-            return false;
+            return null;
         }
     }
 
@@ -318,7 +313,7 @@ class UuidResolver
     private function forceUpdatePossible(): bool
     {
         return ($this->forceUpdate) &&
-            ((time() - $this->account->updated_at->timestamp) > env('MIN_USERDATA_UPDATE_INTERVAL'));
+            ((time() - (int) $this->account->updated_at->timestamp) > (int) env('MIN_USERDATA_UPDATE_INTERVAL'));
     }
 
     /**

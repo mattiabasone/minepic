@@ -10,19 +10,19 @@ use Minepic\Models\Account;
 class AccountCreatedEvent extends Event
 {
     /**
-     * @var null|Account
+     * @var Account
      */
-    private ?Account $account;
+    private Account $account;
 
     /**
-     * @param null|Account $account
+     * @param Account $account
      */
-    public function __construct(?Account $account)
+    public function __construct(Account $account)
     {
         $this->account = $account;
     }
 
-    public function getAccount(): ?Account
+    public function getAccount(): Account
     {
         return $this->account;
     }

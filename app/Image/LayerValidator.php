@@ -27,7 +27,7 @@ class LayerValidator
      * @throws ImageTrueColorCreationFailedException
      * @return bool
      */
-    public function check($sourceImage, Side $side): bool
+    public function check(\GdImage $sourceImage, Side $side): bool
     {
         $checkImage = $this->createCheckImage($sourceImage, $side);
         $this->calculate($checkImage, $side);
@@ -41,7 +41,7 @@ class LayerValidator
      * @param \GdImage $checkImage
      * @param Side $side
      */
-    protected function calculate($checkImage, Side $side): void
+    protected function calculate(\GdImage $checkImage, Side $side): void
     {
         // Check for helm image
         $allRed = [];
@@ -52,7 +52,7 @@ class LayerValidator
         while ($x < $side->getWidth()) {
             $y = 0;
             while ($y < $side->getHeight()) {
-                $color = imagecolorat($checkImage, $x, $y);
+                $color = (int) imagecolorat($checkImage, $x, $y);
                 $colors = imagecolorsforindex($checkImage, $color);
                 $allRed[] = $colors['red'];
                 $allGreen[] = $colors['green'];
@@ -90,9 +90,9 @@ class LayerValidator
      * @param Side $side
      *
      * @throws ImageTrueColorCreationFailedException
-     * @return resource
+     * @return \GdImage
      */
-    private function createCheckImage($sourceImage, Side $side)
+    private function createCheckImage(\GdImage $sourceImage, Side $side): \GdImage
     {
         $width = $side->getWidth();
         $height = $side->getHeight();
@@ -102,7 +102,7 @@ class LayerValidator
         }
         imagealphablending($checkImage, false);
         imagesavealpha($checkImage, true);
-        $colorIdentifier = imagecolorallocatealpha($checkImage, 255, 255, 255, 127);
+        $colorIdentifier = (int) imagecolorallocatealpha($checkImage, 255, 255, 255, 127);
         imagefilledrectangle($checkImage, 0, 0, $width, $height, $colorIdentifier);
         imagecopy($checkImage, $sourceImage, 0, 0, $side->getTopLeft()->getX(), $side->getTopLeft()->getY(), $width, $height);
 

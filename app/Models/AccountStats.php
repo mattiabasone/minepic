@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Minepic\Models;
 
+use Barryvdh\LaravelIdeHelper\Eloquent;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|AccountStats newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AccountStats query()
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereUuid($value)
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class AccountStats extends Model
 {
@@ -60,7 +61,7 @@ class AccountStats extends Model
     protected $primaryKey = 'uuid';
 
     /**
-     * @var array
+     * @var array<string>
      */
     protected $fillable = [
         'uuid',

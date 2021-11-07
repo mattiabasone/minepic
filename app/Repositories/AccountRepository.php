@@ -31,7 +31,7 @@ class AccountRepository
      * @param string $uuid
      * @param array  $columns
      *
-     * @return null|Builder|\Illuminate\Database\Eloquent\Model|object
+     * @return null|Account
      */
     public function findLastUpdatedByUsername(string $uuid, $columns = ['*']): ?Account
     {

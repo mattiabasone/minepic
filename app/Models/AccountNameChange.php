@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Minepic\Models;
 
+use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|AccountNameChange newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AccountNameChange newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AccountNameChange query()
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class AccountNameChange extends Model
 {
@@ -30,6 +31,9 @@ class AccountNameChange extends Model
      */
     protected $table = 'accounts_name_change';
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'uuid',
         'prev_name',

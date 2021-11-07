@@ -6,12 +6,16 @@ namespace Minepic\Image\Sections;
 
 use Minepic\Image\Components\Component;
 use Minepic\Image\Exceptions\ImageResourceCreationFailedException;
+use Minepic\Image\Exceptions\ImageTrueColorCreationFailedException;
+use Minepic\Image\ImageManipulation;
 use Minepic\Image\ImageSection;
 use Minepic\Image\LayerValidator;
 use Minepic\Image\Point;
 
 abstract class BaseSkinSection extends ImageSection
 {
+    use ImageManipulation;
+
     protected string $side;
     protected int $baseImageWidth = 16;
     protected int $baseImageHeight = 32;
@@ -49,10 +53,11 @@ abstract class BaseSkinSection extends ImageSection
 
     /**
      * In old skins (pre 1.8) left arm/leg are right arm/leg flipped
-     * @param $tmpImageResource
+     *
+     * @param \GdImage $tmpImageResource
      * @throws \Exception
      */
-    protected function patchOldSkin($tmpImageResource): void
+    protected function patchOldSkin(\GdImage $tmpImageResource): void
     {
         if ($this->is64x64()) {
             return;
@@ -78,19 +83,24 @@ abstract class BaseSkinSection extends ImageSection
     }
 
     /**
-     * @param $tmpImageResource
+     * @param \GdImage $tmpImageResource
      * @param Component $dstComponent
      * @param Component $srcComponent
      * @param Point $startingPoint
      * @throws \Exception
      */
-    protected function flipComponent($tmpImageResource, Component $dstComponent, Component $srcComponent, Point $startingPoint): void
+    protected function flipComponent(\GdImage $tmpImageResource, Component $dstComponent, Component $srcComponent, Point $startingPoint): void
     {
         $leftArmData = $dstComponent->getSideByIdentifier($this->side);
         $rightArmData = $srcComponent->getSideByIdentifier($this->side);
         $width = $leftArmData->getWidth();
         $height = $leftArmData->getHeight();
         $leftArm = imagecreatetruecolor($width, $height);
+
+        if ($leftArm instanceof \GdImage === false) {
+            throw new ImageTrueColorCreationFailedException();
+        }
+
         for ($x = 0; $x < 4; ++$x) {
             imagecopy(
                 $leftArm,
@@ -117,11 +127,11 @@ abstract class BaseSkinSection extends ImageSection
     }
 
     /**
-     * @param $skinHeight
+     * @param int $skinHeight
      *
      * @return int
      */
-    protected function checkHeight($skinHeight): int
+    protected function checkHeight(int $skinHeight): int
     {
         if ($skinHeight === 0 || $skinHeight < 0 || $skinHeight > (int) env('MAX_SKINS_SIZE')) {
             $skinHeight = (int) env('DEFAULT_SKIN_SIZE');
@@ -155,13 +165,13 @@ abstract class BaseSkinSection extends ImageSection
     }
 
     /**
-     * @param $tmpImageResource
+     * @param \GdImage $tmpImageResource
      * @param string $componentName
      * @param Component $base
      * @param null|Component $layer
      * @throws \Exception
      */
-    protected function copyComponent($tmpImageResource, string $componentName, Component $base, ?Component $layer): void
+    protected function copyComponent(\GdImage $tmpImageResource, string $componentName, Component $base, ?Component $layer): void
     {
         $sideBase = $base->getSideByIdentifier($this->side);
         $width = $sideBase->getWidth();
@@ -180,7 +190,7 @@ abstract class BaseSkinSection extends ImageSection
         );
         if ($layer !== null && (new LayerValidator())->check($this->skinResource, $layer->getSideByIdentifier($this->side))) {
             $sideLayer = $layer->getSideByIdentifier($this->side);
-            imagecopymerge_alpha(
+            $this->imageCopyMergeAlpha(
                 $tmpImageResource,
                 $this->skinResource,
                 $startingPoint->getX(),

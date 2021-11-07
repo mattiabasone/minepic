@@ -6,6 +6,7 @@ namespace Minepic\Exceptions;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Minepic\Misc\SplashMessage;
@@ -62,12 +63,15 @@ class Handler extends ExceptionHandler
                 ]).
                 view('public.errors.404').
                 view('public.template.footer'),
-                404
+                Response::HTTP_NOT_FOUND
             );
         }
 
         if ($e instanceof NotFoundHttpJsonException) {
-            return response(['ok' => false, $e->getMessage()], 404);
+            return response(
+                json_encode(['ok' => false, $e->getMessage()], JSON_THROW_ON_ERROR),
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         return parent::render($request, $e);

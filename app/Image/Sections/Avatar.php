@@ -6,20 +6,26 @@ namespace Minepic\Image\Sections;
 
 use Minepic\Image\Components\Component;
 use Minepic\Image\Components\Side;
+use Minepic\Image\Exceptions\ImageCreateFromPngFailedException;
+use Minepic\Image\Exceptions\ImageResourceCreationFailedException;
+use Minepic\Image\Exceptions\ImageTrueColorCreationFailedException;
+use Minepic\Image\ImageManipulation;
 use Minepic\Image\ImageSection;
 use Minepic\Image\LayerValidator;
 
 class Avatar extends ImageSection
 {
+    use ImageManipulation;
+
     /**
      * Render avatar image.
      *
      * @param int $size Avatar size
      * @param string $type Section rendered
      *
-     * @throws \Minepic\Image\Exceptions\ImageCreateFromPngFailedException
-     * @throws \Minepic\Image\Exceptions\ImageResourceCreationFailedException
-     * @throws \Minepic\Image\Exceptions\ImageTrueColorCreationFailedException
+     * @throws ImageCreateFromPngFailedException
+     * @throws ImageResourceCreationFailedException
+     * @throws ImageTrueColorCreationFailedException
      */
     public function render(int $size = 0, string $type = Side::FRONT): void
     {
@@ -40,7 +46,7 @@ class Avatar extends ImageSection
 
         // if all pixel have transparency or the colors are not the same
         if ((new LayerValidator())->check($baseSkinImage, $helmSide)) {
-            imagecopymerge_alpha(
+            $this->imageCopyMergeAlpha(
                 $tmpImageResource,
                 $baseSkinImage,
                 0,

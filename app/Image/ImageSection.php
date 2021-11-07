@@ -18,7 +18,7 @@ abstract class ImageSection
     /**
      * @var \GdImage
      */
-    protected $skinResource;
+    protected \GdImage $skinResource;
     /**
      * @var int
      */
@@ -32,7 +32,7 @@ abstract class ImageSection
      *
      * @var \GdImage
      */
-    protected $imgResource;
+    protected \GdImage $imgResource;
 
     /**
      * @param string $skinPath
@@ -46,19 +46,13 @@ abstract class ImageSection
         $this->skinHeight = (int) imagesy($this->skinResource);
     }
 
-    /**
-     * Destructor.
-     */
     public function __destruct()
     {
-        if ($this->imgResource) {
+        if ($this->imgResource instanceof \GdImage) {
             imagedestroy($this->imgResource);
         }
     }
 
-    /**
-     * From resource to string.
-     */
     public function __toString(): string
     {
         ob_start();
@@ -79,23 +73,21 @@ abstract class ImageSection
     /**
      * Get generated resource image.
      *
-     * @return resource
+     * @return \GdImage
      */
-    public function getResource()
+    public function getResource(): \GdImage
     {
         return $this->imgResource;
     }
 
     /**
-     * Creates imagecreatefrompng resource, it fails throws an Exception.
-     *
      * @param string $path
      *
      * @throws ImageCreateFromPngFailedException
      *
      * @return \GdImage
      */
-    protected function createImageFromPng(string $path)
+    protected function createImageFromPng(string $path): \GdImage
     {
         $resource = imagecreatefrompng($path);
         if ($resource === false) {
@@ -113,7 +105,7 @@ abstract class ImageSection
      *
      * @return \GdImage
      */
-    protected function emptyBaseImage(int $width, int $height)
+    protected function emptyBaseImage(int $width, int $height): \GdImage
     {
         $tmpImageResource = imagecreatetruecolor($width, $height);
         if ($tmpImageResource === false) {
@@ -121,7 +113,7 @@ abstract class ImageSection
         }
         imagealphablending($tmpImageResource, false);
         imagesavealpha($tmpImageResource, true);
-        $transparent = imagecolorallocatealpha($tmpImageResource, 255, 255, 255, 127);
+        $transparent = (int) imagecolorallocatealpha($tmpImageResource, 255, 255, 255, 127);
         imagefilledrectangle($tmpImageResource, 0, 0, $width, $height, $transparent);
 
         return $tmpImageResource;

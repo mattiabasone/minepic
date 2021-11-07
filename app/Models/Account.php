@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Minepic\Models;
 
+use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -25,7 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Account query()
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereUuid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Account whereUsername($value)
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class Account extends Model
 {
@@ -37,7 +38,7 @@ class Account extends Model
     protected $table = 'accounts';
 
     /**
-     * @var array
+     * @var array<string>
      */
     protected $fillable = [
         'uuid',

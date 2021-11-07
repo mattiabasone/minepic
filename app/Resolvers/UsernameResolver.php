@@ -45,7 +45,6 @@ class UsernameResolver
             return null;
         }
 
-        /** @var \Minepic\Models\Account $account */
         $account = $this->accountRepository->findLastUpdatedByUsername($username);
         if ($account !== null) {
             return $account->uuid;
