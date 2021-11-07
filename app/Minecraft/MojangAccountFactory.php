@@ -29,7 +29,7 @@ class MojangAccountFactory
         });
 
         if (!empty($textures)) {
-            $textureData = json_decode((string) base64_decode($textures[0]['value'], true), true, 512, \JSON_THROW_ON_ERROR);
+            $textureData = json_decode((string) base64_decode($textures[0]['value'], true), associative: true, flags: \JSON_THROW_ON_ERROR);
 
             if (isset($textureData['textures']['SKIN']['url'])) {
                 $skin = self::extractTextureIdFromUrl($textureData['textures']['SKIN']['url']);

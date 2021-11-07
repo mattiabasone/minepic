@@ -23,27 +23,6 @@ class JsonController extends BaseController
     private const USER_NOT_FOUND_MESSAGE = 'User not found';
 
     /**
-     * @var ResponseFactory
-     */
-    private ResponseFactory $responseFactory;
-    /**
-     * @var UuidResolver
-     */
-    private UuidResolver $uuidResolver;
-    /**
-     * @var AccountRepository
-     */
-    private AccountRepository $accountRepository;
-    /**
-     * @var Manager
-     */
-    private Manager $dataManger;
-    /**
-     * @var UsernameResolver
-     */
-    private UsernameResolver $usernameResolver;
-
-    /**
      * @param AccountRepository $accountRepository
      * @param UuidResolver      $uuidResolver
      * @param Manager           $dataManger
@@ -51,18 +30,12 @@ class JsonController extends BaseController
      * @param UsernameResolver  $usernameResolver
      */
     public function __construct(
-        AccountRepository $accountRepository,
-        UuidResolver $uuidResolver,
-        Manager $dataManger,
-        ResponseFactory $responseFactory,
-        UsernameResolver $usernameResolver
+        private AccountRepository $accountRepository,
+        private UuidResolver $uuidResolver,
+        private Manager $dataManger,
+        private ResponseFactory $responseFactory,
+        private UsernameResolver $usernameResolver
     ) {
-        $this->accountRepository = $accountRepository;
-        $this->uuidResolver = $uuidResolver;
-        $this->dataManger = $dataManger;
-        $this->responseFactory = $responseFactory;
-        $this->usernameResolver = $usernameResolver;
-
         $this->dataManger->setSerializer(new ArraySerializer());
     }
 

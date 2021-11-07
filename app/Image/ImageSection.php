@@ -10,12 +10,6 @@ use Minepic\Image\Exceptions\ImageResourceCreationFailedException;
 abstract class ImageSection
 {
     /**
-     * Skin Path.
-     *
-     * @var string
-     */
-    protected string $skinPath = '';
-    /**
      * @var \GdImage
      */
     protected \GdImage $skinResource;
@@ -38,9 +32,8 @@ abstract class ImageSection
      * @param string $skinPath
      * @throws ImageCreateFromPngFailedException
      */
-    public function __construct(string $skinPath)
+    public function __construct(protected string $skinPath = '')
     {
-        $this->skinPath = $skinPath;
         $this->skinResource = $this->createImageFromPng($this->skinPath);
         $this->skinWidth = (int) imagesx($this->skinResource);
         $this->skinHeight = (int) imagesy($this->skinResource);

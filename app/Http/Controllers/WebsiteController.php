@@ -43,23 +43,6 @@ class WebsiteController extends BaseController
     'minecraft skin, avatar, minecraft avatar, generator, skin generator, skin viewer';
 
     /**
-     * @var ResponseFactory
-     */
-    private ResponseFactory $responseFactory;
-    /**
-     * @var UuidResolver
-     */
-    private UuidResolver $uuidResolver;
-    /**
-     * @var UsernameResolver
-     */
-    private UsernameResolver $usernameResolver;
-    /**
-     * @var Manager
-     */
-    private Manager $dataManager;
-
-    /**
      * WebsiteController constructor.
      *
      * @param UuidResolver     $uuidResolver
@@ -68,15 +51,11 @@ class WebsiteController extends BaseController
      * @param Manager          $dataManager
      */
     public function __construct(
-        UuidResolver $uuidResolver,
-        ResponseFactory $responseFactory,
-        UsernameResolver $usernameResolver,
-        Manager $dataManager
+        private UuidResolver $uuidResolver,
+        private ResponseFactory $responseFactory,
+        private UsernameResolver $usernameResolver,
+        private Manager $dataManager
     ) {
-        $this->responseFactory = $responseFactory;
-        $this->uuidResolver = $uuidResolver;
-        $this->usernameResolver = $usernameResolver;
-        $this->dataManager = $dataManager;
         $this->dataManager->setSerializer(new ArraySerializer());
     }
 

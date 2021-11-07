@@ -9,34 +9,6 @@ use Illuminate\Contracts\Support\Arrayable;
 class MojangAccount implements Arrayable
 {
     /**
-     * UUID of the account.
-     *
-     * @var string
-     */
-    private string $uuid;
-
-    /**
-     * Username of the account.
-     *
-     * @var string
-     */
-    private string $username;
-
-    /**
-     * Skin.
-     *
-     * @var string
-     */
-    private string $skin;
-
-    /**
-     * Cape.
-     *
-     * @var string
-     */
-    private string $cape;
-
-    /**
      * MinecraftAccount constructor.
      *
      * @param string $uuid
@@ -44,12 +16,12 @@ class MojangAccount implements Arrayable
      * @param string $skin
      * @param string $cape
      */
-    public function __construct(string $uuid, string $username, string $skin = '', string $cape = '')
-    {
-        $this->uuid = $uuid;
-        $this->username = $username;
-        $this->skin = $skin;
-        $this->cape = $cape;
+    public function __construct(
+        private string $uuid,
+        private string $username,
+        private string $skin = '',
+        private string $cape = ''
+    ) {
     }
 
     /**

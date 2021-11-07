@@ -15,25 +15,15 @@ use Minepic\Resolvers\UuidResolver;
 class DownloadTextureController extends BaseController
 {
     /**
-     * @var UuidResolver
-     */
-    protected UuidResolver $uuidResolver;
-
-    /** @var ResponseFactory */
-    protected ResponseFactory $responseFactory;
-
-    /**
      * Api constructor.
      *
      * @param UuidResolver    $uuidResolver
      * @param ResponseFactory $responseFactory
      */
     public function __construct(
-        UuidResolver $uuidResolver,
-        ResponseFactory $responseFactory
+        protected UuidResolver $uuidResolver,
+        protected ResponseFactory $responseFactory
     ) {
-        $this->uuidResolver = $uuidResolver;
-        $this->responseFactory = $responseFactory;
     }
 
     /**

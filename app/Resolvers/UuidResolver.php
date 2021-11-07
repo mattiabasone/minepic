@@ -46,24 +46,13 @@ class UuidResolver
     private bool $forceUpdate = false;
 
     /**
-     * @var MojangClient
-     */
-    private MojangClient $mojangClient;
-    /**
-     * @var Dispatcher
-     */
-    private Dispatcher $eventDispatcher;
-
-    /**
      * @param MojangClient $mojangClient    Client for Mojang API
      * @param Dispatcher   $eventDispatcher
      */
     public function __construct(
-        MojangClient $mojangClient,
-        Dispatcher $eventDispatcher
+        private MojangClient $mojangClient,
+        private Dispatcher $eventDispatcher
     ) {
-        $this->mojangClient = $mojangClient;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

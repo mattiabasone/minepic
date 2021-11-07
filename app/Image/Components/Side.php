@@ -15,20 +15,12 @@ class Side
     public const RIGHT = 'RIGHT';
     public const LEFT = 'LEFT';
 
-    /** @var Point */
-    protected Point $topLeft;
-
-    /** @var Point */
-    protected Point $bottomRight;
-
     /**
      * @param Point $topLeft
      * @param Point $bottomRight
      */
-    public function __construct(Point $topLeft, Point $bottomRight)
+    public function __construct(protected Point $topLeft, protected Point $bottomRight)
     {
-        $this->topLeft = $topLeft;
-        $this->bottomRight = $bottomRight;
     }
 
     /**

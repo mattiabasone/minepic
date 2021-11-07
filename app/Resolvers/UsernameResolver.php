@@ -12,24 +12,13 @@ use Minepic\Repositories\AccountRepository;
 class UsernameResolver
 {
     /**
-     * @var AccountRepository
-     */
-    private AccountRepository $accountRepository;
-    /**
-     * @var MojangClient
-     */
-    private MojangClient $mojangClient;
-
-    /**
      * @param AccountRepository $accountRepository
      * @param MojangClient      $mojangClient
      */
     public function __construct(
-        AccountRepository $accountRepository,
-        MojangClient $mojangClient
+        private AccountRepository $accountRepository,
+        private MojangClient $mojangClient
     ) {
-        $this->accountRepository = $accountRepository;
-        $this->mojangClient = $mojangClient;
     }
 
     /**

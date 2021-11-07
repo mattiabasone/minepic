@@ -18,27 +18,6 @@ use Minepic\Resolvers\UuidResolver;
 abstract class BaseApiController extends BaseController
 {
     /**
-     * @var UuidResolver
-     */
-    protected UuidResolver $uuidResolver;
-    /**
-     * @var ResponseFactory
-     */
-    protected ResponseFactory $responseFactory;
-    /**
-     * @var UsernameResolver
-     */
-    protected UsernameResolver $usernameResolver;
-    /**
-     * @var Rendering
-     */
-    protected Rendering $rendering;
-    /**
-     * @var Dispatcher
-     */
-    protected Dispatcher $eventDispatcher;
-
-    /**
      * Api constructor.
      *
      * @param UuidResolver     $uuidResolver     Minepic Core Instance
@@ -48,17 +27,12 @@ abstract class BaseApiController extends BaseController
      * @param Dispatcher       $eventDispatcher
      */
     public function __construct(
-        UuidResolver $uuidResolver,
-        ResponseFactory $responseFactory,
-        UsernameResolver $usernameResolver,
-        Rendering $rendering,
-        Dispatcher $eventDispatcher
+        protected UuidResolver $uuidResolver,
+        protected ResponseFactory $responseFactory,
+        protected UsernameResolver $usernameResolver,
+        protected Rendering $rendering,
+        protected Dispatcher $eventDispatcher
     ) {
-        $this->uuidResolver = $uuidResolver;
-        $this->responseFactory = $responseFactory;
-        $this->usernameResolver = $usernameResolver;
-        $this->rendering = $rendering;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

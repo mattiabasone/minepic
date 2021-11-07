@@ -10,16 +10,10 @@ use Minepic\Models\Account;
 class AccountImageServedEvent extends Event
 {
     /**
-     * @var Account
-     */
-    private Account $account;
-
-    /**
      * @param Account $account
      */
-    public function __construct(Account $account)
+    public function __construct(private Account $account)
     {
-        $this->account = $account;
     }
 
     public function getAccount(): Account
