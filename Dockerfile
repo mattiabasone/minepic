@@ -1,6 +1,4 @@
-FROM php:8.0.8-cli-alpine
-
-LABEL maintainer="Mattia Basone mattia.basone@gmail.com"
+FROM php:8.0.12-cli-alpine
 
 ARG DEFAULT_USER_UID=1000
 ARG APP_USER=app

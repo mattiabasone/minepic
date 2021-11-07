@@ -14,10 +14,7 @@ class Kernel extends ConsoleKernel
      *
      * @var array
      */
-    protected $commands = [
-        Commands\CheckUuid::class,
-        Commands\CleanAccountsTable::class,
-    ];
+    protected $commands = [];
 
     /**
      * Define the application's command schedule.

@@ -12,6 +12,7 @@
         "ext-intl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
+        "carbon-cli/carbon-cli": "^1.2",
         "guzzlehttp/guzzle": "^7.0.1",
         "illuminate/redis": "^8.0",
         "laravel/lumen-framework": "^8.0",
@@ -62,9 +63,10 @@
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""
         ],
-        "fix": "@php vendor/bin/php-cs-fixer fix",
+        "format": "vendor/bin/php-cs-fixer fix",
         "ihg": "@php artisan ide-helper:generate",
-        "analyse": "@php vendor/bin/phpstan analyse"
+        "analyse": "@php vendor/bin/phpstan analyse",
+        "test": "vendor/bin/phpunit"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

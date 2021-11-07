@@ -10,3 +10,4 @@ phpunit.xml.dist
 clover.xml
 /composer.phar
 /.php-cs-fixer.cache
+/db.sqlite
