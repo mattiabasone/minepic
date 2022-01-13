@@ -82,6 +82,8 @@ $router->group(['prefix' => 'api/v1', 'middleware' => ['input.clean_params']], s
     $router->get('/typeahead'.ROUTE_USERNAME_MATCH, 'JsonController@userTypeahead');
 
     $router->get('/stats/user/most-wanted', 'JsonController@getMostWantedUsers');
+
+    $router->get('/check', 'JsonController@check');
 });
 
 $router->group(['middleware' => ['input.clean_params']], static function () use ($router) {

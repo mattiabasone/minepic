@@ -11,6 +11,7 @@ use League\Fractal;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\ArraySerializer;
 use Minepic\Exceptions\NotFoundHttpJsonException;
+use Minepic\Models\Account;
 use Minepic\Models\AccountStats;
 use Minepic\Repositories\AccountRepository;
 use Minepic\Resolvers\UsernameResolver;
@@ -151,12 +152,30 @@ class JsonController extends BaseController
 
     /**
      * Get most wanted account list.
+     *
+     * @return JsonResponse
      */
     public function getMostWantedUsers(): JsonResponse
     {
         return $this->responseFactory->json([
             'ok' => true,
             'data' => AccountStats::getMostWanted(),
+        ]);
+    }
+
+    /**
+     * Check system status
+     *
+     * @return JsonResponse
+     */
+    public function check(): JsonResponse
+    {
+        $account = Account::whereUuid('be1cac3b60f04e0dba12c77cc8e0ec21')
+            ->take(1)
+            ->first();
+
+        return $this->responseFactory->json([
+            'ok' => $account instanceof Account,
         ]);
     }
 }
