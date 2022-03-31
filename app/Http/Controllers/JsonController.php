@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Minepic\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Laravel\Lumen\Http\ResponseFactory;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use League\Fractal;
@@ -25,18 +26,19 @@ class JsonController extends BaseController
 
     /**
      * @param AccountRepository $accountRepository
-     * @param UuidResolver      $uuidResolver
-     * @param Manager           $dataManger
-     * @param ResponseFactory   $responseFactory
-     * @param UsernameResolver  $usernameResolver
+     * @param UuidResolver $uuidResolver
+     * @param Manager $dataManger
+     * @param ResponseFactory $responseFactory
+     * @param UsernameResolver $usernameResolver
      */
     public function __construct(
         private AccountRepository $accountRepository,
-        private UuidResolver $uuidResolver,
-        private Manager $dataManger,
-        private ResponseFactory $responseFactory,
-        private UsernameResolver $usernameResolver
-    ) {
+        private UuidResolver      $uuidResolver,
+        private Manager           $dataManger,
+        private ResponseFactory   $responseFactory,
+        private UsernameResolver  $usernameResolver
+    )
+    {
         $this->dataManger->setSerializer(new ArraySerializer());
     }
 
@@ -45,8 +47,8 @@ class JsonController extends BaseController
      *
      * @param string $uuid
      *
-     * @throws \Throwable
      * @return JsonResponse
+     * @throws \Throwable
      */
     public function user($uuid = ''): JsonResponse
     {
@@ -75,9 +77,9 @@ class JsonController extends BaseController
     /**
      * @param string $username
      *
+     * @return JsonResponse
      * @throws \Throwable
      *
-     * @return JsonResponse
      */
     public function userWithUsername(string $username): JsonResponse
     {
@@ -94,9 +96,9 @@ class JsonController extends BaseController
      *
      * @param string $uuid
      *
-     * @throws \Exception
-     *
      * @return JsonResponse
+     * @throws \Throwable
+     *
      */
     public function updateUser(string $uuid): JsonResponse
     {
@@ -104,29 +106,31 @@ class JsonController extends BaseController
         $this->uuidResolver->setForceUpdate(true);
 
         // Check if user exists
-        if ($this->uuidResolver->resolve($uuid)) {
-            // Check if data has been updated
-            if ($this->uuidResolver->userDataUpdated()) {
-                $response = ['ok' => true, 'message' => 'Data updated'];
-                $httpStatus = 200;
-            } else {
-                $userdata = $this->uuidResolver->getAccount();
-                $dateString = $userdata->updated_at->toW3cString();
-
-                $response = [
-                    'ok' => false,
-                    'message' => 'Cannot update user, userdata has been updated recently',
-                    'last_update' => $dateString,
-                ];
-
-                $httpStatus = 403;
-            }
-        } else {
-            $response = ['ok' => false, 'message' => self::USER_NOT_FOUND_MESSAGE];
-            $httpStatus = 404;
+        if (!$this->uuidResolver->resolve($uuid)) {
+            return $this->responseFactory->json(
+                ['ok' => false, 'message' => self::USER_NOT_FOUND_MESSAGE],
+                Response::HTTP_NOT_FOUND
+            );
         }
 
-        return $this->responseFactory->json($response, $httpStatus);
+        // Check if data has been updated
+        if ($this->uuidResolver->userDataUpdated()) {
+            return $this->responseFactory->json(
+                ['ok' => true, 'message' => 'Data updated'],
+                Response::HTTP_OK
+            );
+        }
+
+        $userdata = $this->uuidResolver->getAccount();
+        $dateString = $userdata->updated_at->toW3cString();
+
+        $response = [
+            'ok' => false,
+            'message' => 'Cannot update user, userdata has been updated recently',
+            'last_update' => $dateString,
+        ];
+
+        return $this->responseFactory->json($response, Response::HTTP_FORBIDDEN);
     }
 
     /**

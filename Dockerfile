@@ -1,4 +1,4 @@
-FROM php:8.0.12-cli-alpine
+FROM php:8.1.4-cli-alpine
 
 ARG DEFAULT_USER_UID=1000
 ARG APP_USER=app
@@ -9,12 +9,10 @@ RUN apk update \
     && apk add --no-cache --virtual build-dependencies freetds-dev icu-dev libxml2-dev freetype-dev libpng-dev libjpeg-turbo-dev libzip-dev g++ make autoconf libsodium-dev
 
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
-    && docker-php-ext-configure pdo_dblib --with-libdir=lib \
     && pecl install redis swoole xdebug \
     && docker-php-ext-install \
         bcmath \
         dom \
-        iconv \
         mbstring \
         intl \
         gd \
@@ -22,17 +20,17 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/i
         mysqli \
         pdo_pgsql \
         pdo_mysql \
-        pdo_dblib \
         sockets \
         zip \
         pcntl \
-        tokenizer \
         xml \
     && docker-php-ext-enable \
         redis \
         opcache \
-        swoole
-        # xdebug
+        swoole \
+        # xdebug \
+    && curl -s -o /usr/bin/composer https://getcomposer.org/download/2.3.2/composer.phar \
+    && chmod +x /usr/bin/composer
 
 # Imagick Setup
 RUN set -ex \

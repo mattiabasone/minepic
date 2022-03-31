@@ -12,7 +12,7 @@ class SplashMessage
     /**
      * @var array
      */
-    protected static $messages = [
+    protected static array $messages = [
         'Over 9000 avatars!!',
         'Serving since 2013',
         'Just select and copy the URL, come on!',
@@ -25,7 +25,7 @@ class SplashMessage
     /**
      * @var array
      */
-    protected static $messages404 = [
+    protected static array $messages404 = [
         'Oooops! 404 :(',
         'Page is gone',
         'This page has been stolen by an Enderman',

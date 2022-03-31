@@ -21,8 +21,7 @@ class MojangAccount implements Arrayable
         private string $username,
         private string $skin = '',
         private string $cape = ''
-    ) {
-    }
+    ) {}
 
     /**
      * @return string

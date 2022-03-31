@@ -77,7 +77,7 @@ class WebsiteController extends BaseController
      *
      * @param string $uuid
      *
-     * @throws \Exception
+     * @throws \Throwable
      *
      * @return Response
      */
@@ -107,7 +107,7 @@ class WebsiteController extends BaseController
     /**
      * @param string $username
      *
-     * @throws \Exception
+     * @throws \Throwable
      *
      * @return Response
      */
@@ -141,7 +141,7 @@ class WebsiteController extends BaseController
     }
 
     /**
-     * Render fullpage (headers, body, footer).
+     * Render full page (headers, body, footer).
      *
      * @param string $page
      * @param array  $bodyData
