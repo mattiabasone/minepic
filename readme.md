@@ -48,4 +48,4 @@ Back with size `https://minepic.org/skin/{uuid|username}/{size}`
 
 #### Utility
 
-Update user information `https://minepic.org/update/{uuid|username}`
+Update user information `https://minepic.org/update/{uuid}`
