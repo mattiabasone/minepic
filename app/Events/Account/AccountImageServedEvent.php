@@ -12,7 +12,9 @@ class AccountImageServedEvent extends Event
     /**
      * @param Account $account
      */
-    public function __construct(private Account $account) {}
+    public function __construct(private Account $account)
+    {
+    }
 
     public function getAccount(): Account
     {

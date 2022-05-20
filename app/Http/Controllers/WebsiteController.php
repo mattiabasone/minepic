@@ -51,10 +51,10 @@ class WebsiteController extends BaseController
      * @param Manager          $dataManager
      */
     public function __construct(
-        private UuidResolver $uuidResolver,
-        private ResponseFactory $responseFactory,
-        private UsernameResolver $usernameResolver,
-        private Manager $dataManager
+        private readonly UuidResolver $uuidResolver,
+        private readonly ResponseFactory $responseFactory,
+        private readonly UsernameResolver $usernameResolver,
+        private readonly Manager $dataManager
     ) {
         $this->dataManager->setSerializer(new ArraySerializer());
     }

@@ -14,7 +14,7 @@ services:
       - cache
 
   database:
-    image: library/mysql:5.7
+    image: library/mysql:8
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=minepic_org

@@ -17,11 +17,12 @@ class MojangAccount implements Arrayable
      * @param string $cape
      */
     public function __construct(
-        private string $uuid,
-        private string $username,
-        private string $skin = '',
-        private string $cape = ''
-    ) {}
+        private readonly string $uuid,
+        private readonly string $username,
+        private readonly string $skin = '',
+        private readonly string $cape = ''
+    ) {
+    }
 
     /**
      * @return string

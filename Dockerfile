@@ -1,4 +1,4 @@
-FROM php:8.1.4-cli-alpine
+FROM php:8.1.6-cli-alpine
 
 ARG DEFAULT_USER_UID=1000
 ARG APP_USER=app

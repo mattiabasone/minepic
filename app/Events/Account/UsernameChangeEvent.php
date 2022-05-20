@@ -9,10 +9,11 @@ use Minepic\Events\Event;
 class UsernameChangeEvent extends Event
 {
     public function __construct(
-        private string $uuid,
-        private string $previousName,
-        private string $newName
-    ) {}
+        private readonly string $uuid,
+        private readonly string $previousName,
+        private readonly string $newName
+    ) {
+    }
 
     public function getUuid(): string
     {

@@ -18,7 +18,8 @@ class UsernameResolver
     public function __construct(
         private AccountRepository $accountRepository,
         private MojangClient $mojangClient
-    ) {}
+    ) {
+    }
 
     /**
      * @param string $username

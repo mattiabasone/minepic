@@ -33,12 +33,11 @@ class JsonController extends BaseController
      */
     public function __construct(
         private AccountRepository $accountRepository,
-        private UuidResolver      $uuidResolver,
-        private Manager           $dataManger,
-        private ResponseFactory   $responseFactory,
-        private UsernameResolver  $usernameResolver
-    )
-    {
+        private UuidResolver $uuidResolver,
+        private Manager $dataManger,
+        private ResponseFactory $responseFactory,
+        private UsernameResolver $usernameResolver
+    ) {
         $this->dataManger->setSerializer(new ArraySerializer());
     }
 
@@ -47,8 +46,8 @@ class JsonController extends BaseController
      *
      * @param string $uuid
      *
-     * @return JsonResponse
      * @throws \Throwable
+     * @return JsonResponse
      */
     public function user($uuid = ''): JsonResponse
     {
@@ -77,9 +76,8 @@ class JsonController extends BaseController
     /**
      * @param string $username
      *
-     * @return JsonResponse
      * @throws \Throwable
-     *
+     * @return JsonResponse
      */
     public function userWithUsername(string $username): JsonResponse
     {
@@ -96,9 +94,8 @@ class JsonController extends BaseController
      *
      * @param string $uuid
      *
-     * @return JsonResponse
      * @throws \Throwable
-     *
+     * @return JsonResponse
      */
     public function updateUser(string $uuid): JsonResponse
     {

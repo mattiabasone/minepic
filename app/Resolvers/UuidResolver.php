@@ -52,7 +52,8 @@ class UuidResolver
     public function __construct(
         private MojangClient $mojangClient,
         private Dispatcher $eventDispatcher
-    ) {}
+    ) {
+    }
 
     /**
      * @return null|string

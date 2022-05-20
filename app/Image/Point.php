@@ -12,7 +12,9 @@ class Point
      * @param int $x
      * @param int $y
      */
-    public function __construct(private int $x, private int $y) {}
+    public function __construct(private int $x, private int $y)
+    {
+    }
 
     /**
      * @return int
