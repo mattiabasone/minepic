@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.9"
 
 services:
   backend:
@@ -6,7 +6,7 @@ services:
     build:
       context: ./
     ports:
-      - "1215:1215"
+      - "8000:80"
     volumes:
     - "./:/app"
     depends_on:
