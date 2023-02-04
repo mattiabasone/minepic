@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16facfe0988e2063fd3d81052e002f7a",
+    "content-hash": "bd4bd2d5ac6994a2d50df8d648c36fc2",
     "packages": [
         {
             "name": "brick/math",
@@ -3105,72 +3105,6 @@
             "time": "2021-12-04T23:24:31+00:00"
         },
         {
-            "name": "predis/predis",
-            "version": "v1.1.10",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/predis/predis.git",
-                "reference": "a2fb02d738bedadcffdbb07efa3a5e7bd57f8d6e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/predis/predis/zipball/a2fb02d738bedadcffdbb07efa3a5e7bd57f8d6e",
-                "reference": "a2fb02d738bedadcffdbb07efa3a5e7bd57f8d6e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.8"
-            },
-            "suggest": {
-                "ext-curl": "Allows access to Webdis when paired with phpiredis",
-                "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Predis\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Daniele Alessandri",
-                    "email": "suppakilla@gmail.com",
-                    "homepage": "http://clorophilla.net",
-                    "role": "Creator & Maintainer"
-                },
-                {
-                    "name": "Till Krüss",
-                    "homepage": "https://till.im",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "Flexible and feature-complete Redis client for PHP and HHVM",
-            "homepage": "http://github.com/predis/predis",
-            "keywords": [
-                "nosql",
-                "predis",
-                "redis"
-            ],
-            "support": {
-                "issues": "https://github.com/predis/predis/issues",
-                "source": "https://github.com/predis/predis/tree/v1.1.10"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/sponsors/tillkruss",
-                    "type": "github"
-                }
-            ],
-            "time": "2022-01-05T17:46:08+00:00"
-        },
-        {
             "name": "psr/container",
             "version": "2.0.2",
             "source": {
@@ -3808,89 +3742,6 @@
                 }
             ],
             "time": "2020-11-18T22:40:00+00:00"
-        },
-        {
-            "name": "swooletw/laravel-swoole",
-            "version": "v2.12.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/swooletw/laravel-swoole.git",
-                "reference": "b9b766a68a532600d1e20d66f698a40ebb434ca0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/swooletw/laravel-swoole/zipball/b9b766a68a532600d1e20d66f698a40ebb434ca0",
-                "reference": "b9b766a68a532600d1e20d66f698a40ebb434ca0",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/console": "~5.4|~6.0|~7.0|~8.0|~9.0",
-                "illuminate/contracts": "~5.4|~6.0|~7.0|~8.0|~9.0",
-                "illuminate/http": "~5.4|~6.0|~7.0|~8.0|~9.0",
-                "illuminate/support": "~5.4|~6.0|~7.0|~8.0|~9.0",
-                "php": "^7.2|^8.0",
-                "predis/predis": "^1.1"
-            },
-            "require-dev": {
-                "codedungeon/phpunit-result-printer": "^0.31.0",
-                "laravel/lumen-framework": "~5.4|~6.0|~7.0|~8.0|~9.0",
-                "mockery/mockery": "~1.5",
-                "php-coveralls/php-coveralls": "^2.1",
-                "php-mock/php-mock": "^2.3",
-                "phpunit/php-code-coverage": "^9",
-                "phpunit/phpunit": "^9",
-                "swoole/ide-helper": "@dev"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "SwooleTW\\Http\\LaravelServiceProvider"
-                    ],
-                    "aliases": {
-                        "Server": "SwooleTW\\Http\\Server\\Facades\\Server",
-                        "Table": "SwooleTW\\Http\\Server\\Facades\\Table",
-                        "Room": "SwooleTW\\Http\\Websocket\\Facades\\Room",
-                        "Websocket": "SwooleTW\\Http\\Websocket\\Facades\\Websocket"
-                    }
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/Server/helpers.php"
-                ],
-                "psr-4": {
-                    "SwooleTW\\Http\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Albert Chen",
-                    "email": "albert@unisharp.com"
-                },
-                {
-                    "name": "Huang Yi",
-                    "email": "coodeer@163.com"
-                }
-            ],
-            "description": "High performance HTTP server based on Swoole. Speed up your Laravel and Lumen applications.",
-            "keywords": [
-                "http",
-                "laravel",
-                "lumen",
-                "performance",
-                "server",
-                "swoole"
-            ],
-            "support": {
-                "issues": "https://github.com/swooletw/laravel-swoole/issues",
-                "source": "https://github.com/swooletw/laravel-swoole/tree/v2.12.1"
-            },
-            "time": "2022-03-19T04:41:32+00:00"
         },
         {
             "name": "symfony/console",

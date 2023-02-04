@@ -22,8 +22,6 @@ $app = new Laravel\Lumen\Application(
     realpath(__DIR__.'/../')
 );
 
-$app->configure('swoole_http');
-
 $app->withFacades();
 $app->withEloquent();
 
@@ -78,7 +76,6 @@ $app->singleton(
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
 $app->register(Minepic\Providers\AppServiceProvider::class);
 $app->register(Minepic\Providers\EventServiceProvider::class);
-$app->register(SwooleTW\Http\LumenServiceProvider::class);
 
 if (env('APP_DEBUG')) {
     $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
