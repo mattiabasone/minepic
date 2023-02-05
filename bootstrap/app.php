@@ -19,7 +19,7 @@ require_once __DIR__.'/constants.php';
 */
 
 $app = new Laravel\Lumen\Application(
-    realpath(__DIR__.'/../')
+    dirname(__DIR__)
 );
 
 $app->withFacades();
@@ -45,6 +45,19 @@ $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
     Minepic\Console\Kernel::class
 );
+
+/*
+|--------------------------------------------------------------------------
+| Register Config Files
+|--------------------------------------------------------------------------
+|
+| Now we will register the "app" configuration file. If the file exists in
+| your configuration directory it will be loaded; otherwise, we'll load
+| the default version. You may register other files below as needed.
+|
+*/
+
+$app->configure('app');
 
 /*
 |--------------------------------------------------------------------------

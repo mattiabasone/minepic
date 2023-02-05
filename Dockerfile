@@ -28,7 +28,7 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/i
         redis \
         opcache \
         # xdebug \
-    && curl -s -o /usr/bin/composer https://getcomposer.org/download/2.3.2/composer.phar \
+    && curl -s -o /usr/bin/composer https://getcomposer.org/download/2.5.2/composer.phar \
     && chmod +x /usr/bin/composer
 
 # Imagick Setup
