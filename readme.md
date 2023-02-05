@@ -1,6 +1,6 @@
 # Minepic API Website
 
-![Build](https://img.shields.io/github/workflow/status/mattiabasone/minepic/Testing%20App%20(Lumen%20with%20MySQL)/master)
+![Build](https://img.shields.io/github/actions/workflow/status/mattiabasone/minepic/lumen-mysql.yml?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/mattiabasone/minepic/badge.svg?branch=master)](https://coveralls.io/github/mattiabasone/minepic?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mattiabasone/minepic/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mattiabasone/minepic/?branch=master)
 
