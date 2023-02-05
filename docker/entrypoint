@@ -5,4 +5,4 @@ if [ ! -f "/app/.env" ]; then
     exit 1
 fi
 
-php artisan swoole:http start
+/usr/bin/supervisord -n -c /etc/supervisord.conf

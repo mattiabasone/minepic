@@ -12,21 +12,19 @@
         "ext-intl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "carbon-cli/carbon-cli": "^1.2",
         "guzzlehttp/guzzle": "^7.0.1",
         "illuminate/redis": "^9.0",
-        "laravel/lumen-framework": "^9.0",
+        "laravel/lumen-framework": "^9.1",
         "league/flysystem": "^3.0",
         "league/fractal": "^0.20.0",
         "ramsey/uuid": "^4.0",
-        "swooletw/laravel-swoole": "^2.6",
         "vlucas/phpdotenv": "^5.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.6",
         "fakerphp/faker": "^1.9.1",
         "friendsofphp/php-cs-fixer": "^3.0",
-        "mockery/mockery": "^1.4.4",
+        "mockery/mockery": "^1.5",
         "nunomaduro/larastan": "^2.0",
         "php-coveralls/php-coveralls": "^2.2",
         "phpunit/phpunit": "^9.5.10"
