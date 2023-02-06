@@ -1,4 +1,4 @@
-FROM php:8.1.14-fpm-alpine
+FROM php:8.2.2-fpm-alpine
 
 ARG DEFAULT_USER_UID=1000
 ARG APP_USER=app
