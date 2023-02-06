@@ -9,9 +9,6 @@ namespace Minepic\Misc;
  */
 class SplashMessage
 {
-    /**
-     * @var array
-     */
     protected static array $messages = [
         'Over 9000 avatars!!',
         'Serving since 2013',
@@ -22,9 +19,6 @@ class SplashMessage
         'Many avatars, Wow!',
     ];
 
-    /**
-     * @var array
-     */
     protected static array $messages404 = [
         'Oooops! 404 :(',
         'Page is gone',

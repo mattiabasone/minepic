@@ -10,13 +10,10 @@ use Illuminate\Http\Response;
 class SkinFrontController extends BaseApiController
 {
     /**
-     * @param \Illuminate\Http\Request $request
      * @param string $uuid User UUID or Username
      * @param int    $size
      *
      * @throws \Throwable
-     *
-     * @return \Illuminate\Http\Response
      */
     public function serveUuid(Request $request, string $uuid, $size = 0): Response
     {
@@ -33,8 +30,6 @@ class SkinFrontController extends BaseApiController
      * @param int|string $size
      *
      * @throws \Throwable
-     *
-     * @return Response
      */
     public function serveDefault($size = 0): Response
     {

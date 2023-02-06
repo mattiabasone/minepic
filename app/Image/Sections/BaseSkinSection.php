@@ -21,7 +21,6 @@ abstract class BaseSkinSection extends ImageSection
     protected int $baseImageHeight = 32;
 
     /**
-     * @param int $skinHeight
      * @throws ImageResourceCreationFailedException
      * @throws \Exception
      */
@@ -40,7 +39,7 @@ abstract class BaseSkinSection extends ImageSection
         if ($scale === 0) {
             $scale = 1;
         }
-        $skinWidth = (int) round($scale * ($this->baseImageWidth));
+        $skinWidth = (int) round($scale * $this->baseImageWidth);
 
         $this->imgResource = $this->emptyBaseImage($skinWidth, $skinHeight);
         imagecopyresized($this->imgResource, $tmpImageResource, 0, 0, 0, 0, $skinWidth, $skinHeight, $this->baseImageWidth, $this->baseImageHeight);
@@ -54,7 +53,6 @@ abstract class BaseSkinSection extends ImageSection
     /**
      * In old skins (pre 1.8) left arm/leg are right arm/leg flipped
      *
-     * @param \GdImage $tmpImageResource
      * @throws \Exception
      */
     protected function patchOldSkin(\GdImage $tmpImageResource): void
@@ -83,10 +81,6 @@ abstract class BaseSkinSection extends ImageSection
     }
 
     /**
-     * @param \GdImage $tmpImageResource
-     * @param Component $dstComponent
-     * @param Component $srcComponent
-     * @param Point $startingPoint
      * @throws \Exception
      */
     protected function flipComponent(\GdImage $tmpImageResource, Component $dstComponent, Component $srcComponent, Point $startingPoint): void
@@ -126,11 +120,6 @@ abstract class BaseSkinSection extends ImageSection
         );
     }
 
-    /**
-     * @param int $skinHeight
-     *
-     * @return int
-     */
     protected function checkHeight(int $skinHeight): int
     {
         if ($skinHeight === 0 || $skinHeight < 0 || $skinHeight > (int) env('MAX_SKINS_SIZE')) {
@@ -165,10 +154,6 @@ abstract class BaseSkinSection extends ImageSection
     }
 
     /**
-     * @param \GdImage $tmpImageResource
-     * @param string $componentName
-     * @param Component $base
-     * @param null|Component $layer
      * @throws \Exception
      */
     protected function copyComponent(\GdImage $tmpImageResource, string $componentName, Component $base, ?Component $layer): void

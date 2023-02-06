@@ -1,18 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 $finder = PhpCsFixer\Finder::create()
     ->in([
         __DIR__.'/app',
-        __DIR__.'/tests'
+        __DIR__.'/tests',
     ]);
 
 return (new PhpCsFixer\Config())
-    ->setFinder($finder)
     ->setRules([
         '@Symfony' => true,
         '@PHP80Migration' => true,
         'array_syntax' => [
-            'syntax' => 'short'
+            'syntax' => 'short',
         ],
         'blank_line_after_namespace' => true,
         'blank_line_after_opening_tag' => true,
@@ -21,7 +22,7 @@ return (new PhpCsFixer\Config())
         'date_time_immutable' => true,
         'declare_strict_types' => true,
         'fopen_flags' => [
-            'b_mode' => true
+            'b_mode' => true,
         ],
         'fully_qualified_strict_types' => true,
         'line_ending' => true,
@@ -36,7 +37,7 @@ return (new PhpCsFixer\Config())
         'no_spaces_after_function_name' => true,
         'no_singleline_whitespace_before_semicolons' => true,
         'no_spaces_around_offset' => true,
-        'no_superfluous_phpdoc_tags' => false,
+        'no_superfluous_phpdoc_tags' => ['allow_mixed' => true, 'remove_inheritdoc' => false, 'allow_unused_params' => true],
         'no_unused_imports' => true,
         'no_whitespace_before_comma_in_array' => true,
         'no_whitespace_in_blank_line' => true,
@@ -58,6 +59,7 @@ return (new PhpCsFixer\Config())
             'always_move_variable' => false,
             'equal' => false,
             'identical' => false,
-        ]
+        ],
     ])
-    ->setRiskyAllowed(true);
+    ->setRiskyAllowed(true)
+    ->setFinder($finder);

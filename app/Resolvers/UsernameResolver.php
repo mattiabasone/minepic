@@ -11,10 +11,6 @@ use Minepic\Repositories\AccountRepository;
 
 class UsernameResolver
 {
-    /**
-     * @param AccountRepository $accountRepository
-     * @param MojangClient      $mojangClient
-     */
     public function __construct(
         private AccountRepository $accountRepository,
         private MojangClient $mojangClient
@@ -22,11 +18,7 @@ class UsernameResolver
     }
 
     /**
-     * @param string $username
-     *
      * @throws \Exception
-     *
-     * @return null|string
      */
     public function resolve(string $username): ?string
     {
@@ -52,11 +44,6 @@ class UsernameResolver
         return null;
     }
 
-    /**
-     * @param string $username
-     *
-     * @return bool
-     */
     private function isValidUsername(string $username): bool
     {
         return UserDataValidator::isValidUsername($username) || UserDataValidator::isValidEmail($username);

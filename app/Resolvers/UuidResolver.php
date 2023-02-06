@@ -18,46 +18,29 @@ class UuidResolver
 {
     /**
      * Requested string.
-     *
-     * @var string
      */
     private string $request;
-    /**
-     * @var null|string
-     */
+
     private ?string $uuid = null;
     /**
      * Userdata from/to DB.
-     *
-     * @var null|Account
      */
     private ?Account $account;
     /**
      * User data has been updated?
-     *
-     * @var bool
      */
     private bool $dataUpdated = false;
     /**
      * Set force update.
-     *
-     * @var bool
      */
     private bool $forceUpdate = false;
 
-    /**
-     * @param MojangClient $mojangClient    Client for Mojang API
-     * @param Dispatcher   $eventDispatcher
-     */
     public function __construct(
-        private MojangClient $mojangClient,
-        private Dispatcher $eventDispatcher
+        private readonly MojangClient $mojangClient,
+        private readonly Dispatcher $eventDispatcher
     ) {
     }
 
-    /**
-     * @return null|string
-     */
     public function getUuid(): ?string
     {
         return $this->uuid;
@@ -65,8 +48,6 @@ class UuidResolver
 
     /**
      * Return loaded user data.
-     *
-     * @return Account
      */
     public function getAccount(): Account
     {
@@ -77,8 +58,6 @@ class UuidResolver
      * Insert user data in database.
      **
      * @throws \Throwable
-     *
-     * @return bool
      */
     public function insertNewUuid(): bool
     {
@@ -110,11 +89,6 @@ class UuidResolver
 
     /**
      * Check requested string and initialize objects.
-     *
-     * @param null|string $uuid
-     *
-     * @throws \Throwable
-     * @return bool
      */
     public function resolve(?string $uuid): bool
     {
@@ -122,7 +96,7 @@ class UuidResolver
         $this->request = $uuid ?? '';
 
         if ($uuid === null) {
-            Log::debug('UUID is null');
+            \Log::debug('UUID is null');
 
             return false;
         }
@@ -144,13 +118,6 @@ class UuidResolver
         return $this->dataUpdated;
     }
 
-    /**
-     * Save skin image.
-     *
-     * @throws \Throwable
-     *
-     * @return bool
-     */
     public function saveRemoteSkin(): bool
     {
         if ($this->account instanceof Account === false) {
@@ -163,7 +130,7 @@ class UuidResolver
 
                 return SkinsStorage::save($this->account->uuid, $skinData);
             } catch (\Exception $e) {
-                Log::error($e->getTraceAsString());
+                \Log::error($e->getTraceAsString());
             }
         }
 
@@ -172,8 +139,6 @@ class UuidResolver
 
     /**
      * Set force update.
-     *
-     * @param bool $forceUpdate
      */
     public function setForceUpdate(bool $forceUpdate): void
     {
@@ -182,8 +147,6 @@ class UuidResolver
 
     /**
      * Check if cache is still valid.
-     *
-     * @return bool
      */
     private function checkDbCache(): bool
     {
@@ -194,8 +157,6 @@ class UuidResolver
 
     /**
      * Check if an UUID is in the database.
-     *
-     * @return bool Returns true/false
      */
     private function requestedUuidInDb(): bool
     {
@@ -229,7 +190,7 @@ class UuidResolver
     /**
      * Update db user data.
      */
-    private function updateDbUser(): bool
+    private function updateDbUser(): void
     {
         if (isset($this->account->username) && $this->account->uuid !== '') {
             // Get data from API
@@ -251,7 +212,7 @@ class UuidResolver
 
                 $this->dataUpdated = true;
 
-                return true;
+                return;
             }
 
             $this->updateUserFailUpdate();
@@ -261,8 +222,6 @@ class UuidResolver
             }
         }
         $this->dataUpdated = false;
-
-        return false;
     }
 
     /**
@@ -282,15 +241,13 @@ class UuidResolver
 
     /**
      * Get userdata from Mojang/Minecraft API.
-     *
-     * @return null|MojangAccount
      */
     private function getFullUserdataApi(): ?MojangAccount
     {
         try {
             return $this->mojangClient->getUuidInfo($this->request);
         } catch (\Throwable $e) {
-            Log::error($e->getTraceAsString(), ['request' => $this->request]);
+            \Log::error($e->getTraceAsString(), ['request' => $this->request]);
 
             return null;
         }
@@ -301,21 +258,17 @@ class UuidResolver
      */
     private function forceUpdatePossible(): bool
     {
-        return ($this->forceUpdate) &&
+        return $this->forceUpdate &&
             ((time() - (int) $this->account->updated_at->timestamp) > (int) env('MIN_USERDATA_UPDATE_INTERVAL'));
     }
 
-    /**
-     * @throws \Throwable
-     * @return bool
-     */
     private function initializeUuidRequest(): bool
     {
         if ($this->requestedUuidInDb()) {
             // Check if UUID is in my database
             // Data cache still valid?
             if (!$this->checkDbCache() || $this->forceUpdatePossible()) {
-                Log::debug('Refreshing User DB Data');
+                \Log::debug('Refreshing User DB Data');
                 // Nope, updating data
                 $this->updateDbUser();
             }
@@ -336,12 +289,10 @@ class UuidResolver
 
     /**
      * Set failed request.
-     *
-     * @param string $errorMessage
      */
     private function setFailedRequest(string $errorMessage = ''): void
     {
-        Log::notice($errorMessage, ['request' => $this->request]);
+        \Log::notice($errorMessage, ['request' => $this->request]);
         $this->account = null;
         $this->request = '';
     }

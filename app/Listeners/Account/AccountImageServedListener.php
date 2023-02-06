@@ -10,9 +10,6 @@ use Minepic\Models\AccountStats;
 
 class AccountImageServedListener
 {
-    /**
-     * @param AccountImageServedEvent $event
-     */
     public function handle(AccountImageServedEvent $event): void
     {
         if ($event->getAccount() !== null && env('STATS_ENABLED')) {

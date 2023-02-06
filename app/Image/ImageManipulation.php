@@ -10,15 +10,6 @@ trait ImageManipulation
 {
     /**
      * @see https://www.php.net/manual/en/function.imagecopymerge.php#92787
-     * @param \GdImage $dst_im
-     * @param \GdImage $src_im
-     * @param int $dst_x
-     * @param int $dst_y
-     * @param int $src_x
-     * @param int $src_y
-     * @param int $src_w
-     * @param int $src_h
-     * @param int $pct
      * @throws ImageTrueColorCreationFailedException
      */
     protected function imageCopyMergeAlpha(

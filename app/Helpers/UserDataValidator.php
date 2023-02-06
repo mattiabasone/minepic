@@ -4,17 +4,10 @@ declare(strict_types=1);
 
 namespace Minepic\Helpers;
 
-/**
- * Class Date.
- */
 class UserDataValidator
 {
     /**
      * Checks if the given string is a valid username.
-     *
-     * @param string $username
-     *
-     * @return bool
      */
     public static function isValidUsername(string $username): bool
     {
@@ -23,10 +16,6 @@ class UserDataValidator
 
     /**
      * Checks if the given string is a valid UUID.
-     *
-     * @param string $uuid
-     *
-     * @return bool
      */
     public static function isValidUuid(string $uuid): bool
     {
@@ -35,10 +24,6 @@ class UserDataValidator
 
     /**
      * Check if is an email address has invalid characters.
-     *
-     * @param string $email
-     *
-     * @return bool
      */
     public static function isValidEmail(string $email): bool
     {

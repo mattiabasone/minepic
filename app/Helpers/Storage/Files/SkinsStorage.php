@@ -10,8 +10,6 @@ class SkinsStorage extends Storage
 {
     /**
      * Skins storage location.
-     *
-     * @var string
      */
     protected static string $folder = 'skins';
 }

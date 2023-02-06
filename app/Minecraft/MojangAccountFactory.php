@@ -7,11 +7,7 @@ namespace Minepic\Minecraft;
 class MojangAccountFactory
 {
     /**
-     * @param array $response
-     *
      * @throws \JsonException
-     *
-     * @return MojangAccount
      */
     public static function makeFromApiResponse(array $response): MojangAccount
     {
@@ -45,10 +41,6 @@ class MojangAccountFactory
 
     /**
      * Extract texture (skin/cape) ids from URL.
-     *
-     * @param string $url
-     *
-     * @return string
      */
     private static function extractTextureIdFromUrl(string $url): string
     {

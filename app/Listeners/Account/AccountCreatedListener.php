@@ -9,9 +9,6 @@ use Minepic\Models\AccountStats;
 
 class AccountCreatedListener
 {
-    /**
-     * @param AccountCreatedEvent $event
-     */
     public function handle(AccountCreatedEvent $event): void
     {
         AccountStats::create([

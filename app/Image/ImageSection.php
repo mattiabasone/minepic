@@ -9,27 +9,17 @@ use Minepic\Image\Exceptions\ImageResourceCreationFailedException;
 
 abstract class ImageSection
 {
-    /**
-     * @var \GdImage
-     */
     protected \GdImage $skinResource;
-    /**
-     * @var int
-     */
+
     protected int $skinWidth;
-    /**
-     * @var int
-     */
+
     protected int $skinHeight;
     /**
      * Resource with the image.
-     *
-     * @var \GdImage
      */
     protected \GdImage $imgResource;
 
     /**
-     * @param string $skinPath
      * @throws ImageCreateFromPngFailedException
      */
     public function __construct(protected string $skinPath = '')
@@ -55,9 +45,6 @@ abstract class ImageSection
         return $imgToString;
     }
 
-    /**
-     * @return bool
-     */
     public function is64x64(): bool
     {
         return $this->skinWidth === 64 && $this->skinHeight === 64;
@@ -65,8 +52,6 @@ abstract class ImageSection
 
     /**
      * Get generated resource image.
-     *
-     * @return \GdImage
      */
     public function getResource(): \GdImage
     {
@@ -74,11 +59,7 @@ abstract class ImageSection
     }
 
     /**
-     * @param string $path
-     *
      * @throws ImageCreateFromPngFailedException
-     *
-     * @return \GdImage
      */
     protected function createImageFromPng(string $path): \GdImage
     {
@@ -91,12 +72,7 @@ abstract class ImageSection
     }
 
     /**
-     * @param int $width
-     * @param int $height
-     *
      * @throws ImageResourceCreationFailedException
-     *
-     * @return \GdImage
      */
     protected function emptyBaseImage(int $width, int $height): \GdImage
     {

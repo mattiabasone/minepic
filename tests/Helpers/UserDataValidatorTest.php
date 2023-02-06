@@ -19,8 +19,6 @@ class UserDataValidatorTest extends TestCase
 
     /**
      * @dataProvider shouldValidateUsernameDataProvider
-     *
-     * @param $value
      */
     public function testShouldValidateUsername($value): void
     {
@@ -40,8 +38,6 @@ class UserDataValidatorTest extends TestCase
 
     /**
      * @dataProvider shouldNotValidateUsernameDataProvider
-     *
-     * @param $value
      */
     public function testShouldNotValidateUsername($value): void
     {
@@ -61,8 +57,6 @@ class UserDataValidatorTest extends TestCase
 
     /**
      * @dataProvider shouldValidateUuidDataProvider
-     *
-     * @param $value
      */
     public function testShouldValidateUuid($value): void
     {
@@ -82,8 +76,6 @@ class UserDataValidatorTest extends TestCase
 
     /**
      * @dataProvider shouldNotValidateUuidDataProvider
-     *
-     * @param $value
      */
     public function testShouldNotValidateUuid($value): void
     {
@@ -103,8 +95,6 @@ class UserDataValidatorTest extends TestCase
 
     /**
      * @dataProvider shouldValidateEmailDataProvider
-     *
-     * @param $value
      */
     public function testShouldValidateEmail($value): void
     {
@@ -124,8 +114,6 @@ class UserDataValidatorTest extends TestCase
 
     /**
      * @dataProvider shouldNotValidateEmailDataProvider
-     *
-     * @param $value
      */
     public function testShouldNotValidateEmail($value): void
     {

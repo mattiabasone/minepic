@@ -10,11 +10,6 @@ class MojangAccount implements Arrayable
 {
     /**
      * MinecraftAccount constructor.
-     *
-     * @param string $uuid
-     * @param string $username
-     * @param string $skin
-     * @param string $cape
      */
     public function __construct(
         private readonly string $uuid,
@@ -24,17 +19,11 @@ class MojangAccount implements Arrayable
     ) {
     }
 
-    /**
-     * @return string
-     */
     public function getUuid(): string
     {
         return $this->uuid;
     }
 
-    /**
-     * @return string
-     */
     public function getUsername(): string
     {
         return $this->username;
@@ -56,9 +45,6 @@ class MojangAccount implements Arrayable
         return $this->cape;
     }
 
-    /**
-     * @return array
-     */
     public function toArray(): array
     {
         return [

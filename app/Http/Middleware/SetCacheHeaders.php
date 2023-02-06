@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Minepic\Http\Middleware;
 
-use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,14 +12,9 @@ class SetCacheHeaders
     /**
      * Add cache related HTTP headers.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
-     *
      * @throws \InvalidArgumentException
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, \Closure $next): Response
     {
         /** @var \Symfony\Component\HttpFoundation\Response $response */
         $response = $next($request);

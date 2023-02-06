@@ -48,9 +48,6 @@ class Account extends Model
         'cape',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function stats(): BelongsTo
     {
         return $this->belongsTo(AccountStats::class, 'uuid', 'uuid');

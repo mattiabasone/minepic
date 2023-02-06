@@ -10,7 +10,6 @@ use Minepic\Image\Point;
 
 class SkinFront extends BaseSkinSection
 {
-    /** @var string */
     protected string $side = Side::FRONT;
 
     /**
