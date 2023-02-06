@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MinepicTests\Helpers;
 
+use Minepic\Helpers\UserDataValidator;
 use MinepicTests\TestCase;
 
 class UserDataValidatorTest extends TestCase
@@ -20,10 +21,10 @@ class UserDataValidatorTest extends TestCase
     /**
      * @dataProvider shouldValidateUsernameDataProvider
      */
-    public function testShouldValidateUsername($value): void
+    public function testShouldValidateUsername(string $value): void
     {
         $this->assertTrue(
-            \Minepic\Helpers\UserDataValidator::isValidUsername($value)
+            UserDataValidator::isValidUsername($value)
         );
     }
 
@@ -39,10 +40,10 @@ class UserDataValidatorTest extends TestCase
     /**
      * @dataProvider shouldNotValidateUsernameDataProvider
      */
-    public function testShouldNotValidateUsername($value): void
+    public function testShouldNotValidateUsername(string $value): void
     {
         $this->assertFalse(
-            \Minepic\Helpers\UserDataValidator::isValidUsername($value)
+            UserDataValidator::isValidUsername($value)
         );
     }
 
@@ -58,10 +59,10 @@ class UserDataValidatorTest extends TestCase
     /**
      * @dataProvider shouldValidateUuidDataProvider
      */
-    public function testShouldValidateUuid($value): void
+    public function testShouldValidateUuid(string $value): void
     {
         $this->assertTrue(
-            \Minepic\Helpers\UserDataValidator::isValidUuid($value)
+            UserDataValidator::isValidUuid($value)
         );
     }
 
@@ -76,11 +77,12 @@ class UserDataValidatorTest extends TestCase
 
     /**
      * @dataProvider shouldNotValidateUuidDataProvider
+     * @param mixed $value
      */
-    public function testShouldNotValidateUuid($value): void
+    public function testShouldNotValidateUuid(string $value): void
     {
         $this->assertFalse(
-            \Minepic\Helpers\UserDataValidator::isValidUuid($value)
+            UserDataValidator::isValidUuid($value)
         );
     }
 
@@ -96,10 +98,10 @@ class UserDataValidatorTest extends TestCase
     /**
      * @dataProvider shouldValidateEmailDataProvider
      */
-    public function testShouldValidateEmail($value): void
+    public function testShouldValidateEmail(string $email): void
     {
         $this->assertTrue(
-            \Minepic\Helpers\UserDataValidator::isValidEmail($value)
+            UserDataValidator::isValidEmail($email)
         );
     }
 
@@ -115,10 +117,10 @@ class UserDataValidatorTest extends TestCase
     /**
      * @dataProvider shouldNotValidateEmailDataProvider
      */
-    public function testShouldNotValidateEmail($value): void
+    public function testShouldNotValidateEmail(string $email): void
     {
         $this->assertFalse(
-            \Minepic\Helpers\UserDataValidator::isValidEmail($value)
+            UserDataValidator::isValidEmail($email)
         );
     }
 }

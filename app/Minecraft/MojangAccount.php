@@ -6,16 +6,13 @@ namespace Minepic\Minecraft;
 
 use Illuminate\Contracts\Support\Arrayable;
 
-class MojangAccount implements Arrayable
+readonly class MojangAccount implements Arrayable
 {
-    /**
-     * MinecraftAccount constructor.
-     */
     public function __construct(
-        private readonly string $uuid,
-        private readonly string $username,
-        private readonly string $skin = '',
-        private readonly string $cape = ''
+        private string $uuid,
+        private string $username,
+        private string $skin = '',
+        private string $cape = ''
     ) {
     }
 
@@ -29,22 +26,19 @@ class MojangAccount implements Arrayable
         return $this->username;
     }
 
-    /**
-     * @return string
-     */
     public function getSkin(): ?string
     {
         return $this->skin;
     }
 
-    /**
-     * @return string
-     */
     public function getCape(): ?string
     {
         return $this->cape;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function toArray(): array
     {
         return [

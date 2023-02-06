@@ -14,6 +14,9 @@ use Minepic\Minecraft\MojangAccount;
 use Minepic\Minecraft\MojangClient;
 use Minepic\Models\Account;
 
+/**
+ * TODO: This class must be refactored. It should return a "resolution" instead of modify its parameters.
+ */
 class UuidResolver
 {
     /**
@@ -176,15 +179,13 @@ class UuidResolver
     /**
      * Update current user fail count.
      */
-    private function updateUserFailUpdate(): bool
+    private function updateUserFailUpdate(): void
     {
         if (isset($this->account->uuid)) {
             ++$this->account->fail_count;
 
-            return $this->account->save();
+            $this->account->save();
         }
-
-        return false;
     }
 
     /**

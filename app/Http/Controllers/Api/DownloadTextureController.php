@@ -33,7 +33,6 @@ class DownloadTextureController extends BaseController
             'Content-Disposition' => 'Attachment;filename='.$uuid.'.png',
             'Content-Type' => 'image/png',
         ];
-        $this->uuidResolver->resolve($uuid);
 
         $skinPath = $this->uuidResolver->resolve($uuid) ?
             SkinsStorage::getPath($this->uuidResolver->getUuid()) :
