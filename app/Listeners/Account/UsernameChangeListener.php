@@ -11,8 +11,6 @@ class UsernameChangeListener
 {
     /**
      * Handle the event.
-     *
-     * @param UsernameChangeEvent $event
      */
     public function handle(UsernameChangeEvent $event): void
     {

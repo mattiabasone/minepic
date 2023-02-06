@@ -9,7 +9,6 @@ use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Support\Facades\Log;
 use Minepic\Minecraft\Exceptions\UserNotFoundException;
 use Psr\Http\Message\ResponseInterface;
-use Throwable;
 
 class MojangClient
 {
@@ -24,8 +23,6 @@ class MojangClient
 
     /**
      * HTTP Client for requests.
-     *
-     * @var HttpClient
      */
     private HttpClient $httpClient;
 
@@ -46,11 +43,7 @@ class MojangClient
     /**
      * Account info from username.
      *
-     * @param string $username
-     *
-     * @throws Throwable
-     *
-     * @return MojangAccount
+     * @throws \Throwable
      */
     public function sendUsernameInfoRequest(string $username): MojangAccount
     {
@@ -68,9 +61,7 @@ class MojangClient
      *
      * @param string $uuid User UUID
      *
-     * @throws Throwable
-     *
-     * @return MojangAccount
+     * @throws \Throwable
      */
     public function getUuidInfo(string $uuid): MojangAccount
     {
@@ -88,8 +79,7 @@ class MojangClient
      *
      * @param string $skin Skin uuid
      *
-     * @throws \Exception|Throwable
-     * @return string
+     * @throws \Exception|\Throwable
      */
     public function getSkin(string $skin): string
     {
@@ -115,21 +105,12 @@ class MojangClient
         );
     }
 
-    /**
-     * @param Throwable $exception
-     */
-    private function handleThrowable(Throwable $exception): void
+    private function handleThrowable(\Throwable $exception): void
     {
         Log::error($exception->getFile().':'.$exception->getLine().' - '.$exception->getMessage());
         Log::error($exception->getTraceAsString());
     }
 
-    /**
-     * @param string $method
-     * @param string $url
-     *
-     * @return string
-     */
     private function getCacheKey(string $method, string $url): string
     {
         return 'minecraft_api_response_'.md5($method.'_'.$url);
@@ -141,7 +122,7 @@ class MojangClient
      * @param string $method HTTP Verb
      * @param string $url    API Endpoint
      *
-     * @throws Throwable
+     * @throws \Throwable
      *
      * @return array
      */
@@ -164,7 +145,7 @@ class MojangClient
             $this->handleGuzzleBadResponseException($exception);
 
             throw $exception;
-        } catch (Throwable $exception) {
+        } catch (\Throwable $exception) {
             $this->handleThrowable($exception);
 
             throw $exception;
@@ -174,12 +155,7 @@ class MojangClient
     /**
      * Generic request.
      *
-     * @param string $method
-     * @param string $url
-     *
-     * @throws Throwable
-     *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Throwable
      */
     private function sendRequest(string $method, string $url): ResponseInterface
     {
@@ -189,7 +165,7 @@ class MojangClient
             $this->handleGuzzleBadResponseException($exception);
 
             throw $exception;
-        } catch (Throwable $exception) {
+        } catch (\Throwable $exception) {
             $this->handleThrowable($exception);
 
             throw $exception;

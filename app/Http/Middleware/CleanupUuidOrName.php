@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Minepic\Http\Middleware;
 
-use Closure;
 use Illuminate\Http\Request;
 
 class CleanupUuidOrName
 {
-    public function handle(Request $request, Closure $next): mixed
+    public function handle(Request $request, \Closure $next): mixed
     {
         /** @var array $route */
         $route = $request->route();

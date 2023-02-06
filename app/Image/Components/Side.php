@@ -15,51 +15,30 @@ class Side
     public const RIGHT = 'RIGHT';
     public const LEFT = 'LEFT';
 
-    /**
-     * @param Point $topLeft
-     * @param Point $bottomRight
-     */
     public function __construct(protected Point $topLeft, protected Point $bottomRight)
     {
     }
 
-    /**
-     * @return Point
-     */
     public function getTopLeft(): Point
     {
         return $this->topLeft;
     }
 
-    /**
-     * @return Point
-     */
     public function getBottomRight(): Point
     {
         return $this->bottomRight;
     }
 
-    /**
-     * @return int
-     */
     public function getWidth(): int
     {
         return $this->bottomRight->getX() - $this->topLeft->getX();
     }
 
-    /**
-     * @return int
-     */
     public function getHeight(): int
     {
         return $this->bottomRight->getY() - $this->topLeft->getY();
     }
 
-    /**
-     * @param array $rawPoints
-     *
-     * @return Side
-     */
     public static function fromRawPoints(array $rawPoints): self
     {
         return new self(

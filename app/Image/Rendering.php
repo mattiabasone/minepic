@@ -14,15 +14,12 @@ use Minepic\Minecraft\MinecraftDefaults;
 class Rendering
 {
     /**
-     * @param null|string $uuid
-     * @param int $size
      * @param string $type
      *
      * @throws Exceptions\ImageCreateFromPngFailedException
      * @throws Exceptions\ImageResourceCreationFailedException
      * @throws Exceptions\ImageTrueColorCreationFailedException
      * @throws \Exception
-     * @return Avatar
      */
     public function avatar(?string $uuid, int $size, $type = Side::FRONT): Avatar
     {
@@ -35,14 +32,8 @@ class Rendering
     }
 
     /**
-     * @param null|string $uuid
-     * @param int         $size
-     * @param null|int    $lastUpdateTimestamp
-     *
      * @throws Exceptions\SkinNotFountException
      * @throws \Throwable
-     *
-     * @return IsometricAvatar
      */
     public function isometricAvatar(?string $uuid, int $size, int $lastUpdateTimestamp = null): IsometricAvatar
     {
@@ -60,12 +51,9 @@ class Rendering
     }
 
     /**
-     * @param null|string $uuid
-     * @param int $size
      * @throws Exceptions\ImageResourceCreationFailedException*@throws \Exception
      * @throws Exceptions\ImageCreateFromPngFailedException
      * @throws \Exception
-     * @return SkinFront
      */
     public function skinFront(?string $uuid, int $size): SkinFront
     {
@@ -78,12 +66,9 @@ class Rendering
     }
 
     /**
-     * @param null|string $uuid
-     * @param int $size
      * @throws Exceptions\ImageResourceCreationFailedException*@throws \Exception
      * @throws Exceptions\ImageCreateFromPngFailedException
      * @throws \Exception
-     * @return SkinBack
      */
     public function skinBack(?string $uuid, int $size): SkinBack
     {
@@ -96,11 +81,7 @@ class Rendering
     }
 
     /**
-     * @param null|string $uuid
-     *
      * @throws \Exception
-     *
-     * @return string
      */
     private function imagePath(?string $uuid): string
     {

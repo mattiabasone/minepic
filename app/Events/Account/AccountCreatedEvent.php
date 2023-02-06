@@ -9,9 +9,6 @@ use Minepic\Models\Account;
 
 class AccountCreatedEvent extends Event
 {
-    /**
-     * @param Account $account
-     */
     public function __construct(private Account $account)
     {
     }

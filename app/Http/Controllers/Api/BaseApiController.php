@@ -22,9 +22,6 @@ abstract class BaseApiController extends BaseController
      *
      * @param UuidResolver     $uuidResolver     Minepic Core Instance
      * @param ResponseFactory  $responseFactory  Response Factory
-     * @param UsernameResolver $usernameResolver
-     * @param Rendering        $rendering
-     * @param Dispatcher       $eventDispatcher
      */
     public function __construct(
         protected UuidResolver $uuidResolver,
@@ -37,10 +34,7 @@ abstract class BaseApiController extends BaseController
 
     /**
      * @param Request $request Injected Request
-     * @param string  $uuid
      * @param int     $size    Avatar size User UUID or name
-     *
-     * @return Response
      */
     abstract public function serveUuid(Request $request, string $uuid, $size = 0): Response;
 
@@ -48,19 +42,13 @@ abstract class BaseApiController extends BaseController
      * Serve default skin section.
      *
      * @param int $size
-     *
-     * @return Response
      */
     abstract public function serveDefault($size = 0): Response;
 
     /**
-     * @param Request $request
-     * @param string  $username
      * @param int     $size
      *
      * @throws \Throwable
-     *
-     * @return Response
      */
     public function serveUsername(Request $request, string $username, $size = 0): Response
     {
@@ -69,27 +57,16 @@ abstract class BaseApiController extends BaseController
         return $uuid ? $this->serveUuid($request, $uuid, $size) : $this->serveDefault($size);
     }
 
-    /**
-     * @param string $image
-     *
-     * @return Response
-     */
     public function pngResponse(string $image): Response
     {
         return $this->responseFactory->make($image, Response::HTTP_OK, ['Content-Type' => 'image/png']);
     }
 
-    /**
-     * @return void
-     */
     protected function dispatchAccountImageServedEvent(): void
     {
         $this->eventDispatcher->dispatch(new AccountImageServedEvent($this->uuidResolver->getAccount()));
     }
 
-    /**
-     * @return CacheRepository
-     */
     protected function cache(): CacheRepository
     {
         return \Cache::driver('file');

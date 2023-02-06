@@ -39,49 +39,35 @@ class IsometricAvatar
 
     /**
      * User UUID.
-     *
-     * @var string
      */
     protected string $uuid = '';
 
     /**
      * Last time user data has been updated.
-     *
-     * @var int
      */
     protected int $lastUpdate = 0;
 
     /**
      * Flag for checking cache.
-     *
-     * @var bool
      */
     protected bool $checkCacheStatusFlag = true;
 
     /**
      * Skin Path.
-     *
-     * @var string
      */
     protected string $skinPath = '';
 
     /**
      * Skin Path.
-     *
-     * @var string
      */
     protected string $isometricPath = '';
 
-    /**
-     * @var \Imagick
-     */
     protected \Imagick $head;
 
     /**
      * IsometricAvatar constructor.
      *
      * @param string $uuid       User UUID
-     * @param int    $lastUpdate
      *
      * @throws SkinNotFountException
      */
@@ -112,8 +98,6 @@ class IsometricAvatar
     /**
      * Render image resized.
      *
-     * @param int $size
-     *
      * @throws \Throwable
      */
     public function render(int $size): void
@@ -135,8 +119,6 @@ class IsometricAvatar
 
     /**
      * Get ImagickPixel transparent object.
-     *
-     * @return \ImagickPixel
      */
     final protected function getImagickPixelTransparent(): \ImagickPixel
     {
@@ -213,7 +195,7 @@ class IsometricAvatar
         $this->head->newImage($finalImageSize, $finalImageSize, $this->getImagickPixelTransparent());
 
         // This is weird, but it works
-        $faceX = ((int) round(($doubleAvatarSize / 2))) - 2 + self::HEAD_MARGIN;
+        $faceX = ((int) round($doubleAvatarSize / 2)) - 2 + self::HEAD_MARGIN;
         $faceY = $rightY = ((int) round($doubleAvatarSize / 4)) - 1 + self::HEAD_MARGIN;
         $topX = $rightX = ((int) round($doubleAvatarSize / 16)) + self::HEAD_MARGIN;
         $topY = -1 + self::HEAD_MARGIN;
@@ -264,8 +246,6 @@ class IsometricAvatar
      * Point for face section.
      *
      * @param int $size
-     *
-     * @return array
      */
     private function getFrontPoints($size = self::HEAD_BASE_SIZE): array
     {
@@ -283,8 +263,6 @@ class IsometricAvatar
      * Points for top section.
      *
      * @param int $size
-     *
-     * @return array
      */
     private function getTopPoints($size = self::HEAD_BASE_SIZE): array
     {
@@ -293,8 +271,8 @@ class IsometricAvatar
 
         return [
             0, $size, 0, 0,
-            0, 0, -$cosine_result, -($half_size),
-            $size, $size, $cosine_result, -($half_size),
+            0, 0, -$cosine_result, -$half_size,
+            $size, $size, $cosine_result, -$half_size,
         ];
     }
 
@@ -302,8 +280,6 @@ class IsometricAvatar
      * Points for right section.
      *
      * @param int $size
-     *
-     * @return array
      */
     private function getRightPoints($size = self::HEAD_BASE_SIZE): array
     {
@@ -312,7 +288,7 @@ class IsometricAvatar
 
         return [
             $size, 0, 0, 0,
-            0, 0, -($cosine_result), -($half_size),
+            0, 0, -$cosine_result, -$half_size,
             $size, $size, 0, $size,
         ];
     }

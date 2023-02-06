@@ -12,13 +12,10 @@ class SkinBackController extends BaseApiController
     /**
      * Serve Avatar.
      *
-     * @param \Illuminate\Http\Request $request
      * @param string $uuid User UUID
      * @param int    $size
      *
      * @throws \Throwable
-     *
-     * @return \Illuminate\Http\Response
      */
     public function serveUuid(Request $request, $uuid, $size = 0): Response
     {
@@ -34,8 +31,6 @@ class SkinBackController extends BaseApiController
      * @param int|string $size
      *
      * @throws \Throwable
-     *
-     * @return Response
      */
     public function serveDefault($size = 0): Response
     {

@@ -21,11 +21,7 @@ class LayerValidator
     /**
      * Checks if base image has helm for section.
      *
-     * @param \GdImage $sourceImage
-     * @param Side     $side
-     *
      * @throws ImageTrueColorCreationFailedException
-     * @return bool
      */
     public function check(\GdImage $sourceImage, Side $side): bool
     {
@@ -37,9 +33,6 @@ class LayerValidator
 
     /**
      * Calculate sttdev for merging helm.
-     *
-     * @param \GdImage $checkImage
-     * @param Side $side
      */
     protected function calculate(\GdImage $checkImage, Side $side): void
     {
@@ -86,11 +79,7 @@ class LayerValidator
     }
 
     /**
-     * @param \GdImage $sourceImage
-     * @param Side $side
-     *
      * @throws ImageTrueColorCreationFailedException
-     * @return \GdImage
      */
     private function createCheckImage(\GdImage $sourceImage, Side $side): \GdImage
     {
@@ -109,9 +98,6 @@ class LayerValidator
         return $checkImage;
     }
 
-    /**
-     * @return bool
-     */
     private function validStdDev(): bool
     {
         return ($this->redStdDev > self::DEFAULT_STANDARD_DEVIATION && $this->greenStdDev > self::DEFAULT_STANDARD_DEVIATION) ||

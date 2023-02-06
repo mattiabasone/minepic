@@ -12,13 +12,9 @@ class AvatarController extends BaseApiController
     /**
      * Serve Avatar.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string $uuid
      * @param int    $size
      *
      * @throws \Throwable
-     *
-     * @return \Illuminate\Http\Response
      */
     public function serveUuid(Request $request, string $uuid, $size = 0): Response
     {
@@ -35,8 +31,6 @@ class AvatarController extends BaseApiController
 
     /**
      * @param int|string $size
-     *
-     * @return Response
      */
     public function serveDefault($size = 0): Response
     {

@@ -24,13 +24,6 @@ class JsonController extends BaseController
 {
     private const USER_NOT_FOUND_MESSAGE = 'User not found';
 
-    /**
-     * @param AccountRepository $accountRepository
-     * @param UuidResolver $uuidResolver
-     * @param Manager $dataManger
-     * @param ResponseFactory $responseFactory
-     * @param UsernameResolver $usernameResolver
-     */
     public function __construct(
         private AccountRepository $accountRepository,
         private UuidResolver $uuidResolver,
@@ -43,13 +36,8 @@ class JsonController extends BaseController
 
     /**
      * User info.
-     *
-     * @param string $uuid
-     *
-     * @throws \Throwable
-     * @return JsonResponse
      */
-    public function user($uuid = ''): JsonResponse
+    public function user(string $uuid = ''): JsonResponse
     {
         if (!$this->uuidResolver->resolve($uuid)) {
             $httpStatus = 404;
@@ -74,10 +62,7 @@ class JsonController extends BaseController
     }
 
     /**
-     * @param string $username
-     *
      * @throws \Throwable
-     * @return JsonResponse
      */
     public function userWithUsername(string $username): JsonResponse
     {
@@ -92,10 +77,7 @@ class JsonController extends BaseController
     /**
      * Update User data.
      *
-     * @param string $uuid
-     *
      * @throws \Throwable
-     * @return JsonResponse
      */
     public function updateUser(string $uuid): JsonResponse
     {
@@ -132,10 +114,6 @@ class JsonController extends BaseController
 
     /**
      * Username Typeahead.
-     *
-     * @param string $username
-     *
-     * @return JsonResponse
      */
     public function userTypeahead(string $username): JsonResponse
     {
@@ -153,8 +131,6 @@ class JsonController extends BaseController
 
     /**
      * Get most wanted account list.
-     *
-     * @return JsonResponse
      */
     public function getMostWantedUsers(): JsonResponse
     {
@@ -166,8 +142,6 @@ class JsonController extends BaseController
 
     /**
      * Check system status
-     *
-     * @return JsonResponse
      */
     public function check(): JsonResponse
     {

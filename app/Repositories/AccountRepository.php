@@ -11,9 +11,7 @@ use Minepic\Models\Account;
 class AccountRepository
 {
     /**
-     * @param array $filters
-     *
-     * @return Builder
+     * @return Builder<Account>
      */
     public function filterQuery(array $filters = []): Builder
     {
@@ -27,36 +25,25 @@ class AccountRepository
 
     /**
      * Last updated username.
-     *
-     * @param string $uuid
-     * @param array  $columns
-     *
-     * @return null|Account
      */
-    public function findLastUpdatedByUsername(string $uuid, $columns = ['*']): ?Account
+    public function findLastUpdatedByUsername(string $uuid): ?Account
     {
         return Account::query()
-            ->select($columns)
+            ->select()
             ->whereUsername($uuid)
             ->orderBy('updated_at', 'desc')
             ->first();
     }
 
     /**
-     * @param array    $filters
-     * @param null|int $perPage
-     * @param array    $columns
-     * @param string   $pageName
-     * @param null|int $page
-     *
-     * @return LengthAwarePaginator
+     * @return LengthAwarePaginator<Account>
      */
     public function filterPaginate(
         array $filters,
-        $perPage = null,
-        $columns = ['*'],
-        $pageName = 'page',
-        $page = null
+        ?int $perPage = null,
+        array $columns = ['*'],
+        string $pageName = 'page',
+        ?int $page = null
     ): LengthAwarePaginator {
         return $this->filterQuery($filters)
             ->paginate($perPage, $columns, $pageName, $page);

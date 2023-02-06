@@ -14,12 +14,6 @@ use Minepic\Resolvers\UuidResolver;
 
 class DownloadTextureController extends BaseController
 {
-    /**
-     * Api constructor.
-     *
-     * @param UuidResolver    $uuidResolver
-     * @param ResponseFactory $responseFactory
-     */
     public function __construct(
         protected UuidResolver $uuidResolver,
         protected ResponseFactory $responseFactory
@@ -32,8 +26,6 @@ class DownloadTextureController extends BaseController
      * @param string $uuid User UUID or Username
      *
      * @throws \Minepic\Image\Exceptions\ImageCreateFromPngFailedException
-     *
-     * @return \Illuminate\Http\Response
      */
     public function serve(string $uuid = ''): Response
     {
@@ -41,7 +33,6 @@ class DownloadTextureController extends BaseController
             'Content-Disposition' => 'Attachment;filename='.$uuid.'.png',
             'Content-Type' => 'image/png',
         ];
-        $this->uuidResolver->resolve($uuid);
 
         $skinPath = $this->uuidResolver->resolve($uuid) ?
             SkinsStorage::getPath($this->uuidResolver->getUuid()) :

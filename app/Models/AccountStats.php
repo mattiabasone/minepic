@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Minepic\Models;
 
 use Barryvdh\LaravelIdeHelper\Eloquent;
-use DB;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -25,22 +24,15 @@ class AccountStats extends Model
 {
     /**
      * No primary key.
-     *
-     * @var bool
      */
     public $incrementing = false;
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /** @var string[] */
     public $dates = [
         'request_at',
     ];
 
-    /** @var string[] */
     public $casts = [
         'uuid' => 'string',
         'count_request' => 'int',
@@ -71,14 +63,10 @@ class AccountStats extends Model
 
     /**
      * Get most wanted users.
-     *
-     * @param int $limit
-     *
-     * @return mixed
      */
-    public static function getMostWanted(int $limit = 14)
+    public static function getMostWanted(int $limit = 14): array
     {
-        return DB::select(
+        return \DB::select(
             "SELECT a.`uuid`, a.`username`, s.`count_request`
              FROM (
               SELECT `uuid`, `count_request` FROM `accounts_stats`
@@ -92,14 +80,10 @@ class AccountStats extends Model
 
     /**
      * Get last users.
-     *
-     * @param int $limit
-     *
-     * @return mixed
      */
-    public static function getLastUsers(int $limit = 9)
+    public static function getLastUsers(int $limit = 9): array
     {
-        return DB::select(
+        return \DB::select(
             "SELECT a.`uuid`, a.`username`, s.`count_request`
               FROM (
                 SELECT `uuid`, `count_request` FROM `accounts_stats`

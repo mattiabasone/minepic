@@ -15,6 +15,7 @@ use Minepic\Models\AccountStats;
 use Minepic\Resolvers\UsernameResolver;
 use Minepic\Resolvers\UuidResolver;
 use Minepic\Transformers\Account\AccountBasicDataTransformer;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class WebsiteController extends BaseController
@@ -24,7 +25,7 @@ class WebsiteController extends BaseController
      *
      * @var string
      */
-    private const DEFAULT_PAGE_TITLE = 'Minecraft avatar generator - Minepic';
+    private const DEFAULT_PAGE_TITLE = 'Minecraft avatar generator - MinePic';
 
     /**
      * Default description.
@@ -40,16 +41,8 @@ class WebsiteController extends BaseController
      * @var string
      */
     private const DEFAULT_PAGE_KEYWORDS = 'Minecraft, Minecraft avatar viewer, pic, minepic avatar viewer, skin, '.
-    'minecraft skin, avatar, minecraft avatar, generator, skin generator, skin viewer';
+    'minecraft skin, avatar, minecraft avatar, generator, skin generator, skin viewer, minecraft pfp generator';
 
-    /**
-     * WebsiteController constructor.
-     *
-     * @param UuidResolver     $uuidResolver
-     * @param ResponseFactory  $responseFactory
-     * @param UsernameResolver $usernameResolver
-     * @param Manager          $dataManager
-     */
     public function __construct(
         private readonly UuidResolver $uuidResolver,
         private readonly ResponseFactory $responseFactory,
@@ -59,27 +52,19 @@ class WebsiteController extends BaseController
         $this->dataManager->setSerializer(new ArraySerializer());
     }
 
-    /**
-     * Index.
-     */
     public function index(): Response
     {
-        $bodyData = [
-            'lastRequests' => AccountStats::getLastUsers(),
-            'mostWanted' => AccountStats::getMostWanted(),
-        ];
-
-        return $this->renderPage('index', $bodyData);
+        return $this->renderPage(
+            'index',
+            [
+                'lastRequests' => AccountStats::getLastUsers(),
+                'mostWanted' => AccountStats::getMostWanted(),
+            ]
+        );
     }
 
     /**
      * User stats page.
-     *
-     * @param string $uuid
-     *
-     * @throws \Throwable
-     *
-     * @return Response
      */
     public function user(string $uuid): Response
     {
@@ -105,11 +90,7 @@ class WebsiteController extends BaseController
     }
 
     /**
-     * @param string $username
-     *
      * @throws \Throwable
-     *
-     * @return Response
      */
     public function userWithUsername(string $username): Response
     {
@@ -123,12 +104,6 @@ class WebsiteController extends BaseController
 
     /**
      * Compose view with header and footer.
-     *
-     * @param string $page
-     * @param array  $bodyData
-     * @param array  $headerData
-     *
-     * @return string
      */
     private function composeView(
         string $page = '',
@@ -142,12 +117,6 @@ class WebsiteController extends BaseController
 
     /**
      * Render full page (headers, body, footer).
-     *
-     * @param string $page
-     * @param array  $bodyData
-     * @param array  $headerData
-     *
-     * @return Response
      */
     private function renderPage(
         string $page = '',
@@ -164,7 +133,7 @@ class WebsiteController extends BaseController
 
         return $this->responseFactory->make(
             $view,
-            Response::HTTP_OK
+            SymfonyResponse::HTTP_OK
         );
     }
 }
