@@ -6,6 +6,9 @@ namespace Minepic\Minecraft;
 
 use Illuminate\Contracts\Support\Arrayable;
 
+/**
+ * @implements Arrayable<string, null|string>
+ */
 readonly class MojangAccount implements Arrayable
 {
     public function __construct(
@@ -36,9 +39,6 @@ readonly class MojangAccount implements Arrayable
         return $this->cape;
     }
 
-    /**
-     * @return array<string, string>
-     */
     public function toArray(): array
     {
         return [

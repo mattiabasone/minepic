@@ -193,7 +193,11 @@ class UuidResolver
      */
     private function updateDbUser(): void
     {
-        if (isset($this->account->username) && $this->account->uuid !== '') {
+        if (
+            $this->account instanceof Account &&
+            isset($this->account->username) &&
+            $this->account->uuid !== ''
+        ) {
             // Get data from API
             $mojangAccount = $this->getFullUserdataApi();
             if ($mojangAccount instanceof MojangAccount) {

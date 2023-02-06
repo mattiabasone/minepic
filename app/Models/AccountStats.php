@@ -24,22 +24,15 @@ class AccountStats extends Model
 {
     /**
      * No primary key.
-     *
-     * @var bool
      */
     public $incrementing = false;
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /** @var string[] */
     public $dates = [
         'request_at',
     ];
 
-    /** @var string[] */
     public $casts = [
         'uuid' => 'string',
         'count_request' => 'int',
@@ -70,10 +63,8 @@ class AccountStats extends Model
 
     /**
      * Get most wanted users.
-     *
-     * @return mixed
      */
-    public static function getMostWanted(int $limit = 14)
+    public static function getMostWanted(int $limit = 14): array
     {
         return \DB::select(
             "SELECT a.`uuid`, a.`username`, s.`count_request`
@@ -89,10 +80,8 @@ class AccountStats extends Model
 
     /**
      * Get last users.
-     *
-     * @return mixed
      */
-    public static function getLastUsers(int $limit = 9)
+    public static function getLastUsers(int $limit = 9): array
     {
         return \DB::select(
             "SELECT a.`uuid`, a.`username`, s.`count_request`

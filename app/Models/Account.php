@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Class Accounts.
- *
  * @property int            $id
  * @property string         $uuid
  * @property string         $username
@@ -48,6 +46,9 @@ class Account extends Model
         'cape',
     ];
 
+    /**
+     * @return BelongsTo<AccountStats, Account>
+     */
     public function stats(): BelongsTo
     {
         return $this->belongsTo(AccountStats::class, 'uuid', 'uuid');

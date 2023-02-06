@@ -10,6 +10,9 @@ use Minepic\Models\Account;
 
 class AccountRepository
 {
+    /**
+     * @return Builder<Account>
+     */
     public function filterQuery(array $filters = []): Builder
     {
         $query = Account::query();
@@ -32,6 +35,9 @@ class AccountRepository
             ->first();
     }
 
+    /**
+     * @return LengthAwarePaginator<Account>
+     */
     public function filterPaginate(
         array $filters,
         ?int $perPage = null,
